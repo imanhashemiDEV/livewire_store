@@ -8,7 +8,7 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Hash;
 use Livewire\WithFileUploads;
 
-new  #[Layout('admin::layouts.master'), Title('صفحه اصلی')]
+new  #[Layout('admin::layouts.master',['breadcrumb'=>'ایجاد کاربر']), Title('ایجاد کاربر')]
 class extends Component {
 
     use WithFileUploads;
