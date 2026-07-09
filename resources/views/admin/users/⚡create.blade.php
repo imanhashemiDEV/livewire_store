@@ -52,7 +52,6 @@ class extends Component {
         <div class="container">
             <div class="grid grid-cols-12 gap-x-6 gap-y-10">
                 <div class="col-span-12 sm:col-span-10 sm:col-start-2">
-
                     <div class="mt-7">
                         <form wire:submit="createUser" class="box box--stacked flex flex-col">
                             <div class="p-7">
