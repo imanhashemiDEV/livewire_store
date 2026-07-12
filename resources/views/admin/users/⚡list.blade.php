@@ -264,6 +264,10 @@ class extends Component {
                                             موبایل
                                         </td>
                                         <td data-tw-merge=""
+                                            class="px-5 border-b dark:border-darkmode-300 border-t border-slate-200/60 bg-slate-50 py-4 font-medium text-slate-500">
+                                            نقش
+                                        </td>
+                                        <td data-tw-merge=""
                                             class="px-5 border-b dark:border-darkmode-300 border-t border-slate-200/60 bg-slate-50 py-4 text-center font-medium text-slate-500">
                                             وضعیت
                                         </td>
@@ -308,6 +312,17 @@ class extends Component {
                                                 <a class="whitespace-nowrap font-medium">
                                                     {{$user->mobile}}
                                                 </a>
+                                            </td>
+                                            <td data-tw-merge=""
+                                                class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
+                                                <a href="{{route('admin.users.user_roles',$user->id)}}" class="whitespace-nowrap font-medium">
+                                                    <x-eos-role-binding class="text-info mb-2 h-6 w-6" />
+                                                </a>
+                                                <ul>
+                                                    @foreach($user->roles as $role)
+                                                        <li class="text-sm list-disc">{{$role->name}}</li>
+                                                    @endforeach
+                                                </ul>
                                             </td>
                                             <td data-tw-merge=""
                                                 class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
