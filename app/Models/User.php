@@ -35,6 +35,24 @@ class User extends Authenticatable
     }
 
 
+    public function isSuperAdmin()
+    {
+        $user = auth()->user();
+        return $user->id == 1 || $user->is_admin || $user->hasRole('مدیر کل');
+    }
+
+    public function isAdmin()
+    {
+        $user = auth()->user();
+        return $user->is_admin;
+    }
+
+    public function isUserAdmin()
+    {
+        $user = auth()->user();
+        return $user->isSuperAdmin() || $user->hasRole('مدیر کاربران');
+    }
+
     // ---- Relationships ----
 
 //    public function vendor(): HasOne
