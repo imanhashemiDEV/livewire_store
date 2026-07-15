@@ -21,6 +21,5 @@ class AdminMiddleware
         }else{
             return redirect()->route('home');
         }
-
     }
 }
