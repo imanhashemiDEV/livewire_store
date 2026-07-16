@@ -11,5 +11,10 @@ Route::get('/', function () {
 // Auth Routes
 Route::get('/forgot_password', [ResetPasswordByMobileController::class, 'forgotPassword'])
     ->name('auth.forgot_password');
-Route::post('/reset_password', [ResetPasswordByMobileController::class, 'resetPassword'])
+Route::post('/send_sms', [ResetPasswordByMobileController::class, 'sendSMS'])
+    ->name('auth.send_sms');
+
+Route::get('/reset_password/{mobile}', [ResetPasswordByMobileController::class, 'resetPassword'])
     ->name('auth.reset_password');
+Route::post('/update_password', [ResetPasswordByMobileController::class, 'updatePassword'])
+    ->name('auth.update_password');

@@ -31,7 +31,8 @@
             <div class="mt-10">
                 <div class="text-2xl font-medium">فراموشی رمز عبور</div>
 
-                <form method="POST" action="{{route('auth.reset_password')}}" class="mt-6">
+                <form method="POST" action="{{route('auth.send_sms')}}" class="mt-6">
+                    @csrf
                     <label data-tw-merge="" class="inline-block mb-2 group-[.form-inline]:mb-2 group-[.form-inline]:sm:mb-0 ltr:group-[.form-inline]:sm:mr-5 rtl:group-[.form-inline]:sm:ml-5 ltr:group-[.form-inline]:sm:text-right rtl:group-[.form-inline]:sm:text-left">
                         موبایل*
                     </label>
@@ -40,7 +41,7 @@
                     <span class="text-danger block my-1">{{ $message }}</span>
                     @enderror
                     <div class="mt-5 text-center xl:mt-8 rtl:xl:text-right ltr:xl:text-left">
-                        <button data-tw-merge="" type="submit" class="transition duration-200 border shadow-sm inline-flex items-center justify-center px-3 font-medium cursor-pointer focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus-visible:outline-none dark:focus:ring-slate-700 dark:focus:ring-opacity-50 [&:hover:not(:disabled)]:bg-opacity-90 [&:hover:not(:disabled)]:border-opacity-90 [&:not(button)]:text-center disabled:opacity-70 disabled:cursor-not-allowed bg-primary border-primary text-white dark:border-primary rounded-full w-full rtl:bg-gradient-to-l ltr:bg-gradient-to-r from-theme-1/70 to-theme-2/70 py-3.5 rtl:xl:ml-3 ltr:xl:mr-3">ورود</button>
+                        <button data-tw-merge="" type="submit" class="transition duration-200 border shadow-sm inline-flex items-center justify-center px-3 font-medium cursor-pointer focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus-visible:outline-none dark:focus:ring-slate-700 dark:focus:ring-opacity-50 [&:hover:not(:disabled)]:bg-opacity-90 [&:hover:not(:disabled)]:border-opacity-90 [&:not(button)]:text-center disabled:opacity-70 disabled:cursor-not-allowed bg-primary border-primary text-white dark:border-primary rounded-full w-full rtl:bg-gradient-to-l ltr:bg-gradient-to-r from-theme-1/70 to-theme-2/70 py-3.5 rtl:xl:ml-3 ltr:xl:mr-3">ارسال کد تایید</button>
                     </div>
                 </form>
             </div>
