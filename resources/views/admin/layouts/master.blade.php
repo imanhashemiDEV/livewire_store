@@ -2,11 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" class="opacity-0" lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="rtl"><!-- BEGIN: Head -->
 <head>
     <meta charset="utf-8">
-    <meta name="csrf-token" content="lGySnvnRREog5OmnfEcNX9WYK2csVwKZ9B7vW5y9">
+{{--    <meta name="csrf-token" content="lGySnvnRREog5OmnfEcNX9WYK2csVwKZ9B7vW5y9">--}}
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="تیلوایس admin is super flexible, powerful, clean & modern responsive tailwind admin template with unlimited possibilities.">
-    <meta name="keywords" content="admin template, تیلوایس Admin Template, dashboard template, flat admin template, responsive admin template, web app">
-    <meta name="author" content="LEFT4CODE">
     <title>{{ $title ?? config('app.name') }}</title>
     <!-- BEGIN: CSS Assets-->
     <link rel="stylesheet" href="{{url('panel/css/vendors/litepicker.css')}}">
@@ -284,6 +281,7 @@
 <!-- BEGIN: Vendor JS Assets-->
 <script src="{{url('panel/js/vendors/dom.js')}}"></script>
 <script src="{{url('panel/js/vendors/tailwind-merge.js')}}"></script>
+<script src="{{url('panel/js/vendors/accordion.js')}}"></script>
 <script src="{{url('panel/js/vendors/lucide.js')}}"></script>
 <script src="{{url('panel/js/vendors/dayjs.js')}}"></script>
 <script src="{{url('panel/js/vendors/litepicker.js')}}"></script>

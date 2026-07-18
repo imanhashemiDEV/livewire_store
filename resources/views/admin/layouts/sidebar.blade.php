@@ -46,6 +46,14 @@
                 </a>
             </li>
             @endif
+
+                <li>
+                    <a href="{{route('admin.categories.list')}}" class="side-menu__link @if(\Illuminate\Support\Facades\Route::is('admin.categories.list')) side-menu__link--active  @endif">
+                        <i data-tw-merge="" data-lucide="book-copy" class="stroke-[1] w-5 h-5 side-menu__link__icon"></i>
+                        <div class="side-menu__link__title">دسته بندی ها</div>
+                    </a>
+                </li>
+
             <!-- END: First Child -->
         </ul>
     </div>
