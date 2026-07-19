@@ -15,6 +15,7 @@ class extends Component {
 
     #[Validate('required')]
     public $title;
+    public $edit_title;
     public $parent_id;
     public $editCategory = null;
 
@@ -62,9 +63,9 @@ class extends Component {
     }
 
     #[Computed]
-    public function allCategories()
+    public function allCategories(): array
     {
-        return Category::query()->get();
+        return Category::getAllCategories();
     }
 
     #[Computed]
@@ -139,10 +140,10 @@ class extends Component {
                                         </div>
                                     </div>
                                     <div class=" flex flex-1 flex-col items-center">
-                                        <select name="parent_id" aria-label=".form-select-lg" class="disabled:bg-slate-100 disabled:cursor-not-allowed disabled:dark:bg-darkmode-800/50 [&amp;[readonly]]:bg-slate-100 [&amp;[readonly]]:cursor-not-allowed [&amp;[readonly]]:dark:bg-darkmode-800/50 transition duration-200 ease-in-out w-full border-slate-200 shadow-sm rounded-md px-3 rtl:pl-8 ltr:pr-8 focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus:border-primary focus:border-opacity-40 dark:bg-darkmode-800 dark:border-transparent dark:focus:ring-slate-700 dark:focus:ring-opacity-50 group-[.form-inline]:flex-1 text-lg py-1.5 rtl:pr-4 ltr:pl-4 rtl:sm:ml-2 ltr:sm:mr-2">
+                                        <select wire:model="parent_id" aria-label=".form-select-lg" class="disabled:bg-slate-100 disabled:cursor-not-allowed disabled:dark:bg-darkmode-800/50 [&amp;[readonly]]:bg-slate-100 [&amp;[readonly]]:cursor-not-allowed [&amp;[readonly]]:dark:bg-darkmode-800/50 transition duration-200 ease-in-out w-full border-slate-200 shadow-sm rounded-md px-3 rtl:pl-8 ltr:pr-8 focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus:border-primary focus:border-opacity-40 dark:bg-darkmode-800 dark:border-transparent dark:focus:ring-slate-700 dark:focus:ring-opacity-50 group-[.form-inline]:flex-1 text-lg py-1.5 rtl:pr-4 ltr:pl-4 rtl:sm:ml-2 ltr:sm:mr-2">
                                             <option>دسته بندی اصلی</option>
-                                            @foreach($this->allCategories as $all_category)
-                                                <option value="{{$all_category->id}}">{{$all_category->title}}</option>
+                                            @foreach($this->allCategories as $key=>$value)
+                                                <option value="{{$key}}">{{$value}}</option>
                                             @endforeach
                                         </select>
                                         @error('parent_id')
@@ -163,15 +164,24 @@ class extends Component {
                                 @foreach($this->categories as $category)
                                     <div data-tw-merge class="accordion-item py-4 first:-mt-4 last:-mb-4 [&amp;:not(:last-child)]:border-b [&amp;:not(:last-child)]:border-slate-200/60 [&amp;:not(:last-child)]:dark:border-darkmode-400">
                                         <div class="accordion-header flex" id="faq-accordion-1">
-                                            <button
-                                                data-tw-merge
-                                                data-tw-toggle="collapse"
-                                                data-tw-target="#faq-accordion-1-collapse"
-                                                type="button"
-                                                aria-expanded="true"
-                                                aria-controls="faq-accordion-1-collapse"
-                                                class="accordion-button outline-none py-4 -my-4 font-medium w-full rtl:text-right ltr:text-left dark:text-slate-400 [&amp;:not(.collapsed)]:text-primary [&amp;:not(.collapsed)]:dark:text-slate-300"
-                                            >{{$category->title}}</button>
+                                            @if($this->editCategory== $category->id)
+                                                <input wire:model="edit_title" data-tw-merge="" type="text"
+                                                       class="disabled:bg-slate-100 disabled:cursor-not-allowed dark:disabled:bg-darkmode-800/50 dark:disabled:border-transparent [&[readonly]]:bg-slate-100 [&[readonly]]:cursor-not-allowed [&[readonly]]:dark:bg-darkmode-800/50 [&[readonly]]:dark:border-transparent transition duration-200 ease-in-out w-full text-sm border-slate-200 shadow-sm rounded-md placeholder:text-slate-400/90 focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus:border-primary focus:border-opacity-40 dark:bg-darkmode-800 dark:border-transparent dark:focus:ring-slate-700 dark:focus:ring-opacity-50 dark:placeholder:text-slate-500/80 [&[type='file']]:border rtl:file:ml-4 ltr:file:mr-4 file:py-2 file:px-4 rtl:file:rounded-r-md ltr:file:rounded-l-md file:border-0 rtl:file:border-l-[1px] ltr:file:border-r-[1px] file:border-slate-100/10 file:text-sm file:font-semibold file:bg-slate-100 file:text-slate-500/70 hover:file:bg-200 group-[.form-inline]:flex-1 group-[.input-group]:rounded-none rtl:group-[.input-group]:[&:not(:first-child)]:border-r-transparent ltr:group-[.input-group]:[&:not(:first-child)]:border-l-transparent rtl:group-[.input-group]:first:rounded-r ltr:group-[.input-group]:first:rounded-l rtl:group-[.input-group]:last:rounded-l ltr:group-[.input-group]:last:rounded-r group-[.input-group]:z-10 first:rounded-b-none last:-mt-px last:rounded-t-none focus:z-10 rtl:first:md:rounded-l-none ltr:first:md:rounded-r-none rtl:first:md:rounded-br-md ltr:first:md:rounded-bl-md rtl:last:md:-mr-px ltr:last:md:-ml-px last:md:mt-0 rtl:last:md:rounded-r-none ltr:last:md:rounded-l-none rtl:last:md:rounded-tl-md ltr:last:md:rounded-tr-md [&:not(:first-child):not(:last-child)]:-mt-px [&:not(:first-child):not(:last-child)]:rounded-none rtl:[&:not(:first-child):not(:last-child)]:md:-mr-px ltr:[&:not(:first-child):not(:last-child)]:md:-ml-px [&:not(:first-child):not(:last-child)]:md:mt-0">
+                                                @error('edit_title')
+                                                <span class="block text-danger my-2">{{ $message }}</span>
+                                                @enderror
+                                            @else
+                                                <button
+                                                    data-tw-merge
+                                                    data-tw-toggle="collapse"
+                                                    data-tw-target="#faq-accordion-1-collapse"
+                                                    type="button"
+                                                    aria-expanded="true"
+                                                    aria-controls="faq-accordion-1-collapse"
+                                                    class="accordion-button outline-none py-4 -my-4 font-medium w-full rtl:text-right ltr:text-left dark:text-slate-400 [&amp;:not(.collapsed)]:text-primary [&amp;:not(.collapsed)]:dark:text-slate-300"
+                                                >{{$category->title}}
+                                                </button>
+                                            @endif
                                             @if($this->editCategory==$category->id)
                                                 <x-fas-save  wire:click="updateCategory" class="text-success h-6 w-6 cursor-pointer"/>
                                             @else
@@ -187,7 +197,25 @@ class extends Component {
                                                 data-tw-merge
                                                 class="accordion-body leading-relaxed text-slate-600 dark:text-slate-500 leading-relaxed text-slate-600 dark:text-slate-500"
                                             >
-                                                 children
+                                                 @foreach($category->children as $child)
+                                                     <div class="w-full flex items-center justify-between ">
+                                                         @if($this->editCategory== $child->id)
+                                                             <input wire:model="edit_title" data-tw-merge="" type="text"
+                                                                    class="disabled:bg-slate-100 disabled:cursor-not-allowed dark:disabled:bg-darkmode-800/50 dark:disabled:border-transparent [&[readonly]]:bg-slate-100 [&[readonly]]:cursor-not-allowed [&[readonly]]:dark:bg-darkmode-800/50 [&[readonly]]:dark:border-transparent transition duration-200 ease-in-out w-full text-sm border-slate-200 shadow-sm rounded-md placeholder:text-slate-400/90 focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus:border-primary focus:border-opacity-40 dark:bg-darkmode-800 dark:border-transparent dark:focus:ring-slate-700 dark:focus:ring-opacity-50 dark:placeholder:text-slate-500/80 [&[type='file']]:border rtl:file:ml-4 ltr:file:mr-4 file:py-2 file:px-4 rtl:file:rounded-r-md ltr:file:rounded-l-md file:border-0 rtl:file:border-l-[1px] ltr:file:border-r-[1px] file:border-slate-100/10 file:text-sm file:font-semibold file:bg-slate-100 file:text-slate-500/70 hover:file:bg-200 group-[.form-inline]:flex-1 group-[.input-group]:rounded-none rtl:group-[.input-group]:[&:not(:first-child)]:border-r-transparent ltr:group-[.input-group]:[&:not(:first-child)]:border-l-transparent rtl:group-[.input-group]:first:rounded-r ltr:group-[.input-group]:first:rounded-l rtl:group-[.input-group]:last:rounded-l ltr:group-[.input-group]:last:rounded-r group-[.input-group]:z-10 first:rounded-b-none last:-mt-px last:rounded-t-none focus:z-10 rtl:first:md:rounded-l-none ltr:first:md:rounded-r-none rtl:first:md:rounded-br-md ltr:first:md:rounded-bl-md rtl:last:md:-mr-px ltr:last:md:-ml-px last:md:mt-0 rtl:last:md:rounded-r-none ltr:last:md:rounded-l-none rtl:last:md:rounded-tl-md ltr:last:md:rounded-tr-md [&:not(:first-child):not(:last-child)]:-mt-px [&:not(:first-child):not(:last-child)]:rounded-none rtl:[&:not(:first-child):not(:last-child)]:md:-mr-px ltr:[&:not(:first-child):not(:last-child)]:md:-ml-px [&:not(:first-child):not(:last-child)]:md:mt-0">
+                                                             @error('edit_title')
+                                                             <span class="block text-danger my-2">{{ $message }}</span>
+                                                             @enderror
+                                                         @else
+                                                             <span>{{$child->title}}</span>
+                                                         @endif
+
+                                                         @if($this->editCategory==$child->id)
+                                                             <x-fas-save  wire:click="updateCategory" class="text-success h-6 w-6 cursor-pointer"/>
+                                                         @else
+                                                             <x-fas-edit wire:click="setEditMode('{{$child->id}}' , '{{$child->title}}')" class="text-info h-6 w-6 cursor-pointer"/>
+                                                         @endif
+                                                     </div>
+                                                 @endforeach
                                             </div>
                                         </div>
                                     </div>
