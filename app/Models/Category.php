@@ -16,9 +16,9 @@ class Category extends Model
         $array=[];
         $categories =  Category::query()->with('children')->WhereNull('parent_id')->get();
         foreach ($categories as $category){
-            $array[$category->id]=$category->title;
+            $array[$category->id]= ' - ' . $category->title;
             foreach ($category->children as $cat1){
-                $array[$cat1->id]= ' - ' . $cat1->title;
+                $array[$cat1->id]= ' -- ' . $cat1->title;
             }
         }
         return $array;
