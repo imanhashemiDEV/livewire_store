@@ -68,6 +68,12 @@ class extends Component {
         $this->parent_id=$id;
     }
 
+    #[\Livewire\Attributes\On('destroy-category')]
+    public function destroyCategory($category_id)
+    {
+       // dd($category_id);
+        Category::destroy($category_id);
+    }
     #[Computed]
     public function allCategories(): array
     {
@@ -206,6 +212,7 @@ class extends Component {
                                             @else
                                                 <x-fas-edit wire:click="setEditMode('{{$category->id}}' , '{{$category->title}}')" class="text-info h-6 w-6 cursor-pointer"/>
                                             @endif
+                                                <x-fas-trash wire:click="$dispatch('delete-category',{ category_id: {{$category->id}} } )"  class="text-danger h-6 w-6 cursor-pointer m-4"/>
                                         </div>
                                         <div
                                             id="faq-accordion-1-collapse"
@@ -229,10 +236,11 @@ class extends Component {
                                                          @endif
 
                                                          @if($this->editCategory==$child->id)
-                                                             <x-fas-save  wire:click="updateCategory" class="text-success h-6 w-6 cursor-pointer"/>
+                                                             <x-fas-save  wire:click="updateCategory" class="text-success h-6 w-6 cursor-pointer m-4"/>
                                                          @else
                                                              <x-fas-edit wire:click="setEditMode('{{$child->id}}' , '{{$child->title}}')" class="text-info h-6 w-6 cursor-pointer"/>
                                                          @endif
+                                                             <x-fas-trash wire:click="$dispatch('delete-category',{ category_id: {{$child->id}} } )" class="text-danger h-6 w-6 cursor-pointer m-4"/>
                                                      </div>
                                                  @endforeach
                                             </div>
@@ -262,4 +270,27 @@ class extends Component {
             Livewire.dispatch('set-parent',{id:value});
         }
     });
+
+    Livewire.on('delete-category',(event)=>{
+
+        Swal.fire({
+            title: "آیا از حذف مطمئن هستید؟",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "بله",
+            cancelButtonText: "خیر",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                //console.log(event)
+                Livewire.dispatch('destroy-category', { category_id: event.category_id })
+                Swal.fire({
+                    text: "حذف با موفقیت انجام شد",
+                    icon: "success"
+                });
+            }
+        });
+
+    })
 </script>

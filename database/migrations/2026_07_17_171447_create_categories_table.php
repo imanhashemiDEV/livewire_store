@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('slug')->unique();
             $table->unsignedBigInteger('parent_id')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
