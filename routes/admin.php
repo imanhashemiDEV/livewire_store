@@ -10,3 +10,4 @@ Route::livewire('/user_edit/{user}', 'admin::users.edit')->name('admin.users.edi
 Route::livewire('/roles', 'admin::roles.list')->name('admin.roles.list');
 Route::livewire('/user_roles/{user}', 'admin::users.user_roles')->name('admin.users.user_roles');
 Route::livewire('/categories', 'admin::categories.list')->name('admin.categories.list');
+Route::livewire('/trashed_categories', 'admin::categories.trashed_list')->name('admin.categories.trashed_list');
