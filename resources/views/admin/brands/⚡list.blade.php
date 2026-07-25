@@ -8,16 +8,17 @@ use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
+use Livewire\WithFileUploads;
 
 new #[Layout('admin::layouts.master', ['breadcrumb' => 'لیست برند ها']), Title('لیست برند ها')]
 class extends Component {
 
-    use WithPagination;
+    use WithPagination, WithFileUploads;
 
     public $search;
     #[Validate('required')]
     public $title, $image;
-    public $edit_title;
+    public $edit_title,$edit_image;
     public $editBrand = null;
 
     public function mount(): void
@@ -40,29 +41,43 @@ class extends Component {
     {
         $this->validate();
 
+        if($this->image){
+            $name = $this->image->hashName();
+            $this->image->storeAs('images/brands/',$name,'public');
+        }
+
         Brand::query()->create([
-            'title' => $this->title
+            'title' => $this->title,
+            'image'=>$this->image
         ]);
 
         session()->flash('success', 'برند با موفقیت ایجاد شد');
         $this->reset('title');
     }
 
-    public function setEditMode($id, $title)
+    public function setEditMode($id, $title, $image)
     {
         $this->edit_title = $title;
+        $this->edit_image = $image;
         $this->editBrand = $id;
     }
 
     public function updateBrand()
     {
         $this->validate([
-            'edit_title' => 'required'
+            'edit_title' => 'required',
+            'edit_image'=>'required'
         ]);
+
+        if($this->image){
+            $name = $this->image->hashName();
+            $this->image->storeAs('images/brands/',$name,'public');
+        }
 
         $brand = Brand::query()->find($this->editBrand);
         $brand->update([
-            'title' => $this->edit_title
+            'title' => $this->edit_title,
+            'image'=> $this->image ? $name : $brand->image
         ]);
 
         $this->editBrand = null;
@@ -177,6 +192,10 @@ class extends Component {
                                         </td>
                                         <td data-tw-merge=""
                                             class="px-5 border-b dark:border-darkmode-300 border-t border-slate-200/60 bg-slate-50 py-4 font-medium text-slate-500">
+                                            عکس بنر
+                                        </td>
+                                        <td data-tw-merge=""
+                                            class="px-5 border-b dark:border-darkmode-300 border-t border-slate-200/60 bg-slate-50 py-4 font-medium text-slate-500">
                                             عنوان برند
                                         </td>
                                         <td data-tw-merge=""
@@ -204,6 +223,26 @@ class extends Component {
                                                 </a>
                                             </td>
                                             <td data-tw-merge=""
+                                                class="px-5 border-b dark:border-darkmode-300 w-80 border-dashed py-4 dark:bg-darkmode-600">
+                                                <div class="flex items-center">
+                                                    @if($this->editBrand== $brand->id)
+                                                        <input wire:model="edit_image" id="regular-form-6" type="file"
+                                                               placeholder="ورودی فایل"
+                                                               class="disabled:bg-slate-100 disabled:cursor-not-allowed dark:disabled:bg-darkmode-800/50 dark:disabled:border-transparent [&amp;[readonly]]:bg-slate-100 [&amp;[readonly]]:cursor-not-allowed [&amp;[readonly]]:dark:bg-darkmode-800/50 [&amp;[readonly]]:dark:border-transparent transition duration-200 ease-in-out w-full text-sm border-slate-200 shadow-sm rounded-md placeholder:text-slate-400/90 focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus:border-primary focus:border-opacity-40 dark:bg-darkmode-800 dark:border-transparent dark:focus:ring-slate-700 dark:focus:ring-opacity-50 dark:placeholder:text-slate-500/80 [&amp;[type='file']]:border rtl:file:ml-4 ltr:file:mr-4 file:py-2 file:px-4 rtl:file:rounded-r-md ltr:file:rounded-l-md file:border-0 rtl:file:border-l-[1px] ltr:file:border-r-[1px] file:border-slate-100/10 file:text-sm file:font-semibold file:bg-slate-100 file:text-slate-500/70 hover:file:bg-200 group-[.form-inline]:flex-1 group-[.input-group]:rounded-none rtl:group-[.input-group]:[&amp;:not(:first-child)]:border-r-transparent ltr:group-[.input-group]:[&amp;:not(:first-child)]:border-l-transparent rtl:group-[.input-group]:first:rounded-r ltr:group-[.input-group]:first:rounded-l rtl:group-[.input-group]:last:rounded-l ltr:group-[.input-group]:last:rounded-r group-[.input-group]:z-10">
+                                                        @error('edit_image')
+                                                        <span class="block text-danger my-2">{{ $message }}</span>
+                                                        @enderror
+                                                    @else
+                                                        <div class="image-fit zoom-in h-9 w-9">
+                                                            <img data-placement="top" title="{{$brand->title}}"
+                                                                 src="{{ $brand->image ? url('images/brands/'. $brand->image) : url('panel/images/users/profile.jpg')}}"
+                                                                 class="tooltip cursor-pointer rounded-full shadow-[0px_0px_0px_2px_#fff,_1px_1px_5px_rgba(0,0,0,0.32)] dark:shadow-[0px_0px_0px_2px_#3f4865,_1px_1px_5px_rgba(0,0,0,0.32)]">
+                                                        </div>
+                                                    @endif
+
+                                                </div>
+                                            </td>
+                                            <td data-tw-merge=""
                                                 class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
                                                 @if($this->editBrand== $brand->id)
                                                     <input wire:model="edit_title" data-tw-merge="" type="text"
@@ -225,12 +264,12 @@ class extends Component {
                                             </td>
                                             <td data-tw-merge=""
                                                 class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
-                                                @if($this->editBrand==$Brand->id)
+                                                @if($this->editBrand==$brand->id)
                                                     <x-fas-save wire:click="updateBrand"
                                                                 class="text-success h-6 w-6 cursor-pointer"/>
                                                 @else
                                                     <x-fas-edit
-                                                        wire:click="setEditMode('{{$brand->id}}' , '{{$brand->title}}')"
+                                                        wire:click="setEditMode('{{$brand->id}}' , '{{$brand->title}}', '{{$brand->image}}')"
                                                         class="text-info h-6 w-6 cursor-pointer"/>
                                                 @endif
                                             </td>
