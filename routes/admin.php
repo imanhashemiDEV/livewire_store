@@ -12,3 +12,4 @@ Route::livewire('/user_roles/{user}', 'admin::users.user_roles')->name('admin.us
 Route::livewire('/categories', 'admin::categories.list')->name('admin.categories.list');
 Route::livewire('/trashed_categories', 'admin::categories.trashed_list')->name('admin.categories.trashed_list');
 Route::livewire('/brands', 'admin::brands.list')->name('admin.brands.list');
+Route::livewire('/trashed_brands', 'admin::brands.trashed_list')->name('admin.brands.trashed_list');

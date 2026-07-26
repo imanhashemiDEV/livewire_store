@@ -69,18 +69,24 @@ class extends Component {
             'edit_image'=>'required'
         ]);
 
-        if($this->image){
-            $name = $this->image->hashName();
-            $this->image->storeAs('images/brands/',$name,'public');
+        if($this->edit_image){
+            $name = $this->edit_image->hashName();
+            $this->edit_image->storeAs('images/brands/',$name,'public');
         }
 
         $brand = Brand::query()->find($this->editBrand);
         $brand->update([
             'title' => $this->edit_title,
-            'image'=> $this->image ? $name : $brand->image
+            'image'=> $this->edit_image ? $name : $brand->image
         ]);
 
         $this->editBrand = null;
+    }
+
+    #[\Livewire\Attributes\On('destroy-brand')]
+    public function destroyBrand($brand_id)
+    {
+        Brand::destroy($brand_id);
     }
 
     #[Computed]
@@ -100,6 +106,14 @@ class extends Component {
                     <div class="flex flex-col gap-y-3 md:h-10 md:flex-row md:items-center">
                         <div class="text-base font-medium group-[.mode--light]:text-white">
                             برند ها
+                        </div>
+                        <div class="flex flex-col gap-x-3 gap-y-2 sm:flex-row rtl:md:mr-auto ltr:md:ml-auto">
+                            <a href="{{route('admin.brands.trashed_list')}}" data-tw-merge=""
+                               class="transition duration-200 border shadow-sm inline-flex items-center justify-center py-2 px-3 rounded-md font-medium cursor-pointer focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus-visible:outline-none dark:focus:ring-slate-700 dark:focus:ring-opacity-50 [&:hover:not(:disabled)]:bg-opacity-90 [&:hover:not(:disabled)]:border-opacity-90 [&:not(button)]:text-center disabled:opacity-70 disabled:cursor-not-allowed bg-primary border-primary text-white dark:border-primary group-[.mode--light]:!border-transparent group-[.mode--light]:!bg-white/[0.12] group-[.mode--light]:!text-slate-200">
+                                <i data-tw-merge="" data-lucide="pen-line"
+                                   class="rtl:ml-2 ltr:mr-2 h-4 w-4 stroke-[1.3]"></i>
+                                برند های حذف شده
+                            </a>
                         </div>
                     </div>
                     <div class="mt-3.5 flex flex-col gap-8">
@@ -192,7 +206,7 @@ class extends Component {
                                         </td>
                                         <td data-tw-merge=""
                                             class="px-5 border-b dark:border-darkmode-300 border-t border-slate-200/60 bg-slate-50 py-4 font-medium text-slate-500">
-                                            عکس بنر
+                                            عکس برند
                                         </td>
                                         <td data-tw-merge=""
                                             class="px-5 border-b dark:border-darkmode-300 border-t border-slate-200/60 bg-slate-50 py-4 font-medium text-slate-500">
@@ -235,7 +249,7 @@ class extends Component {
                                                     @else
                                                         <div class="image-fit zoom-in h-9 w-9">
                                                             <img data-placement="top" title="{{$brand->title}}"
-                                                                 src="{{ $brand->image ? url('images/brands/'. $brand->image) : url('panel/images/users/profile.jpg')}}"
+                                                                 src="{{ $brand->image ? url('images/brands/'. $brand->image) : url('panel/images/image.png')}}"
                                                                  class="tooltip cursor-pointer rounded-full shadow-[0px_0px_0px_2px_#fff,_1px_1px_5px_rgba(0,0,0,0.32)] dark:shadow-[0px_0px_0px_2px_#3f4865,_1px_1px_5px_rgba(0,0,0,0.32)]">
                                                         </div>
                                                     @endif
@@ -263,7 +277,7 @@ class extends Component {
                                                 </div>
                                             </td>
                                             <td data-tw-merge=""
-                                                class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
+                                                class="flex gap-x-2 px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
                                                 @if($this->editBrand==$brand->id)
                                                     <x-fas-save wire:click="updateBrand"
                                                                 class="text-success h-6 w-6 cursor-pointer"/>
@@ -272,6 +286,7 @@ class extends Component {
                                                         wire:click="setEditMode('{{$brand->id}}' , '{{$brand->title}}', '{{$brand->image}}')"
                                                         class="text-info h-6 w-6 cursor-pointer"/>
                                                 @endif
+                                                    <x-fas-trash wire:click="$dispatch('delete-brand',{ brand_id: {{$brand->id}} } )" class="text-danger h-6 w-6 cursor-pointer m-4"/>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -289,3 +304,34 @@ class extends Component {
         </div>
     </div>
 </div>
+
+@assets
+<link rel="stylesheet" href="{{url('panel/css/vendors/tom-select.css')}}">
+<script src="{{url('panel/js/vendors/tom-select.js')}}"></script>
+@endassets
+
+<script>
+
+    Livewire.on('delete-brand',(event)=>{
+
+        Swal.fire({
+            title: "آیا از حذف مطمئن هستید؟",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "بله",
+            cancelButtonText: "خیر",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                //console.log(event)
+                Livewire.dispatch('destroy-brand', { brand_id: event.brand_id })
+                Swal.fire({
+                    text: "حذف با موفقیت انجام شد",
+                    icon: "success"
+                });
+            }
+        });
+
+    })
+</script>
