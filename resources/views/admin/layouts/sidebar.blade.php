@@ -22,7 +22,7 @@
         <ul class="scrollable">
             <!-- BEGIN: First Child -->
             <li class="side-menu__divider">
-                داشبوردها
+                مدیریت کاربران
             </li>
             <li>
                 <a href="{{route('admin.panel.index')}}" class="side-menu__link @if(\Illuminate\Support\Facades\Route::is('admin.panel.index')) side-menu__link--active  @endif">
@@ -46,18 +46,31 @@
                 </a>
             </li>
             @endif
+        </ul>
 
-                <li>
-                    <a href="{{route('admin.categories.list')}}" class="side-menu__link @if(\Illuminate\Support\Facades\Route::is('admin.categories.list')) side-menu__link--active  @endif">
-                        <i data-tw-merge="" data-lucide="book-copy" class="stroke-[1] w-5 h-5 side-menu__link__icon"></i>
-                        <div class="side-menu__link__title">دسته بندی ها</div>
-                    </a>
-                </li>
+        <ul class="scrollable">
+            <!-- BEGIN: First Child -->
+            <li class="side-menu__divider">
+                مدیریت فروشگاه
+            </li>
+            <li>
+                <a href="{{route('admin.categories.list')}}" class="side-menu__link @if(\Illuminate\Support\Facades\Route::is('admin.categories.list')) side-menu__link--active  @endif">
+                    <i data-tw-merge="" data-lucide="book-copy" class="stroke-[1] w-5 h-5 side-menu__link__icon"></i>
+                    <div class="side-menu__link__title">دسته بندی ها</div>
+                </a>
+            </li>
 
             <li>
                 <a href="{{route('admin.brands.list')}}" class="side-menu__link @if(\Illuminate\Support\Facades\Route::is('admin.brands.list')) side-menu__link--active  @endif">
-                    <i data-tw-merge="" data-lucide="book-copy" class="stroke-[1] w-5 h-5 side-menu__link__icon"></i>
+                    <i data-tw-merge="" data-lucide="chess-queen" class="stroke-[1] w-5 h-5 side-menu__link__icon"></i>
                     <div class="side-menu__link__title"> برندها</div>
+                </a>
+            </li>
+
+            <li>
+                <a href="{{route('admin.colors.list')}}" class="side-menu__link @if(\Illuminate\Support\Facades\Route::is('admin.colors.list')) side-menu__link--active  @endif">
+                    <i data-tw-merge="" data-lucide="paintbrush" class="stroke-[1] w-5 h-5 side-menu__link__icon"></i>
+                    <div class="side-menu__link__title"> رنگ ها</div>
                 </a>
             </li>
 
