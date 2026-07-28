@@ -62,7 +62,7 @@
 
             <li>
                 <a href="{{route('admin.brands.list')}}" class="side-menu__link @if(\Illuminate\Support\Facades\Route::is('admin.brands.list')) side-menu__link--active  @endif">
-                    <i data-tw-merge="" data-lucide="chess-queen" class="stroke-[1] w-5 h-5 side-menu__link__icon"></i>
+                    <i data-tw-merge="" data-lucide="layout-dashboard" class="stroke-[1] w-5 h-5 side-menu__link__icon"></i>
                     <div class="side-menu__link__title"> برندها</div>
                 </a>
             </li>
