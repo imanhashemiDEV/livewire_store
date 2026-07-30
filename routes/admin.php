@@ -14,3 +14,5 @@ Route::livewire('/trashed_categories', 'admin::categories.trashed_list')->name('
 Route::livewire('/brands', 'admin::brands.list')->name('admin.brands.list');
 Route::livewire('/trashed_brands', 'admin::brands.trashed_list')->name('admin.brands.trashed_list');
 Route::livewire('/colors', 'admin::colors.list')->name('admin.colors.list');
+Route::livewire('/tags', 'admin::tags.list')->name('admin.tags.list');
+Route::livewire('/trashed_tags', 'admin::tags.trashed_list')->name('admin.tags.trashed_list');

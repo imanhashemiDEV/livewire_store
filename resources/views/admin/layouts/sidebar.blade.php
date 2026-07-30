@@ -74,6 +74,13 @@
                 </a>
             </li>
 
+            <li>
+                <a href="{{route('admin.tags.list')}}" class="side-menu__link @if(\Illuminate\Support\Facades\Route::is('admin.tags.list')) side-menu__link--active  @endif">
+                    <i data-tw-merge="" data-lucide="flag" class="stroke-[1] w-5 h-5 side-menu__link__icon"></i>
+                    <div class="side-menu__link__title"> تگ ها</div>
+                </a>
+            </li>
+
             <!-- END: First Child -->
         </ul>
     </div>
