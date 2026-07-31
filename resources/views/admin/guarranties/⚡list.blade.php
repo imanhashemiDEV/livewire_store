@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Tag;
+use App\Models\Guarranty;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
@@ -11,7 +11,7 @@ use Livewire\WithPagination;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\WithFileUploads;
 
-new #[Layout('admin::layouts.master', ['breadcrumb' => 'لیست تگ ها']), Title('لیست تگ ها')]
+new #[Layout('admin::layouts.master', ['breadcrumb' => 'لیست گارانتی ها']), Title('لیست گارانتی ها')]
 class extends Component {
 
     use WithPagination;
@@ -20,7 +20,7 @@ class extends Component {
     #[Validate('required')]
     public $title;
     public $edit_title;
-    public $editTag = null;
+    public $editGuarranty = null;
 
     public function mount(): void
     {
@@ -31,56 +31,56 @@ class extends Component {
         }
     }
 
-    public function searchTag(): void
+    public function searchGuarranty(): void
     {
-        $this->tags = Tag::query()
+        $this->guarranties = Guarranty::query()
             ->where('title', 'like', '%' . $this->search . '%')
             ->paginate(10);
     }
 
-    public function createTag(): void
+    public function createGuarranty(): void
     {
         $this->validate();
 
-        Tag::query()->create([
+        Guarranty::query()->create([
             'title' => $this->title,
         ]);
 
-        session()->flash('success', 'تگ با موفقیت ایجاد شد');
+        session()->flash('success', 'گارانتی با موفقیت ایجاد شد');
         $this->reset('title');
     }
 
     public function setEditMode($id, $title): void
     {
         $this->edit_title = $title;
-        $this->editTag = $id;
+        $this->editGuarranty = $id;
     }
 
-    public function updateTag(): void
+    public function updateGuarranty(): void
     {
         $this->validate([
             'edit_title' => 'required',
         ]);
 
 
-        $tag = Tag::query()->find($this->editTag);
-        $tag->update([
+        $guarranty = Guarranty::query()->find($this->editGuarranty);
+        $guarranty->update([
             'title' => $this->edit_title,
         ]);
 
-        $this->editTag = null;
+        $this->editGuarranty = null;
     }
 
-    #[On('destroy-tag')]
-    public function destroyTag($tag_id): void
+    #[On('destroy-guarranty')]
+    public function destroyGuarranty($guarranty_id): void
     {
-        Tag::destroy($tag_id);
+        Guarranty::destroy($guarranty_id);
     }
 
     #[Computed]
-    public function tags()
+    public function guarranties()
     {
-        return Tag::query()->paginate(10);
+        return Guarranty::query()->paginate(10);
     }
 };
 ?>
@@ -93,14 +93,14 @@ class extends Component {
                 <div class="col-span-12">
                     <div class="flex flex-col gap-y-3 md:h-10 md:flex-row md:items-center">
                         <div class="text-base font-medium group-[.mode--light]:text-white">
-                            تگ ها
+                            گارانتی ها
                         </div>
                         <div class="flex flex-col gap-x-3 gap-y-2 sm:flex-row rtl:md:mr-auto ltr:md:ml-auto">
-                            <a href="{{route('admin.tags.trashed_list')}}" data-tw-merge=""
+                            <a href="{{route('admin.guarranties.trashed_list')}}" data-tw-merge=""
                                class="transition duration-200 border shadow-sm inline-flex items-center justify-center py-2 px-3 rounded-md font-medium cursor-pointer focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus-visible:outline-none dark:focus:ring-slate-700 dark:focus:ring-opacity-50 [&:hover:not(:disabled)]:bg-opacity-90 [&:hover:not(:disabled)]:border-opacity-90 [&:not(button)]:text-center disabled:opacity-70 disabled:cursor-not-allowed bg-primary border-primary text-white dark:border-primary group-[.mode--light]:!border-transparent group-[.mode--light]:!bg-white/[0.12] group-[.mode--light]:!text-slate-200">
                                 <i data-tw-merge="" data-lucide="pen-line"
                                    class="rtl:ml-2 ltr:mr-2 h-4 w-4 stroke-[1.3]"></i>
-                                تگ های حذف شده
+                                گارانتی های حذف شده
                             </a>
                         </div>
                     </div>
@@ -111,15 +111,15 @@ class extends Component {
                                     <div class="relative">
                                         <i data-tw-merge="" data-lucide="search"
                                            class="absolute inset-y-0 rtl:right-0 ltr:left-0 z-10 my-auto rtl:mr-3 ltr:ml-3 h-4 w-4 stroke-[1.3] text-slate-500"></i>
-                                        <input wire:model="search" @keyup.enter="$wire.searchTag" data-tw-merge=""
-                                               type="text" placeholder="جستجوی تگ..."
+                                        <input wire:model="search" @keyup.enter="$wire.searchGuarranty" data-tw-merge=""
+                                               type="text" placeholder="جستجوی گارانتی..."
                                                class="disabled:bg-slate-100 disabled:cursor-not-allowed dark:disabled:bg-darkmode-800/50 dark:disabled:border-transparent [&[readonly]]:bg-slate-100 [&[readonly]]:cursor-not-allowed [&[readonly]]:dark:bg-darkmode-800/50 [&[readonly]]:dark:border-transparent transition duration-200 ease-in-out w-full text-sm border-slate-200 shadow-sm placeholder:text-slate-400/90 focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus:border-primary focus:border-opacity-40 dark:bg-darkmode-800 dark:border-transparent dark:focus:ring-slate-700 dark:focus:ring-opacity-50 dark:placeholder:text-slate-500/80 [&[type='file']]:border rtl:file:ml-4 ltr:file:mr-4 file:py-2 file:px-4 rtl:file:rounded-r-md ltr:file:rounded-l-md file:border-0 rtl:file:border-l-[1px] ltr:file:border-r-[1px] file:border-slate-100/10 file:text-sm file:font-semibold file:bg-slate-100 file:text-slate-500/70 hover:file:bg-200 group-[.form-inline]:flex-1 group-[.input-group]:rounded-none rtl:group-[.input-group]:[&:not(:first-child)]:border-r-transparent ltr:group-[.input-group]:[&:not(:first-child)]:border-l-transparent rtl:group-[.input-group]:first:rounded-r ltr:group-[.input-group]:first:rounded-l rtl:group-[.input-group]:last:rounded-l ltr:group-[.input-group]:last:rounded-r group-[.input-group]:z-10 rounded-[0.5rem] rtl:pr-9 ltr:pl-9 sm:w-64">
                                     </div>
                                 </div>
                             </div>
 
                             @include('admin.layouts.waiting')
-                            <form wire:submit="createTag" class="box box--stacked flex flex-col m-2">
+                            <form wire:submit="createGuarranty" class="box box--stacked flex flex-col m-2">
                                 <div class="p-7 flex items-center gap-x-4">
                                     <div
                                         class="mt-5 block flex-col pt-5 first:mt-0 first:pt-0 sm:flex xl:flex-row xl:items-center">
@@ -127,14 +127,14 @@ class extends Component {
                                             class="mb-2 inline-block sm:mb-0 rtl:sm:ml-5 ltr:sm:mr-5 rtl:sm:text-left ltr:sm:text-right rtl:xl:ml-14 ltr:xl:mr-14 xl:w-60">
                                             <div class="rtl:text-right ltr:text-left">
                                                 <div class="flex items-center">
-                                                    <div class="font-medium">عنوان تگ</div>
+                                                    <div class="font-medium">عنوان گارانتی</div>
                                                     <div
                                                         class="rtl:mr-2.5 ltr:ml-2.5 rounded-md border border-slate-200 bg-slate-100 px-2 py-0.5 text-xs text-slate-500 dark:bg-darkmode-300 dark:text-slate-400">
                                                         ضروری
                                                     </div>
                                                 </div>
                                                 <div class="mt-1.5 text-xs leading-relaxed text-slate-500/80 xl:mt-3">
-                                                    عنوان تگ را وارد کنید
+                                                    عنوان گارانتی را وارد کنید
                                                 </div>
                                             </div>
                                         </div>
@@ -173,7 +173,7 @@ class extends Component {
                                         </td>
                                         <td data-tw-merge=""
                                             class="px-5 border-b dark:border-darkmode-300 border-t border-slate-200/60 bg-slate-50 py-4 font-medium text-slate-500">
-                                            عنوان تگ
+                                            عنوان گارانتی
                                         </td>
                                         <td data-tw-merge=""
                                             class="px-5 border-b dark:border-darkmode-300 border-t border-slate-200/60 bg-slate-50 py-4 font-medium text-slate-500">
@@ -186,7 +186,7 @@ class extends Component {
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @foreach($this->tags as  $index => $tag)
+                                    @foreach($this->guarranties as  $index => $guarranty)
                                         <tr data-tw-merge="" class="[&_td]:last:border-b-0">
                                             <td data-tw-merge=""
                                                 class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
@@ -196,12 +196,12 @@ class extends Component {
                                             <td data-tw-merge=""
                                                 class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
                                                 <a class="whitespace-nowrap font-medium" href="">
-                                                    {{$this->tags->firstItem() + $index}}
+                                                    {{$this->guarranties->firstItem() + $index}}
                                                 </a>
                                             </td>
                                             <td data-tw-merge=""
                                                 class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
-                                                @if($this->editTag== $tag->id)
+                                                @if($this->editGuarranty== $guarranty->id)
                                                     <input wire:model="edit_title" data-tw-merge="" type="text"
                                                            class="disabled:bg-slate-100 disabled:cursor-not-allowed dark:disabled:bg-darkmode-800/50 dark:disabled:border-transparent [&[readonly]]:bg-slate-100 [&[readonly]]:cursor-not-allowed [&[readonly]]:dark:bg-darkmode-800/50 [&[readonly]]:dark:border-transparent transition duration-200 ease-in-out w-full text-sm border-slate-200 shadow-sm rounded-md placeholder:text-slate-400/90 focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus:border-primary focus:border-opacity-40 dark:bg-darkmode-800 dark:border-transparent dark:focus:ring-slate-700 dark:focus:ring-opacity-50 dark:placeholder:text-slate-500/80 [&[type='file']]:border rtl:file:ml-4 ltr:file:mr-4 file:py-2 file:px-4 rtl:file:rounded-r-md ltr:file:rounded-l-md file:border-0 rtl:file:border-l-[1px] ltr:file:border-r-[1px] file:border-slate-100/10 file:text-sm file:font-semibold file:bg-slate-100 file:text-slate-500/70 hover:file:bg-200 group-[.form-inline]:flex-1 group-[.input-group]:rounded-none rtl:group-[.input-group]:[&:not(:first-child)]:border-r-transparent ltr:group-[.input-group]:[&:not(:first-child)]:border-l-transparent rtl:group-[.input-group]:first:rounded-r ltr:group-[.input-group]:first:rounded-l rtl:group-[.input-group]:last:rounded-l ltr:group-[.input-group]:last:rounded-r group-[.input-group]:z-10 first:rounded-b-none last:-mt-px last:rounded-t-none focus:z-10 rtl:first:md:rounded-l-none ltr:first:md:rounded-r-none rtl:first:md:rounded-br-md ltr:first:md:rounded-bl-md rtl:last:md:-mr-px ltr:last:md:-ml-px last:md:mt-0 rtl:last:md:rounded-r-none ltr:last:md:rounded-l-none rtl:last:md:rounded-tl-md ltr:last:md:rounded-tr-md [&:not(:first-child):not(:last-child)]:-mt-px [&:not(:first-child):not(:last-child)]:rounded-none rtl:[&:not(:first-child):not(:last-child)]:md:-mr-px ltr:[&:not(:first-child):not(:last-child)]:md:-ml-px [&:not(:first-child):not(:last-child)]:md:mt-0">
                                                     @error('edit_title')
@@ -209,28 +209,28 @@ class extends Component {
                                                     @enderror
                                                 @else
                                                     <a class="whitespace-nowrap font-medium" href="">
-                                                        {{$tag->title}}
+                                                        {{$guarranty->title}}
                                                     </a>
                                                 @endif
                                             </td>
                                             <td data-tw-merge=""
                                                 class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
                                                 <div class="whitespace-nowrap">
-                                                    {{\Hekmatinasser\Verta\Verta::instance($tag->created_at)->formatJalaliDate()}}
+                                                    {{\Hekmatinasser\Verta\Verta::instance($guarranty->created_at)->formatJalaliDate()}}
                                                 </div>
                                             </td>
                                             <td data-tw-merge=""
                                                 class="flex gap-x-2 px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
-                                                @if($this->editTag==$tag->id)
-                                                    <x-fas-save wire:click="updateTag"
+                                                @if($this->editGuarranty==$guarranty->id)
+                                                    <x-fas-save wire:click="updateGuarranty"
                                                                 class="text-success h-6 w-6 cursor-pointer"/>
                                                 @else
                                                     <x-fas-edit
-                                                        wire:click="setEditMode('{{$tag->id}}' , '{{$tag->title}}')"
+                                                        wire:click="setEditMode('{{$guarranty->id}}' , '{{$guarranty->title}}')"
                                                         class="text-info h-6 w-6 cursor-pointer"/>
                                                 @endif
                                                 <x-fas-trash
-                                                    wire:click="$dispatch('delete-tag',{ tag_id: {{$tag->id}} } )"
+                                                    wire:click="$dispatch('delete-guarranty',{ guarranty_id: {{$guarranty->id}} } )"
                                                     class="text-danger h-6 w-6 cursor-pointer m-4"/>
                                             </td>
                                         </tr>
@@ -240,7 +240,7 @@ class extends Component {
                             </div>
                             <div
                                 class="flex-reverse flex flex-col-reverse flex-wrap items-center justify-center gap-y-2 p-5 sm:flex-row">
-                                {{$this->tags->links('admin.layouts.pagination')}}
+                                {{$this->guarranties->links('admin.layouts.pagination')}}
                             </div>
                         </div>
                     </div>
@@ -252,7 +252,7 @@ class extends Component {
 
 <script>
 
-    Livewire.on('delete-tag', (event) => {
+    Livewire.on('delete-guarranty', (event) => {
 
         Swal.fire({
             title: "آیا از حذف مطمئن هستید؟",
@@ -265,7 +265,7 @@ class extends Component {
         }).then((result) => {
             if (result.isConfirmed) {
                 //console.log(event)
-                Livewire.dispatch('destroy-tag', {tag_id: event.tag_id})
+                Livewire.dispatch('destroy-guarranty', {guarranty_id: event.guarranty_id})
                 Swal.fire({
                     text: "حذف با موفقیت انجام شد",
                     icon: "success"
