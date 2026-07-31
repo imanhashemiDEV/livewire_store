@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\ResetPasswordByMobileController;
+use Cknow\Money\Money;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
