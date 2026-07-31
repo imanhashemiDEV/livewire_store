@@ -81,6 +81,13 @@
                 </a>
             </li>
 
+            <li>
+                <a href="{{route('admin.guarranties.list')}}" class="side-menu__link @if(\Illuminate\Support\Facades\Route::is('admin.guarranties.list')) side-menu__link--active  @endif">
+                    <i data-tw-merge="" data-lucide="shield" class="stroke-[1] w-5 h-5 side-menu__link__icon"></i>
+                    <div class="side-menu__link__title"> گارانتی ها</div>
+                </a>
+            </li>
+
             <!-- END: First Child -->
         </ul>
     </div>
