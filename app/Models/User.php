@@ -55,6 +55,11 @@ class User extends Authenticatable
 
     // ---- Relationships ----
 
+    public function sellers()
+    {
+        return $this->hasMany(Seller::class);
+    }
+
 //    public function vendor(): HasOne
 //    {
 //        return $this->hasOne(Vendor::class);

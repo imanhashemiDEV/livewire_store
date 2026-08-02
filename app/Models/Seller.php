@@ -9,5 +9,14 @@ use Illuminate\Database\Eloquent\Model;
     'address','logo','website','description','status')]
 class Seller extends Model
 {
-    //
+
+
+
+
+    // ---- Relationships ----
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

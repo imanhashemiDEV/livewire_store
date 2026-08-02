@@ -88,6 +88,13 @@
                 </a>
             </li>
 
+            <li>
+                <a href="{{route('admin.sellers.list')}}" class="side-menu__link @if(\Illuminate\Support\Facades\Route::is('admin.sellers.list')) side-menu__link--active  @endif">
+                    <i data-tw-merge="" data-lucide="store" class="stroke-[1] w-5 h-5 side-menu__link__icon"></i>
+                    <div class="side-menu__link__title"> فروشندگان ها</div>
+                </a>
+            </li>
+
             <!-- END: First Child -->
         </ul>
     </div>
