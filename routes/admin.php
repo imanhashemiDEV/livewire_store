@@ -25,3 +25,5 @@ Route::livewire('/trashed_tags', 'admin::tags.trashed_list')->name('admin.tags.t
 
 Route::livewire('/guarranties', 'admin::guarranties.list')->name('admin.guarranties.list');
 Route::livewire('/trashed_guarranties', 'admin::guarranties.trashed_list')->name('admin.guarranties.trashed_list');
+
+Route::livewire('/sellers', 'admin::sellers.list')->name('admin.sellers.list');
