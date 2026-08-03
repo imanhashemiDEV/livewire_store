@@ -27,3 +27,7 @@ Route::livewire('/guarranties', 'admin::guarranties.list')->name('admin.guarrant
 Route::livewire('/trashed_guarranties', 'admin::guarranties.trashed_list')->name('admin.guarranties.trashed_list');
 
 Route::livewire('/sellers', 'admin::sellers.list')->name('admin.sellers.list');
+
+Route::livewire('/products', 'admin::products.list')->name('admin.products.list');
+Route::livewire('/product_create', 'admin::products.create')->name('admin.products.create');
+Route::livewire('/product_edit/{product}', 'admin::products.edit')->name('admin.products.edit');
