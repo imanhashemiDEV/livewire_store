@@ -23,12 +23,9 @@ return new class extends Migration
             $table->integer('viewed')->default(0);
             $table->integer('sold')->default(0);
             $table->integer('max_sell')->nullable();
-            $table->string('image')->nullable();
             $table->string('status')->default(\App\Enums\ProductStatus::Waiting->value);
-            $table->foreignId('seller_id')->constrained('sellers')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('brand_id')->constrained('brands')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('guarranty_id')->constrained('guarranties')->cascadeOnDelete()->cascadeOnUpdate();
             $table->softDeletes();
             $table->timestamps();
         });
