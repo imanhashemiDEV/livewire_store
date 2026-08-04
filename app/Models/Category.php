@@ -40,4 +40,12 @@ class Category extends Model
             }
         });
     }
+
+
+    // -- relations
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 }

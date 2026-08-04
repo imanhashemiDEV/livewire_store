@@ -195,19 +195,19 @@ class extends Component {
                                             <td data-tw-merge=""
                                                 class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
                                                 <a class="whitespace-nowrap font-medium">
-                                                    {{$product->category_id}}
+                                                    {{$product->category->title}}
                                                 </a>
                                             </td>
                                             <td data-tw-merge=""
                                                 class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
                                                 <a class="whitespace-nowrap font-medium">
-                                                    {{$product->price}}
+                                                    {{$product->price}} تومان
                                                 </a>
                                             </td>
                                             <td data-tw-merge=""
                                                 class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
                                                 <a class="whitespace-nowrap font-medium">
-                                                    {{$product->discount}}
+                                                    {{$product->discount}} درصد
                                                 </a>
                                             </td>
                                             <td data-tw-merge=""

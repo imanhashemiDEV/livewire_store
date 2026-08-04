@@ -94,7 +94,7 @@
                                             <div class="mt-3.5 flex flex-col gap-1">
                                                 <a class="flex items-center gap-2.5 rounded-md border border-transparent p-1 hover:border-slate-100 hover:bg-slate-50/80" href="">
                                                     <div class="w-6 h-6 overflow-hidden border-2 rounded-full image-fit zoom-in box border-slate-200/70">
-                                                        <img src="{{url('panel')}}/images/users/user6-50x50.jpg" alt="تیل وایز - قالب داشبورد مدیریتی">
+                                                        <img src="{{url('panel/images/users/profile.jpg')}}" alt="تیل وایز - قالب داشبورد مدیریتی">
                                                     </div>
                                                     <div class="font-medium truncate">
                                                         جنیفر لارنس
@@ -105,7 +105,7 @@
                                                 </a>
                                                 <a class="flex items-center gap-2.5 rounded-md border border-transparent p-1 hover:border-slate-100 hover:bg-slate-50/80" href="">
                                                     <div class="w-6 h-6 overflow-hidden border-2 rounded-full image-fit zoom-in box border-slate-200/70">
-                                                        <img src="{{url('panel')}}/images/users/user2-50x50.jpg" alt="تیل وایز - قالب داشبورد مدیریتی">
+                                                        <img src="{{url('panel/images/users/profile.jpg')}}" alt="تیل وایز - قالب داشبورد مدیریتی">
                                                     </div>
                                                     <div class="font-medium truncate">
                                                         مریل استریپ
@@ -116,7 +116,7 @@
                                                 </a>
                                                 <a class="flex items-center gap-2.5 rounded-md border border-transparent p-1 hover:border-slate-100 hover:bg-slate-50/80" href="">
                                                     <div class="w-6 h-6 overflow-hidden border-2 rounded-full image-fit zoom-in box border-slate-200/70">
-                                                        <img src="{{url('panel')}}/images/users/user8-50x50.jpg" alt="تیل وایز - قالب داشبورد مدیریتی">
+                                                        <img src="{{url('panel/images/users/profile.jpg')}}" alt="تیل وایز - قالب داشبورد مدیریتی">
                                                     </div>
                                                     <div class="font-medium truncate">
                                                         کیت بلانچت
@@ -141,7 +141,7 @@
                                 </a>
 
                             </div>
-                            <div data-tw-merge="" data-tw-placement="bottom-start" class="relative dropdown rtl:mr-5 ltr:ml-5"><button data-tw-toggle="dropdown" aria-expanded="false" class="cursor-pointer image-fit h-[36px] w-[36px] overflow-hidden rounded-full border-[3px] border-white/[0.15]"><img src="{{url('panel')}}/images/users/user1-50x50.jpg" alt="تیل وایز - قالب داشبورد مدیریتی">
+                            <div data-tw-merge="" data-tw-placement="bottom-start" class="relative dropdown rtl:mr-5 ltr:ml-5"><button data-tw-toggle="dropdown" aria-expanded="false" class="cursor-pointer image-fit h-[36px] w-[36px] overflow-hidden rounded-full border-[3px] border-white/[0.15]"><img src="{{url('panel/images/users/profile.jpg')}}" alt="تیل وایز - قالب داشبورد مدیریتی">
                                 </button>
                                 <div data-transition="" data-selector=".show" data-enter="transition-all ease-linear duration-150" data-enter-from="absolute !mt-5 invisible opacity-0 translate-y-1" data-enter-to="!mt-1 visible opacity-100 translate-y-0" data-leave="transition-all ease-linear duration-150" data-leave-from="!mt-1 visible opacity-100 translate-y-0" data-leave-to="absolute !mt-5 invisible opacity-0 translate-y-1" class="dropdown-menu absolute z-[9999] hidden">
                                     <div data-tw-merge="" class="dropdown-content rounded-md border-transparent bg-white p-2 shadow-[0px_3px_10px_#00000017] dark:border-transparent dark:bg-darkmode-600 w-56 mt-1">
@@ -170,7 +170,7 @@
                                     <div class="flex flex-col gap-1.5">
                                         <div class="flex cursor-pointer items-center rounded-lg px-2.5 py-1 hover:bg-slate-100">
                                             <div class="image-fit h-11 w-11 overflow-hidden rounded-full border-[3px] border-slate-200/70">
-                                                <img src="{{url('panel')}}/images/users/user10-50x50.jpg" alt="تیل وایز - قالب داشبورد مدیریتی">
+                                                <img src="{{url('panel/images/users/profile.jpg')}}" alt="تیل وایز - قالب داشبورد مدیریتی">
                                             </div>
                                             <div class="rtl:mr-3.5 ltr:ml-3.5">
                                                 <div class="font-medium">جولیا رابرتز</div>
@@ -189,7 +189,7 @@
                                         </div>
                                         <div class="flex cursor-pointer items-center rounded-lg px-2.5 py-1 hover:bg-slate-100">
                                             <div class="image-fit h-11 w-11 overflow-hidden rounded-full border-[3px] border-slate-200/70">
-                                                <img src="{{url('panel')}}/images/users/user6-50x50.jpg" alt="تیل وایز - قالب داشبورد مدیریتی">
+                                                <img src="{{url('panel/images/users/profile.jpg')}}" alt="تیل وایز - قالب داشبورد مدیریتی">
                                             </div>
                                             <div class="rtl:mr-3.5 ltr:ml-3.5">
                                                 <div class="font-medium">جنیفر لارنس</div>
@@ -208,7 +208,7 @@
                                         </div>
                                         <div class="flex cursor-pointer items-center rounded-lg px-2.5 py-1 hover:bg-slate-100">
                                             <div class="image-fit h-11 w-11 overflow-hidden rounded-full border-[3px] border-slate-200/70">
-                                                <img src="{{url('panel')}}/images/users/user8-50x50.jpg" alt="تیل وایز - قالب داشبورد مدیریتی">
+                                                <img src="{{url('panel/images/users/profile.jpg')}}" alt="تیل وایز - قالب داشبورد مدیریتی">
                                             </div>
                                             <div class="rtl:mr-3.5 ltr:ml-3.5">
                                                 <div class="font-medium">کیت بلانچت</div>
@@ -227,7 +227,7 @@
                                         </div>
                                         <div class="flex cursor-pointer items-center rounded-lg px-2.5 py-1 hover:bg-slate-100">
                                             <div class="image-fit h-11 w-11 overflow-hidden rounded-full border-[3px] border-slate-200/70">
-                                                <img src="{{url('panel')}}/images/users/user7-50x50.jpg" alt="تیل وایز - قالب داشبورد مدیریتی">
+                                                <img src="{{url('panel/images/users/profile.jpg')}}" alt="تیل وایز - قالب داشبورد مدیریتی">
                                             </div>
                                             <div class="rtl:mr-3.5 ltr:ml-3.5">
                                                 <div class="font-medium">جانی دپ</div>
@@ -246,7 +246,7 @@
                                         </div>
                                         <div class="flex cursor-pointer items-center rounded-lg px-2.5 py-1 hover:bg-slate-100">
                                             <div class="image-fit h-11 w-11 overflow-hidden rounded-full border-[3px] border-slate-200/70">
-                                                <img src="{{url('panel')}}/images/users/user1-50x50.jpg" alt="تیل وایز - قالب داشبورد مدیریتی">
+                                                <img src="{{url('panel/images/users/profile.jpg')}}" alt="تیل وایز - قالب داشبورد مدیریتی">
                                             </div>
                                             <div class="rtl:mr-3.5 ltr:ml-3.5">
                                                 <div class="font-medium">تام هنکس</div>
