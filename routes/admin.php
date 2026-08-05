@@ -31,3 +31,4 @@ Route::livewire('/sellers', 'admin::sellers.list')->name('admin.sellers.list');
 Route::livewire('/products', 'admin::products.list')->name('admin.products.list');
 Route::livewire('/product_create', 'admin::products.create')->name('admin.products.create');
 Route::livewire('/product_edit/{product}', 'admin::products.edit')->name('admin.products.edit');
+Route::livewire('/trashed_products', 'admin::products.trashed_list')->name('admin.products.trashed_list');
