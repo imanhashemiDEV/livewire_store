@@ -3,12 +3,14 @@
 use App\Models\Brand;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\File;
 
 new #[Layout('admin::layouts.master', ['breadcrumb' => 'لیست برند ها']), Title('لیست برند ها')]
 class extends Component {
@@ -18,7 +20,7 @@ class extends Component {
     public $search;
     #[Validate('required')]
     public $title, $image;
-    public $edit_title,$edit_image;
+    public $edit_title, $edit_image;
     public $editBrand = null;
 
     public function mount(): void
@@ -41,24 +43,23 @@ class extends Component {
     {
         $this->validate();
 
-        if($this->image){
+        if ($this->image) {
             $name = $this->image->hashName();
-            $this->image->storeAs('images/brands/',$name,'public');
+            $this->image->storeAs('images/brands/', $name, 'public');
         }
 
         Brand::query()->create([
             'title' => $this->title,
-            'image'=>$this->image
+            'image' => $name
         ]);
 
         session()->flash('success', 'برند با موفقیت ایجاد شد');
         $this->reset('title');
     }
 
-    public function setEditMode($id, $title, $image)
+    public function setEditMode($id, $title)
     {
         $this->edit_title = $title;
-        $this->edit_image = $image;
         $this->editBrand = $id;
     }
 
@@ -66,27 +67,28 @@ class extends Component {
     {
         $this->validate([
             'edit_title' => 'required',
-            'edit_image'=>'required'
         ]);
 
-        if($this->edit_image){
+        if ($this->edit_image) {
             $name = $this->edit_image->hashName();
-            $this->edit_image->storeAs('images/brands/',$name,'public');
+            $this->edit_image->storeAs('images/brands/', $name, 'public');
         }
 
         $brand = Brand::query()->find($this->editBrand);
         $brand->update([
             'title' => $this->edit_title,
-            'image'=> $this->edit_image ? $name : $brand->image
+            'image' => $this->edit_image ? $name : $brand->image
         ]);
 
         $this->editBrand = null;
     }
 
-    #[\Livewire\Attributes\On('destroy-brand')]
-    public function destroyBrand($brand_id)
+    #[On('destroy-brand')]
+    public function destroyBrand($brand_id): void
     {
-        Brand::destroy($brand_id);
+       $brand =  Brand::query()->find($brand_id);
+       File::delete('images/brands/'.$brand->image);
+       $brand->delete();
     }
 
     #[Computed]
@@ -283,10 +285,12 @@ class extends Component {
                                                                 class="text-success h-6 w-6 cursor-pointer"/>
                                                 @else
                                                     <x-fas-edit
-                                                        wire:click="setEditMode('{{$brand->id}}' , '{{$brand->title}}', '{{$brand->image}}')"
+                                                        wire:click="setEditMode('{{$brand->id}}' , '{{$brand->title}}')"
                                                         class="text-info h-6 w-6 cursor-pointer"/>
                                                 @endif
-                                                    <x-fas-trash wire:click="$dispatch('delete-brand',{ brand_id: {{$brand->id}} } )" class="text-danger h-6 w-6 cursor-pointer m-4"/>
+                                                <x-fas-trash
+                                                    wire:click="$dispatch('delete-brand',{ brand_id: {{$brand->id}} } )"
+                                                    class="text-danger h-6 w-6 cursor-pointer m-4"/>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -312,7 +316,7 @@ class extends Component {
 
 <script>
 
-    Livewire.on('delete-brand',(event)=>{
+    Livewire.on('delete-brand', (event) => {
 
         Swal.fire({
             title: "آیا از حذف مطمئن هستید؟",
@@ -325,7 +329,7 @@ class extends Component {
         }).then((result) => {
             if (result.isConfirmed) {
                 //console.log(event)
-                Livewire.dispatch('destroy-brand', { brand_id: event.brand_id })
+                Livewire.dispatch('destroy-brand', {brand_id: event.brand_id})
                 Swal.fire({
                     text: "حذف با موفقیت انجام شد",
                     icon: "success"
