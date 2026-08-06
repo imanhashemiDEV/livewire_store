@@ -174,6 +174,10 @@ class extends Component {
                                         </td>
                                         <td data-tw-merge=""
                                             class="px-5 border-b dark:border-darkmode-300 border-t border-slate-200/60 bg-slate-50 py-4 font-medium text-slate-500">
+                                            گالری
+                                        </td>
+                                        <td data-tw-merge=""
+                                            class="px-5 border-b dark:border-darkmode-300 border-t border-slate-200/60 bg-slate-50 py-4 font-medium text-slate-500">
                                             تاریخ ثبت
                                         </td>
                                         <td data-tw-merge=""
@@ -224,6 +228,12 @@ class extends Component {
                                                 class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
                                                 <a class="whitespace-nowrap font-medium">
                                                     {{$product->discount}} درصد
+                                                </a>
+                                            </td>
+                                            <td data-tw-merge=""
+                                                class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
+                                                <a href="{{route('admin.products.gallery', $product->id)}}" class="whitespace-nowrap font-medium">
+                                                    <i data-tw-merge="" data-lucide="scan-eye" class="stroke-[1] w-5 h-5 side-menu__link__icon"></i>
                                                 </a>
                                             </td>
                                             <td data-tw-merge=""
