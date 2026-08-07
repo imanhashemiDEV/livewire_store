@@ -33,7 +33,7 @@ return [
      * The disk on which to store added files and derived images by default. Choose
      * one or more of the disks you've configured in config/filesystems.php.
      */
-    'disk_name' => env('MEDIA_DISK', 'public'),
+    'disk_name' => env('MEDIA_DISK', 'private'),
 
     /*
      * The disk on which to store conversions (thumbnails, etc.) and responsive images
@@ -141,7 +141,7 @@ return [
     /*
      * The class that contains the strategy for determining a media file's path.
      */
-    'path_generator' => DefaultPathGenerator::class,
+    'path_generator' => \App\Helpers\CustomPathGenerator::class,
 
     /*
      * The class that contains the strategy for determining how to remove files.

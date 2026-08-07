@@ -13,7 +13,7 @@ class CustomPathGenerator implements PathGenerator
     {
         if ($media->model_type ==  "App\\Models\\Product") {
 
-            return 'images/products/' . $media->id;
+            return 'images/products/';
         }
     }
 

@@ -18,13 +18,13 @@ class Product extends Model implements HasMedia
 
 
 
-//    public function registerMediaConversions(?Media $media = null): void
-//    {
-//        $this
-//            ->addMediaConversion('thumb200*200')
-//            ->fit(Fit::Contain, 200, 200)
-//            ->nonQueued();
-//    }
+    public function registerMediaConversions(?Media $media = null): void
+    {
+        $this
+            ->addMediaConversion('thumb')
+            ->fit(Fit::Contain, 200, 200)
+            ->nonQueued();
+    }
 
     public function registerMediaCollections(): void
     {
