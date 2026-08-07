@@ -21,6 +21,13 @@ class extends Component {
     public function saveImage()
     {
         $this->product->addMedia($this->image)->toMediaCollection('products');
+        $this->reset('image');
+    }
+
+    public function deleteImage($id)
+    {
+        $media = \Spatie\MediaLibrary\MediaCollections\Models\Media::query()->find($id);
+        $media->delete();
     }
 
 };
@@ -64,9 +71,11 @@ class extends Component {
                                                     @foreach($this->product->getMedia('products') as $media)
                                                         <div class="relative h-24 col-span-3 cursor-pointer image-fit zoom-in md:col-span-2">
                                                             <img class="rounded-lg" src="{{$media->getUrl('thumb')}}" alt="تیل وایز - قالب داشبورد مدیریتی">
-                                                            <span data-placement="top" class="tooltip cursor-pointer absolute top-0 rtl:left-0 ltr:right-0 w-5 h-5 -mt-2 rtl:-ml-2 ltr:-mr-2 bg-white rounded-full"><span class="flex items-center justify-center w-full h-full text-white border rounded-full border-danger/50 bg-danger/80">
-                                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="x" class="lucide lucide-x h-4 w-4 stroke-[1.3]"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
-                                                                            </span></span>
+                                                            <span wire:click="deleteImage({{$media->id}})" data-placement="top" class="tooltip cursor-pointer absolute top-0 rtl:left-0 ltr:right-0 w-5 h-5 -mt-2 rtl:-ml-2 ltr:-mr-2 bg-white rounded-full">
+                                                                <span class="flex items-center justify-center w-full h-full text-white border rounded-full border-danger/50 bg-danger/80">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="x" class="lucide lucide-x h-4 w-4 stroke-[1.3]"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+                                                                 </span>
+                                                            </span>
                                                         </div>
                                                     @endforeach
                                                 </div>
