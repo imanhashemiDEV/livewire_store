@@ -33,7 +33,7 @@ class extends Component {
 
     public function searchAttribute(): void
     {
-        $this->attributes = Attribute::query()
+        $this->attributes_data = Attribute::query()
             ->where('title', 'like', '%' . $this->search . '%')
             ->paginate(10);
     }
@@ -82,7 +82,7 @@ class extends Component {
     }
 
     #[Computed]
-    public function attributes()
+    public function attributes_data()
     {
         return Attribute::query()->paginate(10);
     }
@@ -144,6 +144,37 @@ class extends Component {
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="flex-col block first:mt-0 first:pt-0 sm:flex xl:flex-row xl:items-center">
+                                        <div class="inline-block mb-2 sm:mb-0 rtl:sm:ml-1 ltr:sm:mr-5 rtl:sm:text-left ltr:sm:text-right rtl:xl:ml-7 ltr:xl:mr-7 xl:w-40">
+                                            <div class="rtl:text-right ltr:text-left">
+                                                <div class="flex items-center">
+                                                    <div class="font-medium">نوع</div>
+                                                    <div class="rtl:mr-2.5 ltr:ml-2.5 rounded-md border border-slate-200 bg-slate-100 px-2 py-0.5 text-xs text-slate-500 dark:bg-darkmode-300 dark:text-slate-400">
+                                                        ضروری
+                                                    </div>
+                                                </div>
+                                                <div class="mt-1.5 text-xs leading-relaxed text-slate-500/80 xl:mt-3">
+                                                    نوع ویژگی را وارد کنید
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="flex-1 w-full mt-3 xl:mt-0 xl:w-60">
+                                            <select id="type" wire:model="type" class="disabled:bg-slate-100 disabled:cursor-not-allowed disabled:dark:bg-darkmode-800/50 [&amp;[readonly]]:bg-slate-100 [&amp;[readonly]]:cursor-not-allowed [&amp;[readonly]]:dark:bg-darkmode-800/50 transition duration-200 ease-in-out w-full text-sm border-slate-200 shadow-sm rounded-md py-2 px-3 rtl:pl-8 ltr:pr-8 focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus:border-primary focus:border-opacity-40 dark:bg-darkmode-800 dark:border-transparent dark:focus:ring-slate-700 dark:focus:ring-opacity-50 group-[.form-inline]:flex-1">
+                                                <option>
+                                                    انتخاب کنید
+                                                </option>
+                                                <option value="text">
+                                                    متنی
+                                                </option>
+                                                <option value="color">
+                                                    رنگ
+                                                </option>
+                                            </select>
+                                            @error('type')
+                                            <span class="block text-danger my-2">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
                                     <button type="submit" data-tw-merge=""
                                             class="transition duration-200 bg-rose-500 border shadow-sm inline-flex items-center justify-center py-2 rounded-md font-medium cursor-pointer focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus-visible:outline-none dark:focus:ring-slate-700 dark:focus:ring-opacity-50 [&:hover:not(:disabled)]:bg-opacity-90 [&:hover:not(:disabled)]:border-opacity-90 [&:not(button)]:text-center disabled:opacity-70 disabled:cursor-not-allowed text-primary dark:border-primary [&:hover:not(:disabled)]:bg-primary/10 w-full border-primary/50 px-10 md:w-auto">
                                         <i data-tw-merge="" data-lucide="pocket"
@@ -173,6 +204,10 @@ class extends Component {
                                         </td>
                                         <td data-tw-merge=""
                                             class="px-5 border-b dark:border-darkmode-300 border-t border-slate-200/60 bg-slate-50 py-4 font-medium text-slate-500">
+                                             نوع ویژگی
+                                        </td>
+                                        <td data-tw-merge=""
+                                            class="px-5 border-b dark:border-darkmode-300 border-t border-slate-200/60 bg-slate-50 py-4 font-medium text-slate-500">
                                             تاریخ ثبت
                                         </td>
                                         <td data-tw-merge=""
@@ -182,7 +217,7 @@ class extends Component {
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @foreach($this->attributes as  $index => $attribute)
+                                    @foreach($this->attributes_data as  $index => $attribute)
                                         <tr data-tw-merge="" class="[&_td]:last:border-b-0">
                                             <td data-tw-merge=""
                                                 class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
@@ -192,7 +227,7 @@ class extends Component {
                                             <td data-tw-merge=""
                                                 class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
                                                 <a class="whitespace-nowrap font-medium" href="">
-                                                    {{$this->attributes->firstItem() + $index}}
+                                                    {{$this->attributes_data->firstItem() + $index}}
                                                 </a>
                                             </td>
                                             <td data-tw-merge=""
@@ -209,6 +244,31 @@ class extends Component {
                                                     </a>
                                                 @endif
                                             </td>
+                                            <td data-tw-merge=""
+                                                class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
+                                                @if($this->editAttribute== $attribute->id)
+                                                    <select wire:model="edit_type" class="disabled:bg-slate-100 disabled:cursor-not-allowed disabled:dark:bg-darkmode-800/50 [&amp;[readonly]]:bg-slate-100 [&amp;[readonly]]:cursor-not-allowed [&amp;[readonly]]:dark:bg-darkmode-800/50 transition duration-200 ease-in-out w-full text-sm border-slate-200 shadow-sm rounded-md py-2 px-3 rtl:pl-8 ltr:pr-8 focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus:border-primary focus:border-opacity-40 dark:bg-darkmode-800 dark:border-transparent dark:focus:ring-slate-700 dark:focus:ring-opacity-50 group-[.form-inline]:flex-1">
+                                                        <option value="text">
+                                                            متنی
+                                                        </option>
+                                                        <option value="color">
+                                                            رنگ
+                                                        </option>
+                                                    </select>
+                                                    @error('edit_type')
+                                                    <span class="block text-danger my-2">{{ $message }}</span>
+                                                    @enderror
+                                                @else
+                                                    <a class="whitespace-nowrap font-medium">
+                                                        @if($attribute->type == 'text')
+                                                            متنی
+                                                        @elseif($attribute->type == 'color')
+                                                            رنگ
+                                                        @endif
+                                                    </a>
+                                                @endif
+                                            </td>
+
                                             <td data-tw-merge=""
                                                 class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
                                                 <div class="whitespace-nowrap">
@@ -236,7 +296,7 @@ class extends Component {
                             </div>
                             <div
                                 class="flex-reverse flex flex-col-reverse flex-wrap items-center justify-center gap-y-2 p-5 sm:flex-row">
-                                {{$this->attributes->links('admin.layouts.pagination')}}
+                                {{$this->attributes_data->links('admin.layouts.pagination')}}
                             </div>
                         </div>
                     </div>
