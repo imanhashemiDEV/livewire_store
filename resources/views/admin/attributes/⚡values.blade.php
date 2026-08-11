@@ -19,11 +19,12 @@ class extends Component {
 
     public $search;
     #[Validate('required')]
-    public $vlaue;
+    public $value;
     public $edit_value;
     public $editAttributeValue = null;
 
     public Attribute $attribute;
+
     public function mount(): void
     {
         if (session()->has('success')) {
@@ -36,6 +37,7 @@ class extends Component {
     public function searchAttributeValue(): void
     {
         $this->attribute_values = AttributeValue::query()
+            ->where('attribute_id',$this->attribute->id)
             ->where('value', 'like', '%' . $this->search . '%')
             ->paginate(10);
     }
@@ -55,7 +57,7 @@ class extends Component {
 
     public function setEditMode($id, $value): void
     {
-        $this->edit_title = $value;
+        $this->edit_value = $value;
         $this->editAttributeValue = $id;
     }
 
@@ -67,7 +69,7 @@ class extends Component {
 
 
         $attribute_value = AttributeValue::query()->find($this->editAttributeValue);
-        $attribute->update([
+        $attribute_value->update([
             'value' => $this->edit_value,
         ]);
 
@@ -81,9 +83,17 @@ class extends Component {
     }
 
     #[Computed]
+    public function colors()
+    {
+        return \App\Models\Color::query()->get();
+    }
+
+    #[Computed]
     public function attribute_values()
     {
-        return AttributeValue::query()->paginate(20);
+        return AttributeValue::query()
+            ->where('attribute_id',$this->attribute->id)
+            ->paginate(20);
     }
 };
 ?>
@@ -116,33 +126,66 @@ class extends Component {
                             @include('admin.layouts.waiting')
                             <form wire:submit="createAttributeValue" class="box box--stacked flex flex-col m-2">
                                 <div class="p-7 flex items-center gap-x-4">
-                                    <div
-                                        class="mt-5 block flex-col pt-5 first:mt-0 first:pt-0 sm:flex xl:flex-row xl:items-center">
+                                    @if($this->attribute->type == \App\Enums\AttributeType::Text->value)
                                         <div
-                                            class="mb-2 inline-block sm:mb-0 rtl:sm:ml-5 ltr:sm:mr-5 rtl:sm:text-left ltr:sm:text-right rtl:xl:ml-14 ltr:xl:mr-14 xl:w-60">
-                                            <div class="rtl:text-right ltr:text-left">
-                                                <div class="flex items-center">
-                                                    <div class="font-medium">عنوان مقدار ویژگی</div>
-                                                    <div
-                                                        class="rtl:mr-2.5 ltr:ml-2.5 rounded-md border border-slate-200 bg-slate-100 px-2 py-0.5 text-xs text-slate-500 dark:bg-darkmode-300 dark:text-slate-400">
-                                                        ضروری
+                                            class="mt-5 block flex-col pt-5 first:mt-0 first:pt-0 sm:flex xl:flex-row xl:items-center">
+                                            <div
+                                                class="mb-2 inline-block sm:mb-0 rtl:sm:ml-5 ltr:sm:mr-5 rtl:sm:text-left ltr:sm:text-right rtl:xl:ml-14 ltr:xl:mr-14 xl:w-60">
+                                                <div class="rtl:text-right ltr:text-left">
+                                                    <div class="flex items-center">
+                                                        <div class="font-medium">عنوان مقدار ویژگی</div>
+                                                        <div
+                                                            class="rtl:mr-2.5 ltr:ml-2.5 rounded-md border border-slate-200 bg-slate-100 px-2 py-0.5 text-xs text-slate-500 dark:bg-darkmode-300 dark:text-slate-400">
+                                                            ضروری
+                                                        </div>
+                                                    </div>
+                                                    <div class="mt-1.5 text-xs leading-relaxed text-slate-500/80 xl:mt-3">
+                                                        عنوان مقدار ویژگی را وارد کنید
                                                     </div>
                                                 </div>
-                                                <div class="mt-1.5 text-xs leading-relaxed text-slate-500/80 xl:mt-3">
-                                                    عنوان مقدار ویژگی را وارد کنید
+                                            </div>
+                                            <div class="mt-3 w-full flex gap-2 xl:mt-0">
+                                                <div class="flex flex-col flex-1 items-center">
+                                                    <input wire:model="value" data-tw-merge="" type="text"
+                                                           class="disabled:bg-slate-100 disabled:cursor-not-allowed dark:disabled:bg-darkmode-800/50 dark:disabled:border-transparent [&[readonly]]:bg-slate-100 [&[readonly]]:cursor-not-allowed [&[readonly]]:dark:bg-darkmode-800/50 [&[readonly]]:dark:border-transparent transition duration-200 ease-in-out w-full text-sm border-slate-200 shadow-sm rounded-md placeholder:text-slate-400/90 focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus:border-primary focus:border-opacity-40 dark:bg-darkmode-800 dark:border-transparent dark:focus:ring-slate-700 dark:focus:ring-opacity-50 dark:placeholder:text-slate-500/80 [&[type='file']]:border rtl:file:ml-4 ltr:file:mr-4 file:py-2 file:px-4 rtl:file:rounded-r-md ltr:file:rounded-l-md file:border-0 rtl:file:border-l-[1px] ltr:file:border-r-[1px] file:border-slate-100/10 file:text-sm file:font-semibold file:bg-slate-100 file:text-slate-500/70 hover:file:bg-200 group-[.form-inline]:flex-1 group-[.input-group]:rounded-none rtl:group-[.input-group]:[&:not(:first-child)]:border-r-transparent ltr:group-[.input-group]:[&:not(:first-child)]:border-l-transparent rtl:group-[.input-group]:first:rounded-r ltr:group-[.input-group]:first:rounded-l rtl:group-[.input-group]:last:rounded-l ltr:group-[.input-group]:last:rounded-r group-[.input-group]:z-10 first:rounded-b-none last:-mt-px last:rounded-t-none focus:z-10 rtl:first:md:rounded-l-none ltr:first:md:rounded-r-none rtl:first:md:rounded-br-md ltr:first:md:rounded-bl-md rtl:last:md:-mr-px ltr:last:md:-ml-px last:md:mt-0 rtl:last:md:rounded-r-none ltr:last:md:rounded-l-none rtl:last:md:rounded-tl-md ltr:last:md:rounded-tr-md [&:not(:first-child):not(:last-child)]:-mt-px [&:not(:first-child):not(:last-child)]:rounded-none rtl:[&:not(:first-child):not(:last-child)]:md:-mr-px ltr:[&:not(:first-child):not(:last-child)]:md:-ml-px [&:not(:first-child):not(:last-child)]:md:mt-0">
+                                                    @error('value')
+                                                    <span class="block text-danger my-2">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="mt-3 w-full flex gap-2 xl:mt-0">
-                                            <div class="flex flex-col flex-1 items-center">
-                                                <input wire:model="value" data-tw-merge="" type="text"
-                                                       class="disabled:bg-slate-100 disabled:cursor-not-allowed dark:disabled:bg-darkmode-800/50 dark:disabled:border-transparent [&[readonly]]:bg-slate-100 [&[readonly]]:cursor-not-allowed [&[readonly]]:dark:bg-darkmode-800/50 [&[readonly]]:dark:border-transparent transition duration-200 ease-in-out w-full text-sm border-slate-200 shadow-sm rounded-md placeholder:text-slate-400/90 focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus:border-primary focus:border-opacity-40 dark:bg-darkmode-800 dark:border-transparent dark:focus:ring-slate-700 dark:focus:ring-opacity-50 dark:placeholder:text-slate-500/80 [&[type='file']]:border rtl:file:ml-4 ltr:file:mr-4 file:py-2 file:px-4 rtl:file:rounded-r-md ltr:file:rounded-l-md file:border-0 rtl:file:border-l-[1px] ltr:file:border-r-[1px] file:border-slate-100/10 file:text-sm file:font-semibold file:bg-slate-100 file:text-slate-500/70 hover:file:bg-200 group-[.form-inline]:flex-1 group-[.input-group]:rounded-none rtl:group-[.input-group]:[&:not(:first-child)]:border-r-transparent ltr:group-[.input-group]:[&:not(:first-child)]:border-l-transparent rtl:group-[.input-group]:first:rounded-r ltr:group-[.input-group]:first:rounded-l rtl:group-[.input-group]:last:rounded-l ltr:group-[.input-group]:last:rounded-r group-[.input-group]:z-10 first:rounded-b-none last:-mt-px last:rounded-t-none focus:z-10 rtl:first:md:rounded-l-none ltr:first:md:rounded-r-none rtl:first:md:rounded-br-md ltr:first:md:rounded-bl-md rtl:last:md:-mr-px ltr:last:md:-ml-px last:md:mt-0 rtl:last:md:rounded-r-none ltr:last:md:rounded-l-none rtl:last:md:rounded-tl-md ltr:last:md:rounded-tr-md [&:not(:first-child):not(:last-child)]:-mt-px [&:not(:first-child):not(:last-child)]:rounded-none rtl:[&:not(:first-child):not(:last-child)]:md:-mr-px ltr:[&:not(:first-child):not(:last-child)]:md:-ml-px [&:not(:first-child):not(:last-child)]:md:mt-0">
+                                    @elseif($this->attribute->type == \App\Enums\AttributeType::Color->value)
+                                        <div class="flex-col block first:mt-0 first:pt-0 sm:flex xl:flex-row xl:items-center">
+                                            <div class="inline-block mb-2 sm:mb-0 rtl:sm:ml-1 ltr:sm:mr-5 rtl:sm:text-left ltr:sm:text-right rtl:xl:ml-7 ltr:xl:mr-7 xl:w-40">
+                                                <div class="rtl:text-right ltr:text-left">
+                                                    <div class="flex items-center">
+                                                        <div class="font-medium">نوع</div>
+                                                        <div class="rtl:mr-2.5 ltr:ml-2.5 rounded-md border border-slate-200 bg-slate-100 px-2 py-0.5 text-xs text-slate-500 dark:bg-darkmode-300 dark:text-slate-400">
+                                                            ضروری
+                                                        </div>
+                                                    </div>
+                                                    <div class="mt-1.5 text-xs leading-relaxed text-slate-500/80 xl:mt-3">
+                                                        نوع ویژگی را وارد کنید
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="flex-1 w-full mt-3 xl:mt-0 xl:w-60">
+                                                <select id="type" wire:model="value" class="disabled:bg-slate-100 disabled:cursor-not-allowed disabled:dark:bg-darkmode-800/50 [&amp;[readonly]]:bg-slate-100 [&amp;[readonly]]:cursor-not-allowed [&amp;[readonly]]:dark:bg-darkmode-800/50 transition duration-200 ease-in-out w-full text-sm border-slate-200 shadow-sm rounded-md py-2 px-3 rtl:pl-8 ltr:pr-8 focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus:border-primary focus:border-opacity-40 dark:bg-darkmode-800 dark:border-transparent dark:focus:ring-slate-700 dark:focus:ring-opacity-50 group-[.form-inline]:flex-1">
+                                                    <option>
+                                                        انتخاب کنید
+                                                    </option>
+                                                    @foreach($this->colors as $color)
+                                                        <option value="{{$color->code}}">
+                                                            {{$color->title}}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
                                                 @error('value')
                                                 <span class="block text-danger my-2">{{ $message }}</span>
                                                 @enderror
                                             </div>
                                         </div>
-                                    </div>
+                                    @endif
                                     <button type="submit" data-tw-merge=""
                                             class="transition duration-200 bg-rose-500 border shadow-sm inline-flex items-center justify-center py-2 rounded-md font-medium cursor-pointer focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus-visible:outline-none dark:focus:ring-slate-700 dark:focus:ring-opacity-50 [&:hover:not(:disabled)]:bg-opacity-90 [&:hover:not(:disabled)]:border-opacity-90 [&:not(button)]:text-center disabled:opacity-70 disabled:cursor-not-allowed text-primary dark:border-primary [&:hover:not(:disabled)]:bg-primary/10 w-full border-primary/50 px-10 md:w-auto">
                                         <i data-tw-merge="" data-lucide="pocket"
@@ -204,7 +247,11 @@ class extends Component {
                                                     @enderror
                                                 @else
                                                     <a class="whitespace-nowrap font-medium" href="">
-                                                        {{$attribute_value->value}}
+                                                       @if($this->attribute->type == \App\Enums\AttributeType::Text->value)
+                                                            {{$attribute_value->value}}
+                                                        @elseif($this->attribute->type == \App\Enums\AttributeType::Color->value)
+                                                            {{ \App\Models\Color::query()->where('code',$attribute_value->value)->first()?->title }}
+                                                       @endif
                                                     </a>
                                                 @endif
                                             </td>
