@@ -97,7 +97,7 @@
 
             <li>
                 <a href="{{route('admin.attributes.list')}}" class="side-menu__link @if(\Illuminate\Support\Facades\Route::is('admin.attributes.list')) side-menu__link--active  @endif">
-                    <i data-tw-merge="" data-lucide="store" class="stroke-[1] w-5 h-5 side-menu__link__icon"></i>
+                    <i data-tw-merge="" data-lucide="table-properties" class="stroke-[1] w-5 h-5 side-menu__link__icon"></i>
                     <div class="side-menu__link__title"> ویژگی ها </div>
                 </a>
             </li>

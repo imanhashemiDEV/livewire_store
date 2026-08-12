@@ -46,10 +46,20 @@ class extends Component {
     {
         $this->validate();
 
-        AttributeValue::query()->create([
-            'value' => $this->value,
-            'attribute_id' => $this->attribute->id,
-        ]);
+        if ($this->attribute->type == \App\Enums\AttributeType::Text->value){
+            AttributeValue::query()->create([
+                'value' => $this->value,
+                'attribute_id' => $this->attribute->id,
+                'text' => $this->value,
+            ]);
+        }elseif($this->attribute->type == \App\Enums\AttributeType::Color->value){
+            $color = \App\Models\Color::query()->where('code',$this->value)->first();
+            AttributeValue::query()->create([
+                'value' => $this->value,
+                'attribute_id' => $this->attribute->id,
+                'text' => $color->title,
+            ]);
+        }
 
         session()->flash('success', 'مقدار ویژگی با موفقیت ایجاد شد');
         $this->reset('value');
@@ -247,11 +257,7 @@ class extends Component {
                                                     @enderror
                                                 @else
                                                     <a class="whitespace-nowrap font-medium" href="">
-                                                       @if($this->attribute->type == \App\Enums\AttributeType::Text->value)
-                                                            {{$attribute_value->value}}
-                                                        @elseif($this->attribute->type == \App\Enums\AttributeType::Color->value)
-                                                            {{ \App\Models\Color::query()->where('code',$attribute_value->value)->first()?->title }}
-                                                       @endif
+                                                        {{$attribute_value->text}}
                                                     </a>
                                                 @endif
                                             </td>

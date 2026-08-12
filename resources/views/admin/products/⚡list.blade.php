@@ -181,6 +181,10 @@ class extends Component {
                                             تاریخ ثبت
                                         </td>
                                         <td data-tw-merge=""
+                                            class="px-5 border-b dark:border-darkmode-300 border-t border-slate-200/60 bg-slate-50 py-4 font-medium text-slate-500">
+                                            ویژگی های محصول
+                                        </td>
+                                        <td data-tw-merge=""
                                             class="px-5 border-b dark:border-darkmode-300 w-20 border-t border-slate-200/60 bg-slate-50 py-4 text-center font-medium text-slate-500">
                                             عملیات
                                         </td>
@@ -240,6 +244,12 @@ class extends Component {
                                                 class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
                                                 <div class="whitespace-nowrap">
                                                     {{\Hekmatinasser\Verta\Facades\Verta::instance($product->created_at)->formatJalaliDate()}}
+                                                </div>
+                                            </td>
+                                            <td data-tw-merge=""
+                                                class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
+                                                <div class="whitespace-nowrap">
+                                                    <a href="{{route('admin.products.attributes', $product->id)}}" class="transition duration-200 border shadow-sm items-center justify-center py-2 px-3 rounded-md font-medium cursor-pointer focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus-visible:outline-none dark:focus:ring-slate-700 dark:focus:ring-opacity-50 [&amp;:hover:not(:disabled)]:bg-opacity-90 [&amp;:hover:not(:disabled)]:border-opacity-90 [&amp;:not(button)]:text-center disabled:opacity-70 disabled:cursor-not-allowed border-success text-success dark:border-success [&amp;:hover:not(:disabled)]:bg-success/10 inline-block w-24">ویژگی های محصول</a>
                                                 </div>
                                             </td>
                                             <td data-tw-merge=""
