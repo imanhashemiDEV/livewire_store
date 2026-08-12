@@ -24,7 +24,8 @@ class extends Component {
     public $search;
     #[Validate('required')]
     public $attribute_id,$attribute_value_id;
-    public $edit_attribute_id,$edit_attribute_value_id;
+
+    public $attributes_data = [];
     public $values = [];
     public function mount(): void
     {
@@ -33,8 +34,15 @@ class extends Component {
                 ->success()
                 ->show();
         }
+        $this->attributes_data = Attribute::query()->get();
     }
 
+    public function updated($property)
+    {
+        if($property == 'attribute_id'){
+             $this->values = AttributeValue::query()->where('attribute_id', $this->attribute_id)->get();
+        }
+    }
 
     public function createProductAttribute(): void
     {
@@ -43,7 +51,7 @@ class extends Component {
         ProductAttribute::query()->create([
             'attribute_id' => $this->attribute_id,
             'attribute_value_id' => $this->attribute_value_id,
-            'product_id' => $this->product_id,
+            'product_id' => $this->product->id,
         ]);
 
         session()->flash('success', 'ویژگی محصول با موفقیت ایجاد شد');
@@ -54,29 +62,6 @@ class extends Component {
     public function destroyProductAttribute($product_attribute_id): void
     {
         ProductAttribute::destroy($product_attribute_id);
-    }
-
-    #[Computed]
-    public function colors()
-    {
-        return \App\Models\Color::query()->get();
-    }
-
-    #[Computed]
-    public function attributes_data()
-    {
-      return Attribute::query()->get();
-    }
-
-
-    public function attribute_values()
-    {
-        dd('fff');
-        if($this->attribute_id){
-            return AttributeValue::query()->where('attribute_id',$this->attribute_id)->get();
-        }
-
-        return collect();
     }
 
     #[Computed]
@@ -132,7 +117,7 @@ class extends Component {
                                             </div>
                                         </div>
                                         <div class="flex-1 w-full mt-3 xl:mt-0 xl:w-60">
-                                            <select id="type" wire:model.change.live="attribute_id" wire:model=""  class="disabled:bg-slate-100 disabled:cursor-not-allowed disabled:dark:bg-darkmode-800/50 [&amp;[readonly]]:bg-slate-100 [&amp;[readonly]]:cursor-not-allowed [&amp;[readonly]]:dark:bg-darkmode-800/50 transition duration-200 ease-in-out w-full text-sm border-slate-200 shadow-sm rounded-md py-2 px-3 rtl:pl-8 ltr:pr-8 focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus:border-primary focus:border-opacity-40 dark:bg-darkmode-800 dark:border-transparent dark:focus:ring-slate-700 dark:focus:ring-opacity-50 group-[.form-inline]:flex-1">
+                                            <select id="type" wire:model.live="attribute_id"  class="disabled:bg-slate-100 disabled:cursor-not-allowed disabled:dark:bg-darkmode-800/50 [&amp;[readonly]]:bg-slate-100 [&amp;[readonly]]:cursor-not-allowed [&amp;[readonly]]:dark:bg-darkmode-800/50 transition duration-200 ease-in-out w-full text-sm border-slate-200 shadow-sm rounded-md py-2 px-3 rtl:pl-8 ltr:pr-8 focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus:border-primary focus:border-opacity-40 dark:bg-darkmode-800 dark:border-transparent dark:focus:ring-slate-700 dark:focus:ring-opacity-50 group-[.form-inline]:flex-1">
                                                 <option>
                                                     انتخاب کنید
                                                 </option>
@@ -147,9 +132,7 @@ class extends Component {
                                             @enderror
                                         </div>
                                     </div>
-
-                                        <div class="flex-col block first:mt-0 first:pt-0 sm:flex xl:flex-row xl:items-center">
-
+                                    <div class="flex-col block first:mt-0 first:pt-0 sm:flex xl:flex-row xl:items-center">
                                         <div class="inline-block mb-2 sm:mb-0 rtl:sm:ml-1 ltr:sm:mr-5 rtl:sm:text-left ltr:sm:text-right rtl:xl:ml-7 ltr:xl:mr-7 xl:w-40">
                                             <div class="rtl:text-right ltr:text-left">
                                                 <div class="flex items-center">
@@ -164,17 +147,17 @@ class extends Component {
                                             </div>
                                         </div>
                                         <div class="flex-1 w-full mt-3 xl:mt-0 xl:w-60">
-                                            <select id="type" wire:model="attibute_value_id" class="disabled:bg-slate-100 disabled:cursor-not-allowed disabled:dark:bg-darkmode-800/50 [&amp;[readonly]]:bg-slate-100 [&amp;[readonly]]:cursor-not-allowed [&amp;[readonly]]:dark:bg-darkmode-800/50 transition duration-200 ease-in-out w-full text-sm border-slate-200 shadow-sm rounded-md py-2 px-3 rtl:pl-8 ltr:pr-8 focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus:border-primary focus:border-opacity-40 dark:bg-darkmode-800 dark:border-transparent dark:focus:ring-slate-700 dark:focus:ring-opacity-50 group-[.form-inline]:flex-1">
+                                            <select id="type" wire:model="attribute_value_id" class="disabled:bg-slate-100 disabled:cursor-not-allowed disabled:dark:bg-darkmode-800/50 [&amp;[readonly]]:bg-slate-100 [&amp;[readonly]]:cursor-not-allowed [&amp;[readonly]]:dark:bg-darkmode-800/50 transition duration-200 ease-in-out w-full text-sm border-slate-200 shadow-sm rounded-md py-2 px-3 rtl:pl-8 ltr:pr-8 focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus:border-primary focus:border-opacity-40 dark:bg-darkmode-800 dark:border-transparent dark:focus:ring-slate-700 dark:focus:ring-opacity-50 group-[.form-inline]:flex-1">
                                                 <option>
                                                     انتخاب کنید
                                                 </option>
                                                 @foreach($this->values as $value)
                                                     <option value="{{$value->id}}">
-                                                        {{$value->value}}
+                                                        {{$value->text}}
                                                     </option>
                                                 @endforeach
                                             </select>
-                                            @error('attibute_value_id')
+                                            @error('attribute_value_id')
                                             <span class="block text-danger my-2">{{ $message }}</span>
                                             @enderror
                                         </div>
@@ -239,9 +222,17 @@ class extends Component {
 
                                                     <a class="whitespace-nowrap font-medium" href="">
 
-                                                            {{$product_attribute->id}}
+                                                            {{$product_attribute->attribute->title}}
 
                                                     </a>
+
+                                            </td>
+                                            <td data-tw-merge=""
+                                                class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
+
+                                                <a class="whitespace-nowrap font-medium" href="">
+                                                    {{$product_attribute->attributeValue->text}}
+                                                </a>
 
                                             </td>
                                             <td data-tw-merge=""
@@ -253,7 +244,7 @@ class extends Component {
                                             <td data-tw-merge=""
                                                 class="flex gap-x-2 px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
                                                 <x-fas-trash
-                                                    wire:click="$dispatch('delete-product-attibute',{ product_attibute_id: {{$product_attribute->id}} } )"
+                                                    wire:click="$dispatch('delete-product-attribute',{ product_attribute_id: {{$product_attribute->id}} } )"
                                                     class="text-danger h-6 w-6 cursor-pointer m-4"/>
                                             </td>
                                         </tr>
@@ -275,7 +266,7 @@ class extends Component {
 
 <script>
 
-    Livewire.on('delete-product-attibute', (event) => {
+    Livewire.on('delete-product-attribute', (event) => {
 
         Swal.fire({
             title: "آیا از حذف مطمئن هستید؟",
@@ -287,7 +278,7 @@ class extends Component {
             cancelButtonText: "خیر",
         }).then((result) => {
             if (result.isConfirmed) {
-                Livewire.dispatch('destroy-product-attibute', {product_attibute_id: event.product_attibute_id})
+                Livewire.dispatch('destroy-product-attribute', { product_attribute_id : event.product_attribute_id})
                 Swal.fire({
                     text: "حذف با موفقیت انجام شد",
                     icon: "success"
