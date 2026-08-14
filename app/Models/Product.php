@@ -11,7 +11,7 @@ use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 #[Fillable('title','e_title','slug','description','price','discount'
-,'count','viewed','sold','max_sell','status','category_id','brand_id')]
+,'discount_price','viewed','sold','status','category_id','brand_id')]
 class Product extends Model implements HasMedia
 {
     use SoftDeletes,InteractsWithMedia;

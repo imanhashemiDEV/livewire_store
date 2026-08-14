@@ -11,21 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('products', function (Blueprint $table) {
+        Schema::create('product_variants', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('e_title')->nullable();
-            $table->string('slug');
-            $table->text('description')->nullable();
             $table->integer('price');
             $table->integer('discount')->default(0);
             $table->integer('discount_price')->default(0);
-            $table->integer('viewed')->default(0);
-            $table->integer('sold')->default(0);
+            $table->integer('count')->default(0);
+            $table->integer('max_sell')->nullable();
             $table->string('status')->default(\App\Enums\ProductStatus::Waiting->value);
-            $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('brand_id')->constrained('brands')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->softDeletes();
+            $table->foreignId('color_id')->constrained('colors')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('gaurranty_id')->constrained('guarranties')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('seller_id')->constrained('sellers')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });
     }
@@ -35,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('products');
+        Schema::dropIfExists('product_variants');
     }
 };
