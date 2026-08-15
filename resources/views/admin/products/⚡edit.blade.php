@@ -23,7 +23,7 @@ class extends Component {
 
     public Product $product;
 
-    public function mount()
+    public function mount(): void
     {
        $this->title = $this->product->title;
        $this->e_title = $this->product->e_title;
@@ -55,7 +55,7 @@ class extends Component {
     }
 
     #[On('set-category')]
-    public function setCategoryId($id)
+    public function setCategoryId($id): void
     {
         $this->category_id = $id;
     }

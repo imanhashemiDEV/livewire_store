@@ -22,6 +22,7 @@ return new class extends Migration
             $table->foreignId('color_id')->constrained('colors')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('gaurranty_id')->constrained('guarranties')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('seller_id')->constrained('sellers')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
