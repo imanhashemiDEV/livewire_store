@@ -16,8 +16,9 @@ class extends Component {
     use WithPagination;
 
     public $search;
+    public Product $product;
 
-    public function mount()
+    public function mount(): void
     {
         if (session()->has('success')) {
             LivewireAlert::text(session('success'))
@@ -26,7 +27,7 @@ class extends Component {
         }
     }
 
-    public function searchProduct()
+    public function searchProduct(): void
     {
         $this->product_variants = ProductVariant::query()
             ->paginate(10);
@@ -35,7 +36,7 @@ class extends Component {
     #[Computed]
     public function product_variants()
     {
-        return ProductVariant::query()->paginate(10);
+        return ProductVariant::query()->where('product_id',$this->product->id)->paginate(10);
     }
 
     #[On('destroy-product-variant')]
@@ -160,7 +161,7 @@ class extends Component {
                                                             {{$product_varaint->price}}تومان
                                                         </a>
                                                         <div class="mt-0.5 whitespace-nowrap text-xs text-slate-500">
-                                                            {{$product_varaint->price}}تومان
+                                                            {{$product_varaint->discount_price}}تومان
                                                         </div>
                                                     </div>
                                                 </div>
@@ -210,22 +211,16 @@ class extends Component {
                                             <td data-tw-merge=""
                                                 class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
                                                 <div class="whitespace-nowrap">
-                                                    {{\Hekmatinasser\Verta\Facades\Verta::instance($product->created_at)->formatJalaliDate()}}
-                                                </div>
-                                            </td>
-                                            <td data-tw-merge=""
-                                                class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
-                                                <div class="whitespace-nowrap">
-                                                    <a href="{{route('admin.products.attributes', $product->id)}}" class="transition duration-200 border shadow-sm items-center justify-center py-2 px-3 rounded-md font-medium cursor-pointer focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus-visible:outline-none dark:focus:ring-slate-700 dark:focus:ring-opacity-50 [&amp;:hover:not(:disabled)]:bg-opacity-90 [&amp;:hover:not(:disabled)]:border-opacity-90 [&amp;:not(button)]:text-center disabled:opacity-70 disabled:cursor-not-allowed border-success text-success dark:border-success [&amp;:hover:not(:disabled)]:bg-success/10 inline-block w-24">ویژگی های محصول</a>
+                                                    {{\Hekmatinasser\Verta\Facades\Verta::instance($product_varaint->created_at)->formatJalaliDate()}}
                                                 </div>
                                             </td>
                                             <td data-tw-merge=""
                                                 class="flex gap-x-2 px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
-                                                <a href="{{route('admin.products.edit',$product->id)}}">
+                                                <a href="{{route('admin.products.variant.edit',$product_varaint->id)}}">
                                                     <x-fas-edit class="text-info h-6 w-6 cursor-pointer"/>
                                                 </a>
                                                 <x-fas-trash
-                                                    wire:click="$dispatch('delete-product',{ product_id: {{$product->id}} } )"
+                                                    wire:click="$dispatch('delete-product-variant',{ product_variant_id: {{$product_varaint->id}} } )"
                                                     class="text-danger h-6 w-6 cursor-pointer m-4"/>
                                             </td>
                                         </tr>
@@ -235,7 +230,7 @@ class extends Component {
                             </div>
                             <div
                                 class="flex-reverse flex flex-col-reverse flex-wrap items-center justify-center gap-y-2 p-5 sm:flex-row">
-                                {{$this->products->links('admin.layouts.pagination')}}
+                                {{$this->product_variants->links('admin.layouts.pagination')}}
                             </div>
                         </div>
                     </div>
@@ -247,7 +242,7 @@ class extends Component {
 
 <script>
 
-    Livewire.on('delete-product', (event) => {
+    Livewire.on('delete-product-variant', (event) => {
 
         Swal.fire({
             title: "آیا از حذف مطمئن هستید؟",
@@ -259,7 +254,7 @@ class extends Component {
             cancelButtonText: "خیر",
         }).then((result) => {
             if (result.isConfirmed) {
-                Livewire.dispatch('destroy-product', {product_id: event.product_id})
+                Livewire.dispatch('destroy-product-variant', {product_variant_id: event.product_variant_id})
                 Swal.fire({
                     text: "حذف با موفقیت انجام شد",
                     icon: "success"

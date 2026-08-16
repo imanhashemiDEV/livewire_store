@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('count')->default(0);
             $table->integer('max_sell')->nullable();
             $table->string('status')->default(\App\Enums\ProductStatus::Waiting->value);
+            $table->foreignId('product_id')->constrained('products')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('color_id')->constrained('colors')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('gaurranty_id')->constrained('guarranties')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('seller_id')->constrained('sellers')->cascadeOnDelete()->cascadeOnUpdate();

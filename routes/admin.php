@@ -38,6 +38,6 @@ Route::livewire('/product_attributes/{product}', 'admin::products.attributes')->
 Route::livewire('/attributes', 'admin::attributes.list')->name('admin.attributes.list');
 Route::livewire('/attribute_values/{attribute}', 'admin::attributes.values')->name('admin.attributes.values');
 
-Route::livewire('/product_variants', 'admin::products.variants-list')->name('admin.products.variants.list');
+Route::livewire('/product_variants/{product}', 'admin::products.variants-list')->name('admin.products.variants.list');
 Route::livewire('/product_variant_create', 'admin::products.create-variant')->name('admin.products.variant.create');
 Route::livewire('/product_variant_edit/{product_variant}', 'admin::products.edit-variant')->name('admin.products.variant.edit');
