@@ -23,7 +23,6 @@ class extends Component {
 
     public function createProduct(): void
     {
-        dd($this->description);
         $this->validate();
 
         Product::query()->create([
