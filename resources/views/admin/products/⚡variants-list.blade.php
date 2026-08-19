@@ -141,7 +141,7 @@ class extends Component {
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @foreach($this->product_variants as $product_varaint)
+                                    @foreach($this->product_variants as $product_variant)
                                         <tr data-tw-merge="" class="[&_td]:last:border-b-0">
                                             <td data-tw-merge=""
                                                 class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
@@ -158,10 +158,10 @@ class extends Component {
                                                     </div>
                                                     <div class="rtl:mr-3.5 ltr:ml-3.5">
                                                         <a class="whitespace-nowrap font-medium" href="">
-                                                            {{$product_varaint->price}}تومان
+                                                            {{$product_variant->price}}تومان
                                                         </a>
                                                         <div class="mt-0.5 whitespace-nowrap text-xs text-slate-500">
-                                                            {{$product_varaint->discount_price}}تومان
+                                                            {{$product_variant->discount_price}}تومان
                                                         </div>
                                                     </div>
                                                 </div>
@@ -169,58 +169,58 @@ class extends Component {
                                             <td data-tw-merge=""
                                                 class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
                                                 <a class="whitespace-nowrap font-medium">
-                                                    {{$product_varaint->discount}}درصد
+                                                    {{$product_variant->discount}}درصد
                                                 </a>
                                             </td>
                                             <td data-tw-merge=""
                                                 class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
                                                 <a class="whitespace-nowrap font-medium">
-                                                    {{$product_varaint->count}}
+                                                    {{$product_variant->count}}
                                                 </a>
                                             </td>
                                             <td data-tw-merge=""
                                                 class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
                                                 <a class="whitespace-nowrap font-medium">
-                                                    {{$product_varaint->max_sell}}
+                                                    {{$product_variant->max_sell}}
                                                 </a>
                                             </td>
                                             <td data-tw-merge=""
                                                 class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
                                                 <a class="whitespace-nowrap font-medium">
-                                                    {{$product_varaint->status}}
+                                                    {{$product_variant->status}}
                                                 </a>
                                             </td>
                                             <td data-tw-merge=""
                                                 class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
                                                 <a class="whitespace-nowrap font-medium">
-                                                    {{$product_varaint->color->title}}
+                                                    {{$product_variant->color->title}}
                                                 </a>
                                             </td>
                                             <td data-tw-merge=""
                                                 class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
                                                 <a class="whitespace-nowrap font-medium">
-                                                    {{$product_varaint->guarranty->title}}
+                                                    {{$product_variant->guarranty->title}}
                                                 </a>
                                             </td>
                                             <td data-tw-merge=""
                                                 class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
                                                 <a class="whitespace-nowrap font-medium">
-                                                    {{$product_varaint->seller->title}}
+                                                    {{$product_variant->seller->title}}
                                                 </a>
                                             </td>
                                             <td data-tw-merge=""
                                                 class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
                                                 <div class="whitespace-nowrap">
-                                                    {{\Hekmatinasser\Verta\Facades\Verta::instance($product_varaint->created_at)->formatJalaliDate()}}
+                                                    {{\Hekmatinasser\Verta\Facades\Verta::instance($product_variant->created_at)->formatJalaliDate()}}
                                                 </div>
                                             </td>
                                             <td data-tw-merge=""
                                                 class="flex gap-x-2 px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
-                                                <a href="{{route('admin.products.variant.edit',$product_varaint->id)}}">
+                                                <a href="{{route('admin.products.variant.edit',['product_variant'=>$product_variant->id ,'product'=>$this->product->id])}}">
                                                     <x-fas-edit class="text-info h-6 w-6 cursor-pointer"/>
                                                 </a>
                                                 <x-fas-trash
-                                                    wire:click="$dispatch('delete-product-variant',{ product_variant_id: {{$product_varaint->id}} } )"
+                                                    wire:click="$dispatch('delete-product-variant',{ product_variant_id: {{$product_variant->id}} } )"
                                                     class="text-danger h-6 w-6 cursor-pointer m-4"/>
                                             </td>
                                         </tr>

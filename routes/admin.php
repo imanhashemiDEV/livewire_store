@@ -40,4 +40,4 @@ Route::livewire('/attribute_values/{attribute}', 'admin::attributes.values')->na
 
 Route::livewire('/product_variants/{product}', 'admin::products.variants-list')->name('admin.products.variants.list');
 Route::livewire('/product_variant_create/{product}', 'admin::products.create-variant')->name('admin.products.variant.create');
-Route::livewire('/product_variant_edit/{product_variant}', 'admin::products.edit-variant')->name('admin.products.variant.edit');
+Route::livewire('/product_variant_edit/{product_variant}/{product}', 'admin::products.edit-variant')->name('admin.products.variant.edit');
