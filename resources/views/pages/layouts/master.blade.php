@@ -1281,16 +1281,16 @@
         <div dir="rtl" class="swiper header-slider h-52 md:h-96 cursor-pointer">
             <div class="swiper-wrapper">
                 <a href="shop.html" class="swiper-slide">
-                    <img src="./images/slider/4.webp" class="rounded-xl" alt="">
+                    <img src="{{url('store/images/slider/4.webp')}}" class="rounded-xl" alt="">
                 </a >
                 <a href="shop.html" class="swiper-slide">
-                    <img src="./images/slider/1.jpg" class="rounded-xl" alt="">
+                    <img src="{{url('store/images/slider/1.jpg')}}" class="rounded-xl" alt="">
                 </a >
                 <a href="shop.html" class="swiper-slide">
-                    <img src="./images/slider/2.jpg" class="rounded-xl" alt="">
+                    <img src="{{url('store/images/slider/2.jpg')}}" class="rounded-xl" alt="">
                 </a >
                 <a href="shop.html" class="swiper-slide">
-                    <img src="./images/slider/3.gif" class="rounded-xl" alt="">
+                    <img src="{{url('store/images/slider/3.gif')}}" class="rounded-xl" alt="">
                 </a >
             </div>
             <div class="swiper-pagination-wrapper">
@@ -1409,10 +1409,10 @@
 
                 <div class="flex justify-center md:justify-end items-center gap-x-3  child:bg-gray-950 child:dark:bg-gray-900">
                     <span class="w-16 h-16 lg:w-20 lg:h-20 flex-center rounded-xl ">
-                        <img class="w-16 h-16" src="./images/footer/1.png" alt="">
+                        <img class="w-16 h-16" src="{{url('store/images/footer/1.png')}}" alt="">
                     </span>
                     <span class="w-16 h-16 lg:w-20 lg:h-20 flex-center rounded-xl ">
-                        <img class="w-16 h-16" src="./images/footer/2.png" alt="">
+                        <img class="w-16 h-16" src="{{url('store/images/footer/2.png')}}" alt="">
                     </span>
                 </div>
                 <!-- GO TOP -->
