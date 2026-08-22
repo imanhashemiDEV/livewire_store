@@ -4,9 +4,8 @@ use App\Http\Controllers\Auth\ResetPasswordByMobileController;
 use Cknow\Money\Money;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+
+Route::livewire('/', 'pages::store.index')->name('store,index');
 
 
 // Auth Routes

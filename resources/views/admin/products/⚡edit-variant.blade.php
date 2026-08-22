@@ -291,9 +291,6 @@ class extends Component {
 @script
 <script>
 
-
-
-
     Livewire.on('setData',(event)=>{
 
         new TomSelect("#color", {
@@ -311,7 +308,6 @@ class extends Component {
                 Livewire.dispatch('set-guarranty', {id: value});
             }
         });
-
 
     })
 
