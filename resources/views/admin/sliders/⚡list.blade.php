@@ -102,7 +102,7 @@ class extends Component {
                     <div class="mt-3.5 flex flex-col gap-8">
                         <div class="box box--stacked flex flex-col">
 
-                            @include('admin.layouts.waiting')
+{{--                            @include('admin.layouts.waiting')--}}
                             <form wire:submit="createSlider" class="box box--stacked flex flex-col m-2">
                                 <div class="p-7 flex items-center gap-x-4">
 
@@ -119,11 +119,36 @@ class extends Component {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="mt-3 w-full flex-1 xl:mt-0">
-                                            <div class="flex flex-col items-center md:flex-row">
+                                        <div class="mt-3 w-full flex flex-col xl:mt-0">
+                                            <div          x-data="{ uploading: false, progress: 0 }"
+                                                          x-on:livewire-upload-start="uploading = true"
+                                                          x-on:livewire-upload-finish="uploading = false"
+                                                          x-on:livewire-upload-cancel="uploading = false"
+                                                          x-on:livewire-upload-error="uploading = false"
+                                                          x-on:livewire-upload-progress="progress = $event.detail.progress"
+                                                          class="flex flex-col items-center md:flex-row">
                                                 <input wire:model="photo" id="regular-form-6" type="file"
                                                        placeholder="ورودی فایل"
-                                                       class="disabled:bg-slate-100 disabled:cursor-not-allowed dark:disabled:bg-darkmode-800/50 dark:disabled:border-transparent [&amp;[readonly]]:bg-slate-100 [&amp;[readonly]]:cursor-not-allowed [&amp;[readonly]]:dark:bg-darkmode-800/50 [&amp;[readonly]]:dark:border-transparent transition duration-200 ease-in-out w-full text-sm border-slate-200 shadow-sm rounded-md placeholder:text-slate-400/90 focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus:border-primary focus:border-opacity-40 dark:bg-darkmode-800 dark:border-transparent dark:focus:ring-slate-700 dark:focus:ring-opacity-50 dark:placeholder:text-slate-500/80 [&amp;[type='file']]:border rtl:file:ml-4 ltr:file:mr-4 file:py-2 file:px-4 rtl:file:rounded-r-md ltr:file:rounded-l-md file:border-0 rtl:file:border-l-[1px] ltr:file:border-r-[1px] file:border-slate-100/10 file:text-sm file:font-semibold file:bg-slate-100 file:text-slate-500/70 hover:file:bg-200 group-[.form-inline]:flex-1 group-[.input-group]:rounded-none rtl:group-[.input-group]:[&amp;:not(:first-child)]:border-r-transparent ltr:group-[.input-group]:[&amp;:not(:first-child)]:border-l-transparent rtl:group-[.input-group]:first:rounded-r ltr:group-[.input-group]:first:rounded-l rtl:group-[.input-group]:last:rounded-l ltr:group-[.input-group]:last:rounded-r group-[.input-group]:z-10">
+                                                       class="disabled:bg-slate-100 disabled:cursor-not-allowed dark:disabled:bg-darkmode-800/50 dark:disabled:border-transparent
+                                                        [&amp;[readonly]]:bg-slate-100 [&amp;[readonly]]:cursor-not-allowed [&amp;[readonly]]:dark:bg-darkmode-800/50
+                                                        [&amp;[readonly]]:dark:border-transparent transition duration-200 ease-in-out w-full text-sm
+                                                         border-slate-200 shadow-sm rounded-md placeholder:text-slate-400/90 focus:ring-4
+                                                         focus:ring-primary focus:ring-opacity-20 focus:border-primary focus:border-opacity-40
+                                                         dark:bg-darkmode-800 dark:border-transparent
+                                                          dark:focus:ring-slate-700 dark:focus:ring-opacity-50 dark:placeholder:text-slate-500/80
+                                                          [&amp;[type='file']]:border rtl:file:ml-4 ltr:file:mr-4 file:py-2 file:px-4 rtl:file:rounded-r-md
+                                                          ltr:file:rounded-l-md file:border-0 rtl:file:border-l-[1px] ltr:file:border-r-[1px]
+                                                          file:border-slate-100/10 file:text-sm file:font-semibold file:bg-slate-100
+                                                          file:text-slate-500/70 hover:file:bg-200 group-[.form-inline]:flex-1 group-[.input-group]:rounded-none
+                                                          rtl:group-[.input-group]:[&amp;:not(:first-child)]:border-r-transparent
+                                                          ltr:group-[.input-group]:[&amp;:not(:first-child)]:border-l-transparent
+                                                          rtl:group-[.input-group]:first:rounded-r ltr:group-[.input-group]:first:rounded-l
+                                                          rtl:group-[.input-group]:last:rounded-l ltr:group-[.input-group]:last:rounded-r group-[.input-group]:z-10">
+
+                                                <div x-show="uploading"  class="w-full bg-slate-200 rounded dark:bg-black/20 h-4">
+                                                    <div role="progressbar" x-text="`${progress}%`" x-bind:style="`width:${progress}%`" max="100" x-bind:value="progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="bg-primary h-full rounded text-xs text-white flex justify-center items-center">
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -181,7 +206,7 @@ class extends Component {
                                             <td data-tw-merge=""
                                                 class="px-5 border-b dark:border-darkmode-300 w-80 border-dashed py-4 dark:bg-darkmode-600">
                                                 <div class="flex items-center">
-                                                    @if($this->editBrand== $slider->id)
+                                                    @if($this->editSlider== $slider->id)
                                                         <input wire:model="edit_photo" id="regular-form-6" type="file"
                                                                placeholder="ورودی فایل"
                                                                class="disabled:bg-slate-100 disabled:cursor-not-allowed dark:disabled:bg-darkmode-800/50 dark:disabled:border-transparent [&amp;[readonly]]:bg-slate-100 [&amp;[readonly]]:cursor-not-allowed [&amp;[readonly]]:dark:bg-darkmode-800/50 [&amp;[readonly]]:dark:border-transparent transition duration-200 ease-in-out w-full text-sm border-slate-200 shadow-sm rounded-md placeholder:text-slate-400/90 focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus:border-primary focus:border-opacity-40 dark:bg-darkmode-800 dark:border-transparent dark:focus:ring-slate-700 dark:focus:ring-opacity-50 dark:placeholder:text-slate-500/80 [&amp;[type='file']]:border rtl:file:ml-4 ltr:file:mr-4 file:py-2 file:px-4 rtl:file:rounded-r-md ltr:file:rounded-l-md file:border-0 rtl:file:border-l-[1px] ltr:file:border-r-[1px] file:border-slate-100/10 file:text-sm file:font-semibold file:bg-slate-100 file:text-slate-500/70 hover:file:bg-200 group-[.form-inline]:flex-1 group-[.input-group]:rounded-none rtl:group-[.input-group]:[&amp;:not(:first-child)]:border-r-transparent ltr:group-[.input-group]:[&amp;:not(:first-child)]:border-l-transparent rtl:group-[.input-group]:first:rounded-r ltr:group-[.input-group]:first:rounded-l rtl:group-[.input-group]:last:rounded-l ltr:group-[.input-group]:last:rounded-r group-[.input-group]:z-10">
@@ -189,10 +214,10 @@ class extends Component {
                                                         <span class="block text-danger my-2">{{ $message }}</span>
                                                         @enderror
                                                     @else
-                                                        <div class="image-fit zoom-in h-32 w-32">
+                                                        <div class="image-fit zoom-in h-32 w-80">
                                                             <img data-placement="top"
                                                                  src="{{ $slider->photo ? url('images/sliders/'. $slider->photo) : url('panel/images/image.png')}}"
-                                                                 class="tooltip cursor-pointer rounded-full shadow-[0px_0px_0px_2px_#fff,_1px_1px_5px_rgba(0,0,0,0.32)] dark:shadow-[0px_0px_0px_2px_#3f4865,_1px_1px_5px_rgba(0,0,0,0.32)]">
+                                                                 class="tooltip cursor-pointer shadow-[0px_0px_0px_2px_#fff,_1px_1px_5px_rgba(0,0,0,0.32)] dark:shadow-[0px_0px_0px_2px_#3f4865,_1px_1px_5px_rgba(0,0,0,0.32)]">
                                                         </div>
                                                     @endif
 
@@ -207,7 +232,7 @@ class extends Component {
                                             <td data-tw-merge=""
                                                 class="flex gap-x-2 px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
                                                 @if($this->editSlider==$slider->id)
-                                                    <x-fas-save wire:click="updateBrand"
+                                                    <x-fas-save wire:click="updateSlider"
                                                                 class="text-success h-6 w-6 cursor-pointer"/>
                                                 @else
                                                     <x-fas-edit
