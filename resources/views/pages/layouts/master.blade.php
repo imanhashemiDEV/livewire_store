@@ -344,34 +344,57 @@
                     </a>
                     <div
                         class="absolute dark:border-none border border-gray-100 w-52 p-2 bg-white text-gray-900 dark:text-gray-100 flex flex-col gap-y-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:top-12 transition-all delay-100 dark:bg-gray-700 top-20 rounded-lg text-base shadow child:transition-all duration-300 child:py-1.5 child:px-2 z-30 child:rounded-lg child:w-full">
-                        <a href="dashboard-orders.html"
-                           class="flex items-center gap-x-2  hover:bg-blue-500 hover:text-gray-100">
-                            <svg class="h-5 w-5">
-                                <use href="#user"></use>
-                            </svg>
-                            سفارشات من
-                        </a>
-                        <a href="dashboard-messages.html"
-                           class="flex items-center gap-x-2  hover:bg-blue-500 hover:text-gray-100">
-                            <svg class="h-5 w-5">
-                                <use href="#envelope"></use>
-                            </svg>
-                            لیست پیام ها
-                        </a>
-                        <a href="dashboard-account.html"
-                           class="flex items-center gap-x-2  hover:bg-blue-500 hover:text-gray-100">
-                            <svg class="h-5 w-5">
-                                <use href="#cog"></use>
-                            </svg>
-                            اطلاعات کاربری
-                        </a>
-                        <a href="#"
-                           class="flex items-center gap-x-2  hover:bg-red-500 dark:hover:bg-red-500 hover:text-gray-100">
-                            <svg class="h-5 w-5">
-                                <use href="#arrow-left-end"></use>
-                            </svg>
-                            خروج از حساب
-                        </a>
+                        @auth
+                            <a href="dashboard-orders.html"
+                               class="flex items-center gap-x-2  hover:bg-blue-500 hover:text-gray-100">
+                                <svg class="h-5 w-5">
+                                    <use href="#user"></use>
+                                </svg>
+                                سفارشات من
+                            </a>
+                            <a href="dashboard-account.html"
+                               class="flex items-center gap-x-2  hover:bg-blue-500 hover:text-gray-100">
+                                <svg class="h-5 w-5">
+                                    <use href="#cog"></use>
+                                </svg>
+                                اطلاعات کاربری
+                            </a>
+                            @if(auth()->user()->is_admin)
+                                <a href="{{route('admin.panel.index')}}"
+                                   class="flex items-center gap-x-2  hover:bg-blue-500 hover:text-gray-100">
+                                    <svg class="h-5 w-5">
+                                        <use href="#user"></use>
+                                    </svg>
+                                    پنل مدیریت
+                                </a>
+                            @endif
+                            <a href="#"
+                               class="flex items-center gap-x-2  hover:bg-red-500 dark:hover:bg-red-500 hover:text-gray-100">
+                                <svg class="h-5 w-5">
+                                    <use href="#arrow-left-end"></use>
+                                </svg>
+                                خروج از حساب
+                            </a>
+                        @endauth
+                        @guest
+                                <a href="{{route('login')}}"
+                                   class="flex items-center gap-x-2  hover:bg-red-500 dark:hover:bg-red-500 hover:text-gray-100">
+                                    <svg class="h-5 w-5">
+                                        <use href="#arrow-left-end"></use>
+                                    </svg>
+                                    ورود
+                                </a>
+                                <a href="{{route('register')}}"
+                                   class="flex items-center gap-x-2  hover:bg-red-500 dark:hover:bg-red-500 hover:text-gray-100">
+                                    <svg class="h-5 w-5">
+                                        <use href="#arrow-left-end"></use>
+                                    </svg>
+                                     ثبت نام
+                                </a>
+                        @endguest
+
+
+
                     </div>
                 </button>
                 <!-- Toggle theme -->
