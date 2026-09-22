@@ -99,7 +99,7 @@ new class extends Component
 
                     </div>
                     <!-- product img -->
-                    <a href="product-details.html">
+                    <a href="{{route('store.single.product', $product->id)}}">
                         <img class="product-card_img group-hover:opacity-0 absolute" src="{{$product->getMedia('products')->first()->getUrl('thumb')}}"
                              alt="">
                         <img class="product-card_img opacity-0 group-hover:opacity-100"
@@ -107,7 +107,7 @@ new class extends Component
                     </a>
                     <!--  product footer -->
                     <div class="space-y-2">
-                        <a href="product-details.html" class="product-card_link">
+                        <a href="{{route('store.single.product', $product->id)}}" class="product-card_link">
                             {{$product->title}}  {{$product->e_title}}
                         </a>
                         <!-- Rate and Price -->

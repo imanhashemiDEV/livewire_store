@@ -5,7 +5,8 @@ use Cknow\Money\Money;
 use Illuminate\Support\Facades\Route;
 
 
-Route::livewire('/', 'pages::store.index')->name('store,index');
+Route::livewire('/', 'pages::store.index')->name('store.index');
+Route::livewire('/single_product/{product}', 'pages::store.single-product')->name('store.single.product');
 
 
 // Auth Routes
