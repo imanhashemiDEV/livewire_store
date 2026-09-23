@@ -39,7 +39,7 @@ new class extends Component
                     </svg>
                 </button>
             </div>
-            <a href="shop.html"
+            <a href="#"
                class="group shadow-xl text-sm md:text-base flex gap-x-1.5 items-center px-2 h-10 md:px-3 text-white bg-blue-600 rounded-xl">
                 <p>مشاهده همه</p>
                 <span

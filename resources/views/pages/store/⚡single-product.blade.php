@@ -7,7 +7,19 @@ use \App\Models\Product;
 
 new #[Layout('pages.layouts.master'), Title('جزئیات محصول')]
 class extends Component {
+
     public Product $product;
+    public $mainImage;
+
+    public function mount()
+    {
+        $this->mainImage = $this->product->getMedia('products')->first()->getUrl();
+    }
+
+    public function setMainImage($path)
+    {
+        $this->mainImage = $path;
+    }
 };
 ?>
 
@@ -56,19 +68,15 @@ class extends Component {
                 <!-- IMAGE SLIDER -->
                 <div class="w-2/4 hidden md:flex flex-col justify-center items-center gap-y-4">
                         <span class="open-sliderModal">
-                            <img src="./images/products/11.png" class="cursor-pointer object-cover" alt="">
+                            <img src="{{$this->mainImage}}" class="cursor-pointer object-cover" alt="">
                         </span>
                     <div
                         class="grid grid-cols-12 child:col-span-3 child:app-border gap-x-4 child:size-16 child:rounded-lg child:cursor-pointer">
-                        <div class="p-1 open-sliderModal">
-                            <img src="./images/products/11.png" class="object-cover  rounded-lg">
+                        @foreach($this->product->getMedia('products') as $media)
+                        <div wire:click="setMainImage('{{$media->getUrl()}}')" class="p-1 open-sliderModal">
+                            <img src="{{$media->getUrl('thumb')}}" class="object-cover  rounded-lg">
                         </div>
-                        <div class="p-1 open-sliderModal">
-                            <img src="./images/products/12.webp" class="object-cover  rounded-lg">
-                        </div>
-                        <div class="p-1 open-sliderModal">
-                            <img src="./images/products/13.webp" class="object-cover  rounded-lg">
-                        </div>
+                        @endforeach
                         <div class="overflow-hidden relative open-sliderModal">
                             <svg class="absolute size-8 text-gray-100 top-4 left-4 z-10">
                                 <use href="#ellipsis"></use>
