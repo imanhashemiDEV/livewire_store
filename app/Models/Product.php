@@ -45,4 +45,14 @@ class Product extends Model implements HasMedia
     {
         return $this->belongsTo(Category::class);
     }
+
+    public function product_variants()
+    {
+        return $this->hasMany(ProductVariant::class);
+    }
+
+    public function product_attributes()
+    {
+        return $this->hasMany(ProductAttribute::class);
+    }
 }

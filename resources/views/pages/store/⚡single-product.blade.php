@@ -28,7 +28,7 @@ class extends Component {
     <nav class="flex mt-8" aria-label="Breadcrumb">
         <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
             <li class="inline-flex items-center">
-                <a href="index.html"
+                <a href="{{route('store.index')}}"
                    class="inline-flex items-center text-sm gap-x-1  text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
                     <svg class="size-4 mb-0.5">
                         <use href="#home"/>
@@ -42,7 +42,7 @@ class extends Component {
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="m1 9 4-4-4-4"/>
                 </svg>
-                <a href="shop.html"
+                <a href="#"
                    class="inline-flex items-center text-sm gap-x-1  text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
                     فروشگاه
                 </a>
@@ -68,7 +68,7 @@ class extends Component {
                 <!-- IMAGE SLIDER -->
                 <div class="w-2/4 hidden md:flex flex-col justify-center items-center gap-y-4">
                         <span class="open-sliderModal">
-                            <img src="{{$this->mainImage}}" class="cursor-pointer object-cover" alt="">
+                            <img src="{{$this->mainImage}}" class="cursor-pointer object-cover h-96 w-96" alt="">
                         </span>
                     <div
                         class="grid grid-cols-12 child:col-span-3 child:app-border gap-x-4 child:size-16 child:rounded-lg child:cursor-pointer">
@@ -81,14 +81,14 @@ class extends Component {
                             <svg class="absolute size-8 text-gray-100 top-4 left-4 z-10">
                                 <use href="#ellipsis"></use>
                             </svg>
-                            <img src="./images/products/14.webp" class="object-cover rounded-lg blur-sm">
+                            <img src="{{url('store/images/products/14.webp')}}" class="object-cover rounded-lg blur-sm">
                         </div>
                     </div>
                 </div>
                 <div class="slider-modal">
                     <div class="flex w-full h-fit items-center justify-between">
                         <h1 class="font-DanaMedium text-lg">
-                            تصاویر گوشی موبایل اپل مدل iPhone 16 دو spanیم کارت
+                            {{$this->product->title}}
                         </h1>
                         <svg class="size-6 cursor-pointer close-sliderModal">
                             <use href="#x-mark"></use>
@@ -97,18 +97,11 @@ class extends Component {
 
                     <div class="swiper ProductDetailsSlider mt-14 px-10 w-96 relative">
                         <div class="swiper-wrapper w-[50%] child:w-full child:rounded-lg child:overflow-hidden">
+                            @foreach($this->product->getMedia('products') as $media)
                             <div class="swiper-slide">
-                                <img src="./images/products/11.png" alt="">
+                                <img src="{{$media->getUrl()}}" class="h-96 w-96" alt="">
                             </div>
-                            <div class="swiper-slide">
-                                <img src="./images/products/12.webp" alt="">
-                            </div>
-                            <div class="swiper-slide">
-                                <img src="./images/products/13.webp" alt="">
-                            </div>
-                            <div class="swiper-slide">
-                                <img src="./images/products/14.webp" alt="">
-                            </div>
+                            @endforeach
                         </div>
                     </div>
                     <button
@@ -127,7 +120,7 @@ class extends Component {
                 <!-- INFOS -->
                 <div class="w-full md:w-3/4 flex flex-col gap-y-7">
                     <div class="flex items-center justify-between">
-                        <a href="shop.html" class="font-DanaMedium text-sky-400">اپل / گوشی موبایل اپل</a>
+                        <a href="#" class="font-DanaMedium text-sky-400">{{$this->product->category->parent->title}} / {{$this->product->category->title}}</a>
                         <div class="hidden md:flex items-center gap-x-2">
                             <div class="tooltip">
                                 <button class="rounded-full p-1.5 app-border app-hover">
@@ -187,7 +180,7 @@ class extends Component {
                             {{$product->title}}
                         </p>
                         <p class="text-sm text-gray-300 dark:text-gray-500">
-                            Apple iPhone 16 CH Dual SIM Storage 128GB And RAM 8GB Mobile Phone
+                            {{$product->e_title}}
                         </p>
                         <div class="flex items-center gap-x-2">
                                 <span class="flex items-center gap-x-1 text-sm">
@@ -201,29 +194,19 @@ class extends Component {
                                 class="h-6 bg-slate-100 text-gray-400 dark:bg-slate-700 dark:text-gray-400 flex items-center justify-center rounded-full px-2 text-xs font-DanaMedium pt-1">
                                 410 دیدگاه
                               </span>
-
                         </div>
                     </div>
                     <!-- COLOR -->
                     <div class="flex flex-col gap-y-4">
-                        <h1 class="font-DanaDemiBold text-lg color-title dark:text-gray-200">رنگ : spanبز</h1>
+                        <h1 class="font-DanaDemiBold text-lg color-title dark:text-gray-200">رنگ : </h1>
                         <div class="flex items-center gap-x-3 child:rounded-full child:size-9 child:p-1">
-                            <button
-                                class="color-select-btn ring-4 ring-blue-400 transition-all duration-300 ease-in-out">
-                                <span class="bg-black w-full h-full rounded-full flex"></span>
-                            </button>
-                            <button
-                                class="color-select-btn ring-1 ring-gray-400 transition-all duration-300 ease-in-out">
-                                <span class="bg-white app-border w-full h-full rounded-full flex"></span>
-                            </button>
-                            <button
-                                class="color-select-btn ring-1 ring-gray-400 transition-all duration-300 ease-in-out">
-                                <span class="bg-green-400 w-full h-full rounded-full flex"></span>
-                            </button>
-                            <button
-                                class="color-select-btn ring-1 ring-gray-400 transition-all duration-300 ease-in-out">
-                                <span class="bg-blue-500 w-full h-full rounded-full flex"></span>
-                            </button>
+                            @foreach($this->product->product_variants as $variant)
+                                <button
+                                    class="color-select-btn ring-4 ring-blue-400 transition-all duration-300 ease-in-out">
+                                    <span style="background-color: {{$variant->color->code}}" class="w-full h-full rounded-full flex"></span>
+                                </button>
+                            @endforeach
+
                         </div>
                     </div>
                     <!-- Features Box  -->
@@ -231,26 +214,12 @@ class extends Component {
                         <h1 class="font-DanaDemiBold text-lg dark:text-gray-200">ویژگی‌ها</h1>
                         <div
                             class="grid grid-cols-12 gap-2 child:p-2 child:h-16 child:bg-gray-100 dark:child:bg-gray-900 child:rounded-lg child:flex child:flex-col child:gap-y-1.5">
-                            <div class="col-span-12 md:col-span-6 xl:col-span-4">
-                                <p class="text-sm text-gray-500">فناوری صفحه‌ نمایش </p>
-                                <p class="line-clamp-1 font-DanaDemiBold text-sm text-slate-800 dark:text-slate-200">
-                                    LTPO Super Retina XDR</p>
-                            </div>
-                            <div class="col-span-12 md:col-span-6 xl:col-span-4">
-                                <p class="text-sm text-gray-500">نspanخه spanیspanتم عامل </p>
-                                <p class="line-clamp-1 font-DanaDemiBold text-sm text-slate-800 dark:text-slate-200">iOS
-                                    18</p>
-                            </div>
-                            <div class="col-span-12 md:col-span-6 xl:col-span-4">
-                                <p class="text-sm text-gray-500">رزولوشن دوربین اصلی </p>
-                                <p class="line-clamp-1 font-DanaDemiBold text-sm text-slate-800 dark:text-slate-200">48
-                                    مگاپیکspanل</p>
-                            </div>
-                            <div class="col-span-12 md:col-span-6 xl:col-span-4">
-                                <p class="text-sm text-gray-500">اندازه</p>
-                                <p class="line-clamp-1 font-DanaDemiBold text-sm text-slate-800 dark:text-slate-200">
-                                    6.1</p>
-                            </div>
+                             @foreach($this->product->product_attributes as $product_attribute)
+                                <div class="col-span-12 md:col-span-6 xl:col-span-4">
+                                    <p class="text-sm text-gray-500">{{$product_attribute->attribute->title}}</p>
+                                    <p class="line-clamp-1 font-DanaDemiBold text-sm text-slate-800 dark:text-slate-200">{{$product_attribute->attributeValue->text}}</p>
+                                </div>
+                             @endforeach
                         </div>
                     </div>
                 </div>
