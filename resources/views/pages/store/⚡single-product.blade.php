@@ -809,7 +809,7 @@ class extends Component {
         </div>
     </section>
 
-    <section class="relative mt-10 flex flex-col items-start gap-4 rounded-lg bg-white dark:bg-gray-800 shadow p-4">
+    <section id="properties" class="relative mt-10 flex flex-col items-start gap-4 rounded-lg bg-white dark:bg-gray-800 shadow p-4">
         <div
             class="w-full py-3 flex items-center gap-x-6 child:font-DanaMedium tab-buttons z-10 border-b  border-gray-600/20 dark:border-b-gray-200/20">
             <button class="tab-btn text-blue-500" data-target="tab1">معرفی محصول</button>

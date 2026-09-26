@@ -1218,7 +1218,7 @@
 <script src="{{url('store/scripts/swiper-bundle.min.js')}}"></script>
 <script src="{{url('store/scripts/app.js')}}"></script>
 <script type="module" src="{{url('store/scripts/slider.js')}}"></script>
-<script src="{{url('store/scripts/timer.js')}}"></script>
+<script src="{{url('store/scripts/productDetails.js')}}"></script>
 </body>
 
 </html>

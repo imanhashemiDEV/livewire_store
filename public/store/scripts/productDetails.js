@@ -120,19 +120,21 @@ const sliderModal = document.querySelector('.slider-modal')
 const overlayProductPage = document.querySelector('.overlay')
 const closeSliderModal = document.querySelector('.close-sliderModal')
 
-openSliderModals.forEach(el => {
-    el.addEventListener('click', () => {
-        sliderModal.classList.add('active')
-        overlayProductPage.classList.add('active')
+if (sliderModal && overlayProductPage && closeSliderModal) {
+    openSliderModals.forEach(el => {
+        el.addEventListener('click', () => {
+            sliderModal.classList.add('active')
+            overlayProductPage.classList.add('active')
+        })
     })
-})
 
-overlayProductPage.addEventListener('click', () => {
-    overlayProductPage.classList.remove('active')
-    sliderModal.classList.remove('active')
-})
+    overlayProductPage.addEventListener('click', () => {
+        overlayProductPage.classList.remove('active')
+        sliderModal.classList.remove('active')
+    })
 
-closeSliderModal.addEventListener('click', () => {
-    sliderModal.classList.remove('active')
-    overlayProductPage.classList.remove('active')
-})
+    closeSliderModal.addEventListener('click', () => {
+        sliderModal.classList.remove('active')
+        overlayProductPage.classList.remove('active')
+    })
+}
