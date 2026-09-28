@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\ProductVariant;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -9,11 +11,18 @@ new #[Layout('pages.layouts.master'), Title('جزئیات محصول')]
 class extends Component {
 
     public Product $product;
+    public $product_price;
+    public $total_price;
     public $mainImage;
+    public $count=1;
+    public $selected_variant;
 
     public function mount()
     {
         $this->mainImage = $this->product->getMedia('products')->first()->getUrl();
+        $this->product_price = $this->product->price;
+        $this->total_price = $this->product_price;
+        $this->selected_variant = ProductVariant::query()->where('price',$this->product->price)->first();
     }
 
     public function setMainImage($path)
@@ -21,10 +30,34 @@ class extends Component {
         $this->mainImage = $path;
     }
 
-    #[\Livewire\Attributes\Computed]
+    #[Computed]
     public function relatedProducts()
     {
-        return \App\Models\Product::query()->where('category_id', $this->product->category_id)->take(6)->get();
+        return Product::query()->where('category_id', $this->product->category_id)->take(6)->get();
+    }
+
+    public function setProduct($id)
+    {
+        $this->selected_variant = ProductVariant::query()->where('price',$this->product->price)->first();
+        $this->product_price = $this->selected_variant->price;
+        $this->total_price = $this->product_price;
+    }
+
+    public function increaseProduct()
+    {
+        if($this->count <= $this->selected_variant->max_sell ){
+            $this->count++;
+            $this->total_price = $this->product_price * $this->count;
+        }
+    }
+
+    public function decreaseProduct()
+    {
+        if($this->count > 1){
+            $this->count++;
+            $this->total_price = $this->product_price * $this->count;
+        }
+
     }
 };
 ?>
@@ -79,9 +112,9 @@ class extends Component {
                     <div
                         class="grid grid-cols-12 child:col-span-3 child:app-border gap-x-4 child:size-16 child:rounded-lg child:cursor-pointer">
                         @foreach($this->product->getMedia('products') as $media)
-                        <div wire:click="setMainImage('{{$media->getUrl()}}')" class="p-1 open-sliderModal">
-                            <img src="{{$media->getUrl('thumb')}}" class="object-cover  rounded-lg">
-                        </div>
+                            <div wire:click="setMainImage('{{$media->getUrl()}}')" class="p-1 open-sliderModal">
+                                <img src="{{$media->getUrl('thumb')}}" class="object-cover  rounded-lg">
+                            </div>
                         @endforeach
                         <div class="overflow-hidden relative open-sliderModal">
                             <svg class="absolute size-8 text-gray-100 top-4 left-4 z-10">
@@ -104,9 +137,9 @@ class extends Component {
                     <div class="swiper ProductDetailsSlider mt-14 px-10 w-96 relative">
                         <div class="swiper-wrapper w-[50%] child:w-full child:rounded-lg child:overflow-hidden">
                             @foreach($this->product->getMedia('products') as $media)
-                            <div class="swiper-slide">
-                                <img src="{{$media->getUrl()}}" class="h-96 w-96" alt="">
-                            </div>
+                                <div class="swiper-slide">
+                                    <img src="{{$media->getUrl()}}" class="h-96 w-96" alt="">
+                                </div>
                             @endforeach
                         </div>
                     </div>
@@ -126,7 +159,8 @@ class extends Component {
                 <!-- INFOS -->
                 <div class="w-full md:w-3/4 flex flex-col gap-y-7">
                     <div class="flex items-center justify-between">
-                        <a href="#" class="font-DanaMedium text-sky-400">{{$this->product->category->parent->title}} / {{$this->product->category->title}}</a>
+                        <a href="#" class="font-DanaMedium text-sky-400">{{$this->product->category->parent->title}}
+                            / {{$this->product->category->title}}</a>
                         <div class="hidden md:flex items-center gap-x-2">
                             <div class="tooltip">
                                 <button class="rounded-full p-1.5 app-border app-hover">
@@ -207,9 +241,13 @@ class extends Component {
                         <h1 class="font-DanaDemiBold text-lg color-title dark:text-gray-200">رنگ : </h1>
                         <div class="flex items-center gap-x-3 child:rounded-full child:size-9 child:p-1">
                             @foreach($this->product->product_variants as $variant)
-                                <button
-                                    class="color-select-btn ring-4 ring-blue-400 transition-all duration-300 ease-in-out">
-                                    <span style="background-color: {{$variant->color->code}}" class="w-full h-full rounded-full flex"></span>
+                                <button wire:click="setProduct({{$variant->id}})"
+                                @class([
+                                     'ring-4 ring-blue-400' => $this->product_price == $variant->price,
+                                     'color-select-btn  transition-all duration-300 ease-in-out'
+                                      ])
+                                <span style="background-color: {{$variant->color->code}}"
+                                      class="w-full h-full rounded-full flex"></span>
                                 </button>
                             @endforeach
 
@@ -220,12 +258,12 @@ class extends Component {
                         <h1 class="font-DanaDemiBold text-lg dark:text-gray-200">ویژگی‌ها</h1>
                         <div
                             class="grid grid-cols-12 gap-2 child:p-2 child:h-16 child:bg-gray-100 dark:child:bg-gray-900 child:rounded-lg child:flex child:flex-col child:gap-y-1.5">
-                             @foreach($this->product->product_attributes as $product_attribute)
+                            @foreach($this->product->product_attributes as $product_attribute)
                                 <div class="col-span-12 md:col-span-6 xl:col-span-4">
                                     <p class="text-sm text-gray-500">{{$product_attribute->attribute->title}}</p>
                                     <p class="line-clamp-1 font-DanaDemiBold text-sm text-slate-800 dark:text-slate-200">{{$product_attribute->attributeValue->text}}</p>
                                 </div>
-                             @endforeach
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -264,17 +302,17 @@ class extends Component {
         <div class="w-full lg:w-1/4 lg:sticky top-5 flex flex-col gap-y-6">
             <!-- PRICE -->
             <div class="flex items-center gap-x-1">
-                <p class="text-2xl font-DanaDemiBold">۹۹,۸۹۹,۰۰۰</p>
+                <p class="text-2xl font-DanaDemiBold">{{$product_price}}</p>
                 <p class="">تومان</p>
             </div>
             <button
                 class="w-full flex items-center justify-between gap-x-1 rounded-lg border border-gray-200 dark:border-white/20 py-2 px-3">
-                <svg class="w-6 h-6 increment text-green-600">
+                <svg  wire:click="increaseProduct" class="w-6 h-6 increment text-green-600">
                     <use href="#plus"></use>
                 </svg>
                 <input type="number" name="customInput" id="customInput" min="1" max="20" value="1"
                        class="custom-input mr-4 text-lg bg-transparent">
-                <svg class="w-6 h-6 decrement text-red-500">
+                <svg  wire:click="decreaseProduct" class="w-6 h-6  text-red-500">
                     <use href="#minus"></use>
                 </svg>
             </button>
@@ -282,7 +320,7 @@ class extends Component {
             <button
                 class="w-full flex items-center gap-x-1 justify-between dark:bg-gray-900 dark:text-gray-400  bg-gray-100 transition-all rounded-lg py-2 px-2 xl:px-3 font-DanaMedium text-sm xl:text-base">
                 <p>مجموع خرید :</p>
-                <p>۹۹,۸۹۹,۰۰۰ تومان</p>
+                <p>{{$total_price}} تومان</p>
             </button>
 
             <div class="relative overflow-hidden text-sm font-DanaDemiBold text-right">
@@ -311,7 +349,8 @@ class extends Component {
     <livewire:pages::components.products-slider :products="$this->relatedProducts" title="محصولات مرتبط"
                                                 subtitle="جدیدترین و بروزترین محصولات"/>
 
-    <section id="properties" class="relative mt-10 flex flex-col items-start gap-4 rounded-lg bg-white dark:bg-gray-800 shadow p-4">
+    <section id="properties"
+             class="relative mt-10 flex flex-col items-start gap-4 rounded-lg bg-white dark:bg-gray-800 shadow p-4">
         <div
             class="w-full py-3 flex items-center gap-x-6 child:font-DanaMedium tab-buttons z-10 border-b  border-gray-600/20 dark:border-b-gray-200/20">
             <button class="tab-btn text-blue-500" data-target="tab1">معرفی محصول</button>
@@ -321,7 +360,7 @@ class extends Component {
         <div class="tab-content tab1 block">
             <h2 class="font-DanaDemiBold border-b-2 border-blue-500 w-fit p-1 text-lg">معرفی</h2>
             <p class="mt-4 leading-8">
-                  {!! $this->product->description !!}
+                {!! $this->product->description !!}
                 <a href="#" class="flex gap-x-1 items-center text-blue-400">
                     مشاهده بیشتر
                     <svg class="size-4">
