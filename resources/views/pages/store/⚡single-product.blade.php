@@ -17,15 +17,17 @@ class extends Component {
     public $count=1;
     public $selected_variant;
 
-    public function mount()
+    public function mount(): void
     {
         $this->mainImage = $this->product->getMedia('products')->first()->getUrl();
-        $this->product_price = $this->product->price;
-        $this->total_price = $this->product_price;
         $this->selected_variant = ProductVariant::query()->where('price',$this->product->price)->first();
+        $this->product_price = $this->selected_variant->discount > 0
+            ? $this->selected_variant->discount_price
+            : $this->selected_variant->price;
+        $this->total_price = $this->product_price;
     }
 
-    public function setMainImage($path)
+    public function setMainImage($path): void
     {
         $this->mainImage = $path;
     }
@@ -36,28 +38,29 @@ class extends Component {
         return Product::query()->where('category_id', $this->product->category_id)->take(6)->get();
     }
 
-    public function setProduct($id)
+    public function setProduct($id): void
     {
-        $this->selected_variant = ProductVariant::query()->where('price',$this->product->price)->first();
-        $this->product_price = $this->selected_variant->price;
-        $this->total_price = $this->product_price;
+        $this->selected_variant = ProductVariant::query()->findOrFail($id);
+        $this->product_price = $this->selected_variant->discount > 0
+            ? $this->selected_variant->discount_price
+            : $this->selected_variant->price;
+        $this->total_price = $this->product_price * $this->count;
     }
 
-    public function increaseProduct()
+    public function increaseProduct(): void
     {
-        if($this->count <= $this->selected_variant->max_sell ){
+        if($this->count < $this->selected_variant->max_sell ){
             $this->count++;
             $this->total_price = $this->product_price * $this->count;
         }
     }
 
-    public function decreaseProduct()
+    public function decreaseProduct(): void
     {
         if($this->count > 1){
-            $this->count++;
-            $this->total_price = $this->product_price * $this->count;
+            $this->total_price = $this->total_price - $this->selected_variant->price;
+            $this->count--;
         }
-
     }
 };
 ?>
@@ -113,18 +116,18 @@ class extends Component {
                         class="grid grid-cols-12 child:col-span-3 child:app-border gap-x-4 child:size-16 child:rounded-lg child:cursor-pointer">
                         @foreach($this->product->getMedia('products') as $media)
                             <div wire:click="setMainImage('{{$media->getUrl()}}')" class="p-1 open-sliderModal">
-                                <img src="{{$media->getUrl('thumb')}}" class="object-cover  rounded-lg">
+                                <img src="{{$media->getUrl('thumb')}}" class="object-cover  rounded-lg" alt="">
                             </div>
                         @endforeach
                         <div class="overflow-hidden relative open-sliderModal">
                             <svg class="absolute size-8 text-gray-100 top-4 left-4 z-10">
                                 <use href="#ellipsis"></use>
                             </svg>
-                            <img src="{{url('store/images/products/14.webp')}}" class="object-cover rounded-lg blur-sm">
+                            <img src="{{url('store/images/products/14.webp')}}" class="object-cover rounded-lg blur-sm" alt="">
                         </div>
                     </div>
                 </div>
-                <div class="slider-modal">
+                <div class="slider-modal" wire:ignore>
                     <div class="flex w-full h-fit items-center justify-between">
                         <h1 class="font-DanaMedium text-lg">
                             {{$this->product->title}}
@@ -189,7 +192,7 @@ class extends Component {
                                     </svg>
                                 </button>
                                 <div class="tooltiptext">
-                                    مقایspanه
+                                    مقایسه
                                 </div>
                             </div>
                         </div>
@@ -198,18 +201,11 @@ class extends Component {
                     <div class="flex md:hidden">
                         <div class="swiper MobileProductSlider w-full">
                             <div class="swiper-wrapper w-full child:w-full child:overflow-hidden child:rounded-lg">
-                                <div class="swiper-slide">
-                                    <img src="./images/products/11.png" alt="">
-                                </div>
-                                <div class="swiper-slide">
-                                    <img src="./images/products/12.webp" alt="">
-                                </div>
-                                <div class="swiper-slide">
-                                    <img src="./images/products/13.webp" alt="">
-                                </div>
-                                <div class="swiper-slide">
-                                    <img src="./images/products/14.webp" alt="">
-                                </div>
+                                @foreach($this->product->getMedia('products') as $media)
+                                    <div class="swiper-slide">
+                                        <img src="{{$media->getUrl('thumb')}}" alt="">
+                                    </div>
+                                @endforeach
                             </div>
                             <div class="swiper-pagination MobileProductSlider-pagination"></div>
                         </div>
@@ -245,7 +241,7 @@ class extends Component {
                                 @class([
                                      'ring-4 ring-blue-400' => $this->product_price == $variant->price,
                                      'color-select-btn  transition-all duration-300 ease-in-out'
-                                      ])
+                                      ])>
                                 <span style="background-color: {{$variant->color->code}}"
                                       class="w-full h-full rounded-full flex"></span>
                                 </button>
@@ -294,24 +290,30 @@ class extends Component {
                         <svg class="w-4 h-4 lg:w-6 lg:h-6">
                             <use href="#truke"></use>
                         </svg>
-                        <p>ارspanال به spanراspanر ایران </p>
+                        <p>ارسال به ایران </p>
                     </span>
             </div>
         </div>
         <!-- PRICE & ADD TO CART BOX -->
-        <div class="w-full lg:w-1/4 lg:sticky top-5 flex flex-col gap-y-6">
+        <div id="change" class="w-full lg:w-1/4 lg:sticky top-5 flex flex-col gap-y-6">
             <!-- PRICE -->
+            @if($selected_variant->discount > 0)
+                <div class="flex items-center gap-x-2">
+                    <span class="product-card_badge">{{$selected_variant->discount}}% تخفیف‌</span>
+                    <del class="text-sm text-gray-400">{{$selected_variant->price}} تومان</del>
+                </div>
+            @endif
             <div class="flex items-center gap-x-1">
                 <p class="text-2xl font-DanaDemiBold">{{$product_price}}</p>
                 <p class="">تومان</p>
             </div>
             <button
                 class="w-full flex items-center justify-between gap-x-1 rounded-lg border border-gray-200 dark:border-white/20 py-2 px-3">
-                <svg  wire:click="increaseProduct" class="w-6 h-6 increment text-green-600">
+                <svg  wire:click="increaseProduct" class="w-6 h-6 text-green-600">
                     <use href="#plus"></use>
                 </svg>
-                <input type="number" name="customInput" id="customInput" min="1" max="20" value="1"
-                       class="custom-input mr-4 text-lg bg-transparent">
+                <input type="number" wire:model="count" disabled
+                       class="custom-input mr-4 text-center text-lg bg-transparent">
                 <svg  wire:click="decreaseProduct" class="w-6 h-6  text-red-500">
                     <use href="#minus"></use>
                 </svg>
@@ -330,7 +332,7 @@ class extends Component {
             </div>
             <button
                 class="w-full flex items-center gap-x-1 justify-center bg-blue-500 text-white hover:bg-blue-600 transition-all rounded-lg shadow py-2">
-                افزودن به spanبد
+                افزودن به سبد
                 <svg class="w-5 h-5">
                     <use href="#shopping-bag"></use>
                 </svg>
@@ -340,7 +342,7 @@ class extends Component {
                 <svg class="w-5 h-5">
                     <use href="#info"></use>
                 </svg>
-                <p>ارspanال رایگان برای خریدهای بالای 400 هزار تومان</p>
+                <p>ارسال رایگان برای خریدهای بالای 400 هزار تومان</p>
             </div>
         </div>
     </section>
@@ -428,7 +430,7 @@ class extends Component {
                     <li class="child:flex py-4 border-b border-gray-200 dark:border-b-gray-200/20 child:border-white/20">
                         <!-- TITLE -->
                         <div class="flex items-center gap-x-2">
-                            <h2 class="font-DanaMedium text-lg mb-1">عملکرد spanریع و روان</h2>
+                            <h2 class="font-DanaMedium text-lg mb-1">عملکرد سریع و روان</h2>
                             <span class="px-2 py-1 mb-2 rounded-lg bg-blue-500 text-white text-xs">خریدار</span>
                         </div>
                         <!-- COOMENT TEXT -->
@@ -586,7 +588,7 @@ class extends Component {
                                 پیشنهاد میشود
                             </h2>
                             <p class="text-gray-500 dark:text-gray-200 mb-2 line-clamp-2">
-                                من باطری گوشی رو با اspanتفاده زیاد تspanت کردم، دو روز کامل جواب داد. عالیه!
+                                من باطری گوشی رو با استفاده زیاد تست کردم، دو روز کامل جواب داد. عالیه!
                             </p>
 
                         </div>
@@ -623,7 +625,7 @@ class extends Component {
                         class="hidden-comment-item hidden child:flex py-4 border-b border-gray-200 dark:border-b-gray-200/20 child:border-white/20">
                         <!-- TITLE -->
                         <div class="flex items-center gap-x-2">
-                            <h2 class="font-DanaMedium text-lg mb-1"> بspanته بندی خوب نبود </h2>
+                            <h2 class="font-DanaMedium text-lg mb-1"> بسته بندی خوب نبود </h2>
                             <span class="px-2 py-1 mb-2 rounded-lg bg-blue-500 text-white text-xs">خریدار</span>
                         </div>
                         <!-- COOMENT TEXT -->
@@ -635,7 +637,7 @@ class extends Component {
                                 پیشنهاد نمیشود
                             </h2>
                             <p class="text-gray-500 dark:text-gray-200 mb-2">
-                                بspanته بندی محصول ایراد داشت.
+                                بسته بندی محصول ایراد داشت.
                             </p>
                         </div>
                         <!-- COMMENT FOOTER -->
