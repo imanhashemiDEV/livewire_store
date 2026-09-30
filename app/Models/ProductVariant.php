@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ProductStatus;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -26,5 +27,10 @@ class ProductVariant extends Model
     public function seller()
     {
         return $this->belongsTo(Seller::class);
+    }
+
+    public function scopeActiveProductVariant($query)
+    {
+        return $query->where('status', ProductStatus::Active->value);
     }
 }

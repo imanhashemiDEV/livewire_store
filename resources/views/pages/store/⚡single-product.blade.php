@@ -20,11 +20,16 @@ class extends Component {
     public function mount(): void
     {
         $this->mainImage = $this->product->getMedia('products')->first()->getUrl();
-        $this->selected_variant = ProductVariant::query()->where('price',$this->product->price)->first();
-        $this->product_price = $this->selected_variant->discount > 0
-            ? $this->selected_variant->discount_price
-            : $this->selected_variant->price;
-        $this->total_price = $this->product_price;
+        $this->selected_variant = ProductVariant::activeProductVariant()->where('id',$this->product->lowest_product_id)->first();
+        if($this->selected_variant){
+            $this->product_price = $this->selected_variant->discount > 0
+                ? $this->selected_variant->discount_price
+                : $this->selected_variant->price;
+            $this->total_price = $this->product_price;
+        }else{
+            $this->redirectRoute('store.index');
+        }
+
     }
 
     public function setMainImage($path): void
@@ -40,7 +45,7 @@ class extends Component {
 
     public function setProduct($id): void
     {
-        $this->selected_variant = ProductVariant::query()->findOrFail($id);
+        $this->selected_variant = ProductVariant::activeProductVariant()->findOrFail($id);
         $this->product_price = $this->selected_variant->discount > 0
             ? $this->selected_variant->discount_price
             : $this->selected_variant->price;
@@ -236,7 +241,7 @@ class extends Component {
                     <div class="flex flex-col gap-y-4">
                         <h1 class="font-DanaDemiBold text-lg color-title dark:text-gray-200">رنگ : </h1>
                         <div class="flex items-center gap-x-3 child:rounded-full child:size-9 child:p-1">
-                            @foreach($this->product->product_variants as $variant)
+                            @foreach($this->product->product_variants()->activeProductVariant()->get() as $variant)
                                 <button wire:click="setProduct({{$variant->id}})"
                                 @class([
                                      'ring-4 ring-blue-400' => $this->product_price == $variant->price,

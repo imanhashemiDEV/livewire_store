@@ -1,22 +1,24 @@
 <?php
 
+use App\Models\Product;
 use Illuminate\Support\Collection;
+use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 
 new #[Layout('pages.layouts.master'), Title('صفحه اصلی')]
 class extends Component {
-    #[\Livewire\Attributes\Computed]
+    #[Computed]
     public function lastProducts()
     {
-        return \App\Models\Product::query()->orderByDesc('updated_at')->take(6)->get();
+        return Product::query()->activeProduct()->orderByDesc('updated_at')->take(6)->get();
     }
 
-    #[\Livewire\Attributes\Computed]
+    #[Computed]
     public function bestProducts()
     {
-        return \App\Models\Product::query()->orderByDesc('sold')->take(6)->get();
+        return Product::query()->activeProduct()->orderByDesc('sold')->take(6)->get();
     }
 };
 ?>

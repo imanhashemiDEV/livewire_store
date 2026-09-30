@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ProductStatus;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -10,7 +11,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-#[Fillable('title','e_title','slug','description','price','discount'
+#[Fillable('lowest_product_id','title','e_title','slug','description','price','discount'
 ,'discount_price','viewed','sold','status','category_id','brand_id')]
 class Product extends Model implements HasMedia
 {
@@ -54,5 +55,12 @@ class Product extends Model implements HasMedia
     public function product_attributes()
     {
         return $this->hasMany(ProductAttribute::class);
+    }
+
+    public function scopeActiveProduct($query)
+    {
+        return $query->whereHas('product_variants',function ($query){
+            $query->where('status', ProductStatus::Active->value);
+        })->where('status', ProductStatus::Active->value);
     }
 }
