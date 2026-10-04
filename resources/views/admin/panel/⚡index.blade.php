@@ -19,6 +19,15 @@ class extends Component {
     public function approveProductVariant($id)
     {
         $variant = ProductVariant::query()->find($id);
+        $product_discount_price = $variant->product->discount_price;
+        if($variant->discount_price < $product_discount_price){
+            $variant->product->update([
+                'lowest_product_id'=> $variant->id,
+                'price'=>$variant->price,
+                'discount'=>$variant->discount,
+                'discount_price'=>$variant->discount_price,
+            ]);
+        }
         $variant->update(
             [
                 'status'=> \App\Enums\ProductStatus::Active->value
