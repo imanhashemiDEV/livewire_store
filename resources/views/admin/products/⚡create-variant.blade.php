@@ -1,8 +1,9 @@
 <?php
 
+use App\Models\Color;
 use App\Models\Product;
 use App\Models\ProductVariant;
-use App\Models\Guarranty;
+use App\Models\Guaranty;
 use App\Models\Seller;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
@@ -17,11 +18,12 @@ new  #[Layout('admin::layouts.master', ['breadcrumb' => 'ایجاد تنوع ق�
 class extends Component {
 
     use WithFileUploads;
+
     public Product $product;
 
     #[Validate('required')]
-    public $price,$count,$max_sell, $color_id, $guarranty_id;
-    public $discount,$seller_id;
+    public $price, $count, $max_sell, $color_id, $guaranty_id;
+    public $discount, $seller_id;
 
     public function mount()
     {
@@ -35,17 +37,17 @@ class extends Component {
         ProductVariant::query()->create([
             'price' => $this->price,
             'discount' => $this->discount,
-            'discount_price' => ($this->price - ( ($this->price * $this->discount)/100 )),
+            'discount_price' => ($this->price - (($this->price * $this->discount) / 100)),
             'max_sell' => $this->max_sell,
             'count' => $this->count,
             'product_id' => $this->product->id,
             'color_id' => $this->color_id,
-            'guarranty_id' => $this->guarranty_id,
+            'guaranty_id' => $this->guaranty_id,
             'seller_id' => $this->seller_id,
         ]);
 
         session()->flash('success', 'تنوع قیمت محصول با موفقیت ایجاد شد');
-        $this->redirectRoute('admin.products.variants.list',['product'=>$this->product->id]);
+        $this->redirectRoute('admin.products.variants.list', ['product' => $this->product->id]);
     }
 
     #[On('set-color')]
@@ -57,19 +59,19 @@ class extends Component {
     #[Computed]
     public function allColors(): array
     {
-        return \App\Models\Color::query()->pluck('title', 'id')->toArray();
+        return Color::query()->pluck('title', 'id')->toArray();
     }
 
-    #[On('set-guarranty')]
-    public function setGuarrantyId($id): void
+    #[On('set-guaranty')]
+    public function setGuarantyId($id): void
     {
-        $this->guarranty_id = $id;
+        $this->guaranty_id = $id;
     }
 
     #[Computed]
-    public function allGuarranties(): array
+    public function allGuaranties(): array
     {
-        return Guarranty::query()->pluck('title', 'id')->toArray();
+        return Guaranty::query()->pluck('title', 'id')->toArray();
     }
 
 };
@@ -153,7 +155,7 @@ class extends Component {
                                                 </div>
                                             </div>
                                             <div class="mt-1.5 text-xs leading-relaxed text-slate-500/80 xl:mt-3">
-                                                 تعداد موجودی محصول را وارد کنید
+                                                تعداد موجودی محصول را وارد کنید
                                             </div>
                                         </div>
                                     </div>
@@ -245,14 +247,14 @@ class extends Component {
                                     </div>
                                     <div class="mt-3 w-full flex-1 xl:mt-0">
                                         <div wire:ignore class="flex flex-col items-center">
-                                            <select id="guarranty" aria-label=".form-select"
+                                            <select id="guaranty" aria-label=".form-select"
                                                     class="tom-select disabled:bg-slate-100 disabled:cursor-not-allowed disabled:dark:bg-darkmode-800/50 [&amp;[readonly]]:bg-slate-100 [&amp;[readonly]]:cursor-not-allowed [&amp;[readonly]]:dark:bg-darkmode-800/50 transition duration-200 ease-in-out w-full border-slate-200 shadow-sm rounded-md px-3 rtl:pl-8 ltr:pr-8 focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus:border-primary focus:border-opacity-40 dark:bg-darkmode-800 dark:border-transparent dark:focus:ring-slate-700 dark:focus:ring-opacity-50 group-[.form-inline]:flex-1 text-md py-1 rtl:pr-4 ltr:pl-4 rtl:sm:ml-2 ltr:sm:mr-2">
                                                 <option>گارانتی</option>
-                                                @foreach($this->allGuarranties as $key=>$value)
+                                                @foreach($this->allGuaranties as $key=>$value)
                                                     <option value="{{$key}}">{{$value}}</option>
                                                 @endforeach
                                             </select>
-                                            @error('guarranty_id')
+                                            @error('guaranty_id')
                                             <span class="block text-danger my-2">{{ $message }}</span>
                                             @enderror
                                         </div>
@@ -289,10 +291,10 @@ class extends Component {
         }
     });
 
-    new TomSelect("#guarranty", {
+    new TomSelect("#guaranty", {
         create: true,
         onChange: function (value) {
-            Livewire.dispatch('set-guarranty', {id: value});
+            Livewire.dispatch('set-guaranty', {id: value});
         }
     });
 

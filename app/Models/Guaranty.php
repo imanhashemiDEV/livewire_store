@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable('title')]
-class Guarranty extends Model
+class Guaranty extends Model
 {
     use SoftDeletes;
 }

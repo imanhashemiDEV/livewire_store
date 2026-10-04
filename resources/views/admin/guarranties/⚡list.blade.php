@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Guarranty;
+use App\Models\Guaranty;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
@@ -33,7 +33,7 @@ class extends Component {
 
     public function searchGuarranty(): void
     {
-        $this->guarranties = Guarranty::query()
+        $this->guarranties = Guaranty::query()
             ->where('title', 'like', '%' . $this->search . '%')
             ->paginate(10);
     }
@@ -42,7 +42,7 @@ class extends Component {
     {
         $this->validate();
 
-        Guarranty::query()->create([
+        Guaranty::query()->create([
             'title' => $this->title,
         ]);
 
@@ -63,7 +63,7 @@ class extends Component {
         ]);
 
 
-        $guarranty = Guarranty::query()->find($this->editGuarranty);
+        $guarranty = Guaranty::query()->find($this->editGuarranty);
         $guarranty->update([
             'title' => $this->edit_title,
         ]);
@@ -74,19 +74,19 @@ class extends Component {
     #[On('destroy-guarranty')]
     public function destroyGuarranty($guarranty_id): void
     {
-        Guarranty::destroy($guarranty_id);
+        Guaranty::destroy($guarranty_id);
     }
 
     #[Computed]
     public function guarranties()
     {
-        return Guarranty::query()->paginate(10);
+        return Guaranty::query()->paginate(10);
     }
 };
 ?>
 
 <div
-    class="content transition-[margin,width] duration-100 rtl:xl:pr-3.5 ltr:xl:pl-3.5 pt-[54px] pb-16 relative z-10 group mode content--compact rtl:xl:mr-[275px] ltr:xl:ml-[275px] mode--light rtl:[&.content--compact]:xl:mr-[91px] ltr:[&.content--compact]:xl:ml-[91px]">
+        class="content transition-[margin,width] duration-100 rtl:xl:pr-3.5 ltr:xl:pl-3.5 pt-[54px] pb-16 relative z-10 group mode content--compact rtl:xl:mr-[275px] ltr:xl:ml-[275px] mode--light rtl:[&.content--compact]:xl:mr-[91px] ltr:[&.content--compact]:xl:ml-[91px]">
     <div class="px-5 mt-16">
         <div class="container">
             <div class="grid grid-cols-12 gap-x-6 gap-y-10">
@@ -122,14 +122,14 @@ class extends Component {
                             <form wire:submit="createGuarranty" class="box box--stacked flex flex-col m-2">
                                 <div class="p-7 flex items-center gap-x-4">
                                     <div
-                                        class="mt-5 block flex-col pt-5 first:mt-0 first:pt-0 sm:flex xl:flex-row xl:items-center">
+                                            class="mt-5 block flex-col pt-5 first:mt-0 first:pt-0 sm:flex xl:flex-row xl:items-center">
                                         <div
-                                            class="mb-2 inline-block sm:mb-0 rtl:sm:ml-5 ltr:sm:mr-5 rtl:sm:text-left ltr:sm:text-right rtl:xl:ml-14 ltr:xl:mr-14 xl:w-60">
+                                                class="mb-2 inline-block sm:mb-0 rtl:sm:ml-5 ltr:sm:mr-5 rtl:sm:text-left ltr:sm:text-right rtl:xl:ml-14 ltr:xl:mr-14 xl:w-60">
                                             <div class="rtl:text-right ltr:text-left">
                                                 <div class="flex items-center">
                                                     <div class="font-medium">عنوان گارانتی</div>
                                                     <div
-                                                        class="rtl:mr-2.5 ltr:ml-2.5 rounded-md border border-slate-200 bg-slate-100 px-2 py-0.5 text-xs text-slate-500 dark:bg-darkmode-300 dark:text-slate-400">
+                                                            class="rtl:mr-2.5 ltr:ml-2.5 rounded-md border border-slate-200 bg-slate-100 px-2 py-0.5 text-xs text-slate-500 dark:bg-darkmode-300 dark:text-slate-400">
                                                         ضروری
                                                     </div>
                                                 </div>
@@ -226,12 +226,12 @@ class extends Component {
                                                                 class="text-success h-6 w-6 cursor-pointer"/>
                                                 @else
                                                     <x-fas-edit
-                                                        wire:click="setEditMode('{{$guarranty->id}}' , '{{$guarranty->title}}')"
-                                                        class="text-info h-6 w-6 cursor-pointer"/>
+                                                            wire:click="setEditMode('{{$guarranty->id}}' , '{{$guarranty->title}}')"
+                                                            class="text-info h-6 w-6 cursor-pointer"/>
                                                 @endif
                                                 <x-fas-trash
-                                                    wire:click="$dispatch('delete-guarranty',{ guarranty_id: {{$guarranty->id}} } )"
-                                                    class="text-danger h-6 w-6 cursor-pointer m-4"/>
+                                                        wire:click="$dispatch('delete-guarranty',{ guarranty_id: {{$guarranty->id}} } )"
+                                                        class="text-danger h-6 w-6 cursor-pointer m-4"/>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -239,7 +239,7 @@ class extends Component {
                                 </table>
                             </div>
                             <div
-                                class="flex-reverse flex flex-col-reverse flex-wrap items-center justify-center gap-y-2 p-5 sm:flex-row">
+                                    class="flex-reverse flex flex-col-reverse flex-wrap items-center justify-center gap-y-2 p-5 sm:flex-row">
                                 {{$this->guarranties->links('admin.layouts.pagination')}}
                             </div>
                         </div>

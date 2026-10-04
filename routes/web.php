@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::livewire('/', 'pages::store.index')->name('store.index');
 Route::livewire('/single_product/{product}', 'pages::store.single-product')->name('store.single.product');
+Route::livewire('/cart', 'pages::store.cart')->name('store.cart');
 
 
 // Auth Routes
