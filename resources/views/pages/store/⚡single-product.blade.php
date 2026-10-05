@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Cart;
 use App\Models\ProductVariant;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
@@ -14,19 +15,19 @@ class extends Component {
     public $product_price;
     public $total_price;
     public $mainImage;
-    public $count=1;
+    public $count = 1;
     public $selected_variant;
 
     public function mount(): void
     {
         $this->mainImage = $this->product->getMedia('products')->first()->getUrl();
-        $this->selected_variant = ProductVariant::activeProductVariant()->where('id',$this->product->lowest_product_id)->first();
-        if($this->selected_variant){
+        $this->selected_variant = ProductVariant::activeProductVariant()->where('id', $this->product->lowest_product_id)->first();
+        if ($this->selected_variant) {
             $this->product_price = $this->selected_variant->discount > 0
                 ? $this->selected_variant->discount_price
                 : $this->selected_variant->price;
             $this->total_price = $this->product_price;
-        }else{
+        } else {
             $this->redirectRoute('store.index');
         }
 
@@ -54,7 +55,7 @@ class extends Component {
 
     public function increaseProduct(): void
     {
-        if($this->count < $this->selected_variant->max_sell ){
+        if ($this->count < $this->selected_variant->max_sell) {
             $this->count++;
             $this->total_price = $this->product_price * $this->count;
         }
@@ -62,9 +63,32 @@ class extends Component {
 
     public function decreaseProduct(): void
     {
-        if($this->count > 1){
+        if ($this->count > 1) {
             $this->total_price = $this->total_price - $this->selected_variant->price;
             $this->count--;
+        }
+    }
+
+
+    public function addToCart($variant): void
+    {
+        $user = auth()->user();
+        if ($user) {
+            $cart_exists = Cart::query()->where('user_id', $user->id)
+                ->where('product_variant_id', $variant['id'])->exists();
+            if (!$cart_exists) {
+                Cart::query()->create([
+                    'user_id'=>$user->id,
+                    'product_id'=>$this->product->id,
+                    'count'=>$this->count,
+                    'product_variant_id'=>$variant['id']
+                ]);
+                $this->redirectRoute('store.cart');
+            }
+            $this->redirectRoute('store.cart');
+
+        } else {
+            $this->redirectRoute('login');
         }
     }
 };
@@ -128,7 +152,8 @@ class extends Component {
                             <svg class="absolute size-8 text-gray-100 top-4 left-4 z-10">
                                 <use href="#ellipsis"></use>
                             </svg>
-                            <img src="{{url('store/images/products/14.webp')}}" class="object-cover rounded-lg blur-sm" alt="">
+                            <img src="{{url('store/images/products/14.webp')}}" class="object-cover rounded-lg blur-sm"
+                                 alt="">
                         </div>
                     </div>
                 </div>
@@ -243,10 +268,10 @@ class extends Component {
                         <div class="flex items-center gap-x-3 child:rounded-full child:size-9 child:p-1">
                             @foreach($this->product->product_variants()->activeProductVariant()->get() as $variant)
                                 <button wire:click="setProduct({{$variant->id}})"
-                                @class([
-                                     'ring-4 ring-blue-400' => $this->product_price == $variant->price,
-                                     'color-select-btn  transition-all duration-300 ease-in-out'
-                                      ])>
+                                    @class([
+                                         'ring-4 ring-blue-400' => $this->product_price == $variant->price,
+                                         'color-select-btn  transition-all duration-300 ease-in-out'
+                                          ])>
                                 <span style="background-color: {{$variant->color->code}}"
                                       class="w-full h-full rounded-full flex"></span>
                                 </button>
@@ -314,12 +339,12 @@ class extends Component {
             </div>
             <button
                 class="w-full flex items-center justify-between gap-x-1 rounded-lg border border-gray-200 dark:border-white/20 py-2 px-3">
-                <svg  wire:click="increaseProduct" class="w-6 h-6 text-green-600">
+                <svg wire:click="increaseProduct" class="w-6 h-6 text-green-600">
                     <use href="#plus"></use>
                 </svg>
                 <input type="number" wire:model="count" disabled
                        class="custom-input mr-4 text-center text-lg bg-transparent">
-                <svg  wire:click="decreaseProduct" class="w-6 h-6  text-red-500">
+                <svg wire:click="decreaseProduct" class="w-6 h-6  text-red-500">
                     <use href="#minus"></use>
                 </svg>
             </button>
@@ -335,8 +360,8 @@ class extends Component {
                     <p>🔥 ۱۰۰۰+ فروش در هفته گذشته</p>
                 </div>
             </div>
-            <button
-                class="w-full flex items-center gap-x-1 justify-center bg-blue-500 text-white hover:bg-blue-600 transition-all rounded-lg shadow py-2">
+            <button wire:click="addToCart({{$this->selected_variant}})"
+                    class="w-full flex items-center gap-x-1 justify-center bg-blue-500 text-white hover:bg-blue-600 transition-all rounded-lg shadow py-2">
                 افزودن به سبد
                 <svg class="w-5 h-5">
                     <use href="#shopping-bag"></use>
