@@ -1,12 +1,26 @@
 <?php
 
+use App\Models\Cart;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
 new #[Layout('pages.layouts.master'), Title('جزئیات محصول')]
 class extends Component {
-    //
+
+    #[Computed]
+    public function cart()
+    {
+        $user = auth()->user();
+        if ($user) {
+
+            return Cart::query()->where('user_id', $user->id)->get();
+
+        } else {
+            $this->redirectRoute('login');
+        }
+    }
 };
 ?>
 
@@ -57,157 +71,80 @@ class extends Component {
             <!-- PRODUCT ITEMS -->
             <div
                 class="w-full flex flex-col gap-y-4 child:p-2 lg:child:p-4 ">
-                <!-- PRODUCT ITEM -->
-                <div class="w-full flex justify-between relative border-b-2 border-gray-200 dark:border-white/20 ">
-                    <div class="flex flex-col sm:flex-row items-center gap-6">
-                        <!-- IMG AND COUNT BTN -->
-                        <div class="flex w-fit flex-col">
-                            <img src="./images/products/8.webp" class="w-36" alt="">
-                            <button
-                                class="flex items-center justify-between gap-x-1 rounded-lg border border-gray-200 dark:border-white/20 py-1 px-2">
-                                <svg class="w-4 h-4 increment text-green-600">
-                                    <use href="#plus"></use>
-                                </svg>
-                                <input type="number" name="customInput" id="customInput" min="1" max="20" value="1"
-                                       class="custom-input mr-8 text-lg bg-transparent">
-                                <svg class="w-4 h-4 decrement text-red-500">
-                                    <use href="#minus"></use>
-                                </svg>
-                            </button>
-                        </div>
-                        <!-- information and name product -->
-                        <div class="flex flex-col gap-y-4">
-                            <h2 class="font-DanaMedium line-clamp-1">
-                                لپ تاپ 15.3 اینچی اپل مدل MacBook Air MXD13 2024 LLA-M3-16GB RAM-512GB SSD
-                            </h2>
-                            <ul
-                                class="space-y-3 child:text-sm text-gray-400 child:flex child:items-center child:gap-x-1.5">
-                                <li>
-                                    <span class="size-5 bg-blue-500 rounded-full"></span>
-                                    <p>آبی</p>
-                                </li>
-                                <li>
-                                    <svg class="w-5 h-5">
-                                        <use href="#shield"></use>
-                                    </svg>
-                                    <p class="mt-1">گارانتی 18 ماهه</p>
-                                </li>
-                                <li>
-                                    <svg class="w-5 h-5">
-                                        <use href="#truck"></use>
-                                    </svg>
-                                    <p class="mt-1">ارسال 1 روز کاری</p>
-                                </li>
-                            </ul>
-                            <span
-                                class="flex items-center gap-x-1 text-gray-700 dark:text-gray-300 font-DanaMedium mt-4">
-                                    <p class="font-DanaMedium text-xl">۱۲۵,۰۰۰,۰۰۰</p>
-                                    <p class="text-lg">تومان</p>
-                                </span>
-                            <span
-                                class="absolute bottom-3 left-0 text-blue-500 flex sm:hidden items-center gap-x-1 text-sm cursor-pointer">
-                                    <p class="hidden sm:flex">افزودن به خرید بعدی</p>
-                                    <p class="flex sm:hidden">خرید بعدی</p>
-                                    <svg class="w-4 h-4">
-                                        <use href="#chevron-left"></use>
-                                    </svg>
-                                </span>
-                            <svg class=" flex sm:hidden absolute top-0 left-0 w-5 h-5">
-                                <use href="#close"></use>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="hidden sm:flex items-end justify-between flex-col">
-                        <svg class="w-5 h-5 cursor-pointer">
-                            <use href="#x-mark"></use>
-                        </svg>
-                        <span
-                            class="absolute bottom-5 text-blue-500 hover:ml-2 duration-300 transition-all flex items-center gap-x-1 text-sm cursor-pointer">
-                                <p class="hidden md:flex">افزودن به خرید بعدی</p>
-                                <p class="flex md:hidden">خرید بعدی</p>
-                                <svg class="w-4 h-4">
-                                    <use href="#chevron-left"></use>
-                                </svg>
-                            </span>
-                    </div>
-                </div>
-
-                <!-- PRODUCT ITEM -->
-                <div class="w-full flex justify-between relative">
-                    <div class="flex flex-col sm:flex-row items-center gap-6">
-                        <!-- IMG AND COUNT BTN -->
-                        <div class="flex w-fit flex-col">
-                            <img src="./images/products/11.png" class="w-36 mb-5" alt="">
-                            <button
-                                class="flex items-center justify-between gap-x-1 rounded-lg border border-gray-200 dark:border-white/20 py-1 px-2">
-                                <svg class="w-4 h-4 increment text-green-600">
-                                    <use href="#plus"></use>
-                                </svg>
-                                <input type="number" name="customInput" id="customInput" min="1" max="20" value="1"
-                                       class="custom-input mr-8 text-lg bg-transparent">
-                                <svg class="w-4 h-4 decrement text-red-500">
-                                    <use href="#minus"></use>
-                                </svg>
-                            </button>
-                        </div>
-                        <!-- information and name product -->
-                        <div class="flex flex-col gap-y-4">
-                            <h2 class="font-DanaMedium line-clamp-1">
-                                لپ تاپ 15.3 اینچی اپل مدل MacBook Air MXD13 2024 LLA-M3-16GB RAM-512GB SSD
-                            </h2>
-                            <ul
-                                class="space-y-3 child:text-sm text-gray-400 child:flex child:items-center child:gap-x-1.5">
-                                <li>
+                @if($this->cart)
+                    @foreach($this->cart as $item)
+                        <div class="w-full flex justify-between relative border-b-2 border-gray-200 dark:border-white/20 ">
+                            <div class="flex flex-col sm:flex-row items-center gap-6">
+                                <!-- IMG AND COUNT BTN -->
+                                <div class="flex w-fit flex-col">
+                                    <img src="{{$item->product->getMedia('products')->first()->getUrl()}}" class="w-36" alt="">
+                                    <button
+                                        class="flex items-center justify-between gap-x-1 rounded-lg border border-gray-200 dark:border-white/20 py-1 px-2">
+                                        <svg class="w-4 h-4 increment text-green-600">
+                                            <use href="#plus"></use>
+                                        </svg>
+                                        <input type="number" name="customInput" id="customInput" min="1" max="20" value="1"
+                                               class="custom-input mr-8 text-lg bg-transparent">
+                                        <svg class="w-4 h-4 decrement text-red-500">
+                                            <use href="#minus"></use>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <!-- information and name product -->
+                                <div class="flex flex-col gap-y-4">
+                                    <h2 class="font-DanaMedium line-clamp-1">
+                                        {{$item->product->title}}
+                                    </h2>
+                                    <ul
+                                        class="space-y-3 child:text-sm text-gray-400 child:flex child:items-center child:gap-x-1.5">
+                                        <li>
+                                            <span style="background-color: {{$item->product_variant->color->code}}"
+                                                  class="size-5 rounded-full"></span>
+                                            <p>{{$item->product_variant->color->title}}</p>
+                                        </li>
+                                        <li>
+                                            <svg class="w-5 h-5">
+                                                <use href="#shield"></use>
+                                            </svg>
+                                            <p class="mt-1">{{$item->product_variant->guaranty->title}}</p>
+                                        </li>
+                                        <li>
+                                            <svg class="w-5 h-5">
+                                                <use href="#truck"></use>
+                                            </svg>
+                                            <p class="mt-1">ارسال 1 روز کاری</p>
+                                        </li>
+                                    </ul>
                                     <span
-                                        class="size-5 bg-white border-2 border-gray-200 dark:border-none rounded-full"></span>
-                                    <p>سفید</p>
-                                </li>
-                                <li>
-                                    <svg class="w-5 h-5">
-                                        <use href="#shield"></use>
-                                    </svg>
-                                    <p class="mt-1">گارانتی 18 ماهه</p>
-                                </li>
-                                <li>
-                                    <svg class="w-5 h-5">
-                                        <use href="#truck"></use>
-                                    </svg>
-                                    <p class="mt-1">ارسال 1 روز کاری</p>
-                                </li>
-                            </ul>
-                            <span
-                                class="flex items-center gap-x-1 text-gray-700 dark:text-gray-300 font-DanaMedium mt-4">
-                                    <p class="font-DanaMedium text-xl">۲۵,۰۰۰,۰۰۰</p>
+                                        class="flex items-center gap-x-1 text-gray-700 dark:text-gray-300 font-DanaMedium mt-4">
+                                    <p class="font-DanaMedium text-xl">{{$item->product_variant->price}}</p>
                                     <p class="text-lg">تومان</p>
                                 </span>
-                            <span
-                                class="absolute bottom-3 left-0 text-blue-500 flex sm:hidden items-center gap-x-1 text-sm cursor-pointer">
-                                    <p class="hidden sm:flex">افزودن به خرید بعدی</p>
-                                    <p class="flex sm:hidden">خرید بعدی</p>
+                                    <span
+                                        class="absolute bottom-3 left-0 text-blue-500 flex sm:hidden items-center gap-x-1 text-sm cursor-pointer">
                                     <svg class="w-4 h-4">
                                         <use href="#chevron-left"></use>
                                     </svg>
                                 </span>
-                            <svg class=" flex sm:hidden absolute top-0 left-0 w-5 h-5">
-                                <use href="#close"></use>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="hidden sm:flex items-end justify-between flex-col">
-                        <svg class="w-5 h-5 cursor-pointer">
-                            <use href="#x-mark"></use>
-                        </svg>
-                        <span
-                            class="absolute bottom-5 text-blue-500 hover:ml-2 duration-300 transition-all flex items-center gap-x-1 text-sm cursor-pointer">
-                                <p class="hidden md:flex">افزودن به خرید بعدی</p>
-                                <p class="flex md:hidden">خرید بعدی</p>
+                                    <svg class=" flex sm:hidden absolute top-0 left-0 w-5 h-5">
+                                        <use href="#close"></use>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="hidden sm:flex items-end justify-between flex-col">
+                                <svg class="w-5 h-5 cursor-pointer">
+                                    <use href="#x-mark"></use>
+                                </svg>
+                                <span
+                                    class="absolute bottom-5 text-blue-500 hover:ml-2 duration-300 transition-all flex items-center gap-x-1 text-sm cursor-pointer">
                                 <svg class="w-4 h-4">
                                     <use href="#chevron-left"></use>
                                 </svg>
                             </span>
-                    </div>
-                </div>
-
+                            </div>
+                        </div>
+                    @endforeach
+                @endif
             </div>
         </div>
 
@@ -230,7 +167,7 @@ class extends Component {
                 </li>
             </ul>
 
-            <a href="./checkout.html"
+            <a href="#"
                class="w-full mt-4 flex items-center gap-x-1 justify-center bg-blue-500 text-white hover:bg-blue-600 transition-all rounded-lg shadow py-2">
                 تایید و تکمیل سفارش
                 <svg class="w-5 h-5">
