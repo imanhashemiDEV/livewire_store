@@ -9,6 +9,25 @@ use Livewire\Component;
 new #[Layout('pages.layouts.master'), Title('جزئیات محصول')]
 class extends Component {
 
+    public int $totalPrice = 0;
+    public int $totalDiscount = 0;
+    public int $finalPrice = 0;
+
+    public function mount(): void
+    {
+        if($this->cart){
+            foreach ($this->cart as $item){
+
+                $this->totalPrice += $item->product_variant->price * $item->count;
+                if($item->product_variant->discount > 0){
+                    $this->totalDiscount += ($item->product_variant->price - $item->product_variant->discount_price) * $item->count ;
+                }
+            }
+
+            $this->finalPrice = $this->totalPrice - $this->totalDiscount;
+        }
+    }
+
     #[Computed]
     public function cart()
     {
@@ -73,17 +92,20 @@ class extends Component {
                 class="w-full flex flex-col gap-y-4 child:p-2 lg:child:p-4 ">
                 @if($this->cart)
                     @foreach($this->cart as $item)
-                        <div class="w-full flex justify-between relative border-b-2 border-gray-200 dark:border-white/20 ">
+                        <div
+                            class="w-full flex justify-between relative border-b-2 border-gray-200 dark:border-white/20 ">
                             <div class="flex flex-col sm:flex-row items-center gap-6">
                                 <!-- IMG AND COUNT BTN -->
                                 <div class="flex w-fit flex-col">
-                                    <img src="{{$item->product->getMedia('products')->first()->getUrl()}}" class="w-36" alt="">
+                                    <img src="{{$item->product->getMedia('products')->first()->getUrl()}}" class="w-36"
+                                         alt="">
                                     <button
                                         class="flex items-center justify-between gap-x-1 rounded-lg border border-gray-200 dark:border-white/20 py-1 px-2">
                                         <svg class="w-4 h-4 increment text-green-600">
                                             <use href="#plus"></use>
                                         </svg>
-                                        <input type="number" name="customInput" id="customInput" min="1" max="20" value="1"
+                                        <input type="number" name="customInput" id="customInput" min="1" max="20"
+                                               value="1"
                                                class="custom-input mr-8 text-lg bg-transparent">
                                         <svg class="w-4 h-4 decrement text-red-500">
                                             <use href="#minus"></use>
@@ -115,9 +137,24 @@ class extends Component {
                                             <p class="mt-1">ارسال 1 روز کاری</p>
                                         </li>
                                     </ul>
+                                    @if($item->product_variant->discount > 0)
+                                        <span class="flex items-center gap-x-2">
+                                        <span class="flex items-center gap-x-1 text-red-500">
+                                            <p class="font-DanaMedium text-sm">{{$item->product_variant->discount}}%</p>
+                                        </span>
+                                        <span class="flex items-center gap-x-1 text-gray-400 line-through">
+                                            <p class="text-sm">{{$item->product_variant->price}}</p>
+                                            <p class="text-xs">تومان</p>
+                                        </span>
+                                    </span>
+                                    @endif
                                     <span
                                         class="flex items-center gap-x-1 text-gray-700 dark:text-gray-300 font-DanaMedium mt-4">
-                                    <p class="font-DanaMedium text-xl">{{$item->product_variant->price}}</p>
+                                    @if($item->product_variant->discount_price > 0)
+                                            <p class="font-DanaMedium text-xl">{{$item->product_variant->discount_price}}</p>
+                                        @else
+                                            <p class="font-DanaMedium text-xl">{{$item->product_variant->price}}</p>
+                                        @endif
                                     <p class="text-lg">تومان</p>
                                 </span>
                                     <span
@@ -153,17 +190,21 @@ class extends Component {
             <!-- PRICE -->
             <ul class="child:flex child:items-center child:justify-between space-y-8">
                 <li>
-                    <p>قیمت کالاها(۱)</p>
-                    <p class="flex gap-x-1 text-gray-600 dark:text-gray-300 ">۱۲۵,۰۰۰,۰۰۰ <span class="hidden xl:flex">تومان</span>
+                    <p>قیمت کالاها({{ $this->cart ? $this->cart->count() : 0 }})</p>
+                    <p class="flex gap-x-1 text-gray-600 dark:text-gray-300 ">{{ number_format($this->totalPrice) }} <span
+                            class="hidden xl:flex">تومان</span>
                     </p>
                 </li>
-                <li>
-                    <p>تخفیف </p>
-                    <p class="font-DanaMedium text-gray-700 dark:text-gray-200">۵۰۰,۰۰۰ تومان </p>
-                </li>
+                @if($this->totalDiscount > 0)
+                    <li>
+                        <p>تخفیف </p>
+                        <p class="font-DanaMedium text-gray-700 dark:text-gray-200">{{ number_format($this->totalDiscount) }}
+                            تومان </p>
+                    </li>
+                @endif
                 <li class="border-t-2 border-dashed border-gray-400 pt-8">
                     <p> مبلغ نهایی :</p>
-                    <p>۱۱۹,۵۰۰,۰۰۰ تومان</p>
+                    <p>{{ number_format($this->finalPrice) }} تومان</p>
                 </li>
             </ul>
 
