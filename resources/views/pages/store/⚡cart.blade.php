@@ -51,12 +51,21 @@ class extends Component {
             $this->totalPrice -= $cartItem->product_variant->price;
             $this->totalDiscount -= $cartItem->product_variant->price - $cartItem->product_variant->discount_price;
             $this->finalPrice = $this->totalPrice - $this->totalDiscount;
+        }elseif($cartItem && $cartItem->count == 1){
+            $this->totalPrice -= $cartItem->product_variant->price;
+            $this->totalDiscount -= $cartItem->product_variant->price - $cartItem->product_variant->discount_price;
+            $this->finalPrice = $this->totalPrice - $this->totalDiscount;
+            $cartItem->delete();
         }
     }
 
-    public function calculatePrices(): void
+    public function deleteCartItem(int $cartId , $count): void
     {
-
+        $cartItem = Cart::query()->find($cartId);
+            $this->totalPrice -= $cartItem->product_variant->price * $count;
+            $this->totalDiscount -= ($cartItem->product_variant->price - $cartItem->product_variant->discount_price) * $count;
+            $this->finalPrice = $this->totalPrice - $this->totalDiscount;
+            $cartItem->delete();
     }
 
     #[Computed]
@@ -194,13 +203,13 @@ class extends Component {
                                         <use href="#chevron-left"></use>
                                     </svg>
                                 </span>
-                                    <svg class=" flex sm:hidden absolute top-0 left-0 w-5 h-5">
+                                    <svg  class=" flex sm:hidden absolute top-0 left-0 w-5 h-5">
                                         <use href="#close"></use>
                                     </svg>
                                 </div>
                             </div>
                             <div class="hidden sm:flex items-end justify-between flex-col">
-                                <svg class="w-5 h-5 cursor-pointer">
+                                <svg wire:click="deleteCartItem('{{$item->id}}','{{$item->count}}')" class="w-5 h-5 cursor-pointer">
                                     <use href="#x-mark"></use>
                                 </svg>
                                 <span
