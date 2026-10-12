@@ -4,6 +4,7 @@ use App\Models\Cart;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 new #[Layout('pages.layouts.master'), Title('جزئیات محصول')]
@@ -17,15 +18,45 @@ class extends Component {
     {
         if($this->cart){
             foreach ($this->cart as $item){
-
                 $this->totalPrice += $item->product_variant->price * $item->count;
                 if($item->product_variant->discount > 0){
-                    $this->totalDiscount += ($item->product_variant->price - $item->product_variant->discount_price) * $item->count ;
+                    $this->totalDiscount += ($item->product_variant->price - $item->product_variant->discount_price) * $item->count;
                 }
             }
 
             $this->finalPrice = $this->totalPrice - $this->totalDiscount;
         }
+    }
+
+    public function increaseProduct(int $cartId , $count): void
+    {
+        $cartItem = Cart::query()->find($cartId);
+        if ($cartItem && $cartItem->count < $cartItem->product_variant->max_sell) {
+            $cartItem->update([
+                'count'=> (int) ++$count
+            ]);
+            $this->totalPrice += $cartItem->product_variant->price;
+            $this->totalDiscount += $cartItem->product_variant->price - $cartItem->product_variant->discount_price;
+            $this->finalPrice = $this->totalPrice - $this->totalDiscount;
+        }
+    }
+
+    public function decreaseProduct(int $cartId , $count): void
+    {
+        $cartItem = Cart::query()->find($cartId);
+        if ($cartItem && $cartItem->count > 1) {
+            $cartItem->update([
+                'count'=> (int) --$count
+            ]);
+            $this->totalPrice -= $cartItem->product_variant->price;
+            $this->totalDiscount -= $cartItem->product_variant->price - $cartItem->product_variant->discount_price;
+            $this->finalPrice = $this->totalPrice - $this->totalDiscount;
+        }
+    }
+
+    public function calculatePrices(): void
+    {
+
     }
 
     #[Computed]
@@ -101,13 +132,13 @@ class extends Component {
                                          alt="">
                                     <button
                                         class="flex items-center justify-between gap-x-1 rounded-lg border border-gray-200 dark:border-white/20 py-1 px-2">
-                                        <svg class="w-4 h-4 increment text-green-600">
+                                        <svg wire:click="increaseProduct('{{ $item->id }}' , '{{$item->count}}')" class="w-4 h-4 text-green-600 cursor-pointer">
                                             <use href="#plus"></use>
                                         </svg>
-                                        <input type="number" name="customInput" id="customInput" min="1" max="20"
-                                               value="1"
-                                               class="custom-input mr-8 text-lg bg-transparent">
-                                        <svg class="w-4 h-4 decrement text-red-500">
+                                        <input type="number" name="customInput" id="customInput-{{ $item->id }}" min="1" max="{{ $item->product_variant->max_sell }}"
+                                               value="{{ $item->count }}"
+                                               class="custom-input text-lg bg-transparent text-center">
+                                        <svg wire:click="decreaseProduct('{{ $item->id }}' , '{{$item->count}}')" class="w-4 h-4 text-red-500 cursor-pointer">
                                             <use href="#minus"></use>
                                         </svg>
                                     </button>
