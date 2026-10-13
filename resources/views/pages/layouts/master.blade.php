@@ -412,12 +412,7 @@
                         <use href="#shopping-bag" />
                     </svg>
                     @auth()
-                        <span class="absolute -top-1 -right-1 flex h-4 w-4">
-                            <span
-                                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-600 opacity-75"></span>
-                            <span
-                                class="relative inline-flex rounded-full h-4 w-4 bg-red-500 text-xs pt-1 flex-center text-white">{{\App\Models\Cart::query()->where('user_id', auth()->user()->id)->count()}}</span>
-                    </span>
+                       <livewire:pages::components.header-cart-icon/>
                     @endauth
                 </button>
                 <!-- Cart -->

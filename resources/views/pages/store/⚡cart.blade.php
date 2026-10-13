@@ -16,6 +16,14 @@ class extends Component {
 
     public function mount(): void
     {
+        $this->calculateCart();
+    }
+
+    public function calculateCart()
+    {
+     $this->totalPrice = 0;
+     $this->totalDiscount = 0;
+     $this->finalPrice = 0;
         if($this->cart){
             foreach ($this->cart as $item){
                 $this->totalPrice += $item->product_variant->price * $item->count;
@@ -39,6 +47,8 @@ class extends Component {
             $this->totalDiscount += $cartItem->product_variant->price - $cartItem->product_variant->discount_price;
             $this->finalPrice = $this->totalPrice - $this->totalDiscount;
         }
+        $this->dispatch('refreshSideCart');
+        $this->calculateCart();
     }
 
     public function decreaseProduct(int $cartId , $count): void
@@ -56,7 +66,11 @@ class extends Component {
             $this->totalDiscount -= $cartItem->product_variant->price - $cartItem->product_variant->discount_price;
             $this->finalPrice = $this->totalPrice - $this->totalDiscount;
             $cartItem->delete();
+            $this->dispatch('refreshCartIcon');
         }
+
+        $this->dispatch('refreshSideCart');
+        $this->calculateCart();
     }
 
     public function deleteCartItem(int $cartId , $count): void
@@ -66,16 +80,23 @@ class extends Component {
             $this->totalDiscount -= ($cartItem->product_variant->price - $cartItem->product_variant->discount_price) * $count;
             $this->finalPrice = $this->totalPrice - $this->totalDiscount;
             $cartItem->delete();
+
+        $this->dispatch('refreshSideCart');
+        $this->dispatch('refreshCartIcon');
+        $this->calculateCart();
     }
 
+    #[On('refreshMainCart')]
+    public function refreshCart()
+    {
+        $this->calculateCart();
+    }
     #[Computed]
     public function cart()
     {
         $user = auth()->user();
         if ($user) {
-
             return Cart::query()->where('user_id', $user->id)->get();
-
         } else {
             $this->redirectRoute('login');
         }
