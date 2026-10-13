@@ -7,7 +7,7 @@ use Livewire\Attributes\Title;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-new #[Layout('pages.layouts.master'), Title('جزئیات محصول')]
+new #[Layout('pages.layouts.master'), Title('سبد خرید')]
 class extends Component {
 
     public int $totalPrice = 0;
