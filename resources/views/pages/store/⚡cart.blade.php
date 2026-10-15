@@ -19,7 +19,7 @@ class extends Component {
         $this->calculateCart();
     }
 
-    public function calculateCart()
+    public function calculateCart(): void
     {
      $this->totalPrice = 0;
      $this->totalDiscount = 0;
@@ -87,7 +87,7 @@ class extends Component {
     }
 
     #[On('refreshMainCart')]
-    public function refreshCart()
+    public function refreshCart(): void
     {
         $this->calculateCart();
     }

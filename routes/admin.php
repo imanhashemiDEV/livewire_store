@@ -1,7 +1,10 @@
 <?php
 
 
+use App\Http\Controllers\Admin\EditorUploadController;
 use Illuminate\Support\Facades\Route;
+
+Route::post('/editor_upload', EditorUploadController::class)->name('admin.editor-upload');
 
 Route::livewire('/', 'admin::panel.index')->name('admin.panel.index');
 

@@ -287,7 +287,9 @@ class extends Component {
                                         </div>
                                     </div>
                                     <div class="mt-3 w-full flex-1 xl:mt-0">
-                                        <div wire:ignore class="flex flex-col items-center">
+                                        <div wire:ignore class="flex flex-col items-center"
+                                             data-editor-upload-url="{{ route('admin.editor-upload') }}"
+                                             data-csrf-token="{{ csrf_token() }}">
                                             <textarea id="editor" wire:model="description"
                                                       class="disabled:bg-slate-100 disabled:cursor-not-allowed dark:disabled:bg-darkmode-800/50 dark:disabled:border-transparent [&[readonly]]:bg-slate-100 [&[readonly]]:cursor-not-allowed [&[readonly]]:dark:bg-darkmode-800/50 [&[readonly]]:dark:border-transparent transition duration-200 ease-in-out w-full text-sm border-slate-200 shadow-sm rounded-md placeholder:text-slate-400/90 focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus:border-primary focus:border-opacity-40 dark:bg-darkmode-800 dark:border-transparent dark:focus:ring-slate-700 dark:focus:ring-opacity-50 dark:placeholder:text-slate-500/80 [&[type='file']]:border rtl:file:ml-4 ltr:file:mr-4 file:py-2 file:px-4 rtl:file:rounded-r-md ltr:file:rounded-l-md file:border-0 rtl:file:border-l-[1px] ltr:file:border-r-[1px] file:border-slate-100/10 file:text-sm file:font-semibold file:bg-slate-100 file:text-slate-500/70 hover:file:bg-200 group-[.form-inline]:flex-1 group-[.input-group]:rounded-none rtl:group-[.input-group]:[&:not(:first-child)]:border-r-transparent ltr:group-[.input-group]:[&:not(:first-child)]:border-l-transparent rtl:group-[.input-group]:first:rounded-r ltr:group-[.input-group]:first:rounded-l rtl:group-[.input-group]:last:rounded-l ltr:group-[.input-group]:last:rounded-r group-[.input-group]:z-10 first:rounded-b-none last:-mt-px last:rounded-t-none focus:z-10 rtl:first:md:rounded-l-none ltr:first:md:rounded-r-none rtl:first:md:rounded-br-md ltr:first:md:rounded-bl-md rtl:last:md:-mr-px ltr:last:md:-ml-px last:md:mt-0 rtl:last:md:rounded-r-none ltr:last:md:rounded-l-none rtl:last:md:rounded-tl-md ltr:last:md:rounded-tr-md [&:not(:first-child):not(:last-child)]:-mt-px [&:not(:first-child):not(:last-child)]:rounded-none rtl:[&:not(:first-child):not(:last-child)]:md:-mr-px ltr:[&:not(:first-child):not(:last-child)]:md:-ml-px [&:not(:first-child):not(:last-child)]:md:mt-0"></textarea>
                                             @error('description')
@@ -336,6 +338,64 @@ class extends Component {
             Livewire.dispatch('set-brand', {id: value});
         }
     });
+
+    const editorWrapper = document.querySelector('[data-editor-upload-url]');
+    const editorUploadUrl = editorWrapper.dataset.editorUploadUrl;
+    const csrfToken = editorWrapper.dataset.csrfToken;
+
+    // This CKEditor DLL build ships SimpleUploadAdapter as dead code but never
+    // registers it, so ImageUpload would fail with "filerepository-no-upload-adapter"
+    // and the image button would silently do nothing. Register our own adapter that
+    // posts to the Laravel upload endpoint instead.
+    class ProductImageUploadAdapter {
+        constructor(loader) {
+            this.loader = loader;
+        }
+
+        upload() {
+            return this.loader.file.then(file => new Promise((resolve, reject) => {
+                const xhr = this.xhr = new XMLHttpRequest();
+                const genericError = `Couldn't upload file: ${file.name}.`;
+
+                xhr.open('POST', editorUploadUrl, true);
+                xhr.responseType = 'json';
+                xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+
+                xhr.addEventListener('error', () => reject(genericError));
+                xhr.addEventListener('abort', () => reject());
+                xhr.addEventListener('load', () => {
+                    const response = xhr.response;
+
+                    if (!response || response.error) {
+                        return reject(response && response.error && response.error.message
+                            ? response.error.message
+                            : genericError);
+                    }
+
+                    resolve({ default: response.url });
+                });
+
+                if (xhr.upload) {
+                    xhr.upload.addEventListener('progress', event => {
+                        if (event.lengthComputable) {
+                            this.loader.uploadTotal = event.total;
+                            this.loader.uploaded = event.loaded;
+                        }
+                    });
+                }
+
+                const data = new FormData();
+                data.append('upload', file);
+                xhr.send(data);
+            }));
+        }
+
+        abort() {
+            if (this.xhr) {
+                this.xhr.abort();
+            }
+        }
+    }
 
     ClassicEditor
         .create(document.querySelector('#editor'), {
@@ -393,6 +453,9 @@ class extends Component {
 
         })
         .then(editor => {
+            editor.plugins.get('FileRepository').createUploadAdapter = (loader) =>
+                new ProductImageUploadAdapter(loader);
+
             editor.model.document.on('change:data', () => {
                 this.set('description', editor.getData(), false);
             })

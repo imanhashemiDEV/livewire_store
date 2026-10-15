@@ -10,7 +10,7 @@ new class extends Component {
 
     #[On('refreshCartIcon')]
     #[Computed]
-    public function cart()
+    public function cart(): \Illuminate\Database\Eloquent\Collection
     {
         $user = auth()->user();
         return Cart::query()->where('user_id', $user->id)->get();
