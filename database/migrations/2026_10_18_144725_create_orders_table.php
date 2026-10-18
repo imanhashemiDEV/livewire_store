@@ -29,8 +29,9 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->float('total_price');
             $table->float('total_discount');
-            $table->float('total_price');
+            $table->float('total_discount_price');
             $table->string('status')->default(\App\Enums\OrderStatus::PENDING->value);
+            $table->softDeletes();
             $table->timestamps();
         });
     }
