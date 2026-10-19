@@ -269,7 +269,7 @@ class extends Component {
                 </li>
             </ul>
 
-            <a href="#"
+            <a href="{{route('store.order')}}"
                class="w-full mt-4 flex items-center gap-x-1 justify-center bg-blue-500 text-white hover:bg-blue-600 transition-all rounded-lg shadow py-2">
                 تایید و تکمیل سفارش
                 <svg class="w-5 h-5">

@@ -46,3 +46,5 @@ Route::livewire('/product_variant_create/{product}', 'admin::products.create-var
 Route::livewire('/product_variant_edit/{product_variant}/{product}', 'admin::products.edit-variant')->name('admin.products.variant.edit');
 
 Route::livewire('/sliders', 'admin::sliders.list')->name('admin.sliders.list');
+
+Route::livewire('/send_type', 'admin::send-type.index')->name('admin.send-type.index');
