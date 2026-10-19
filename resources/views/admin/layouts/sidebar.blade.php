@@ -121,6 +121,12 @@
                     <div class="side-menu__link__title">نحوه ارسال</div>
                 </a>
             </li>
+            <li>
+                <a href="{{route('admin.payment-type.index')}}" class="side-menu__link @if(\Illuminate\Support\Facades\Route::is('admin.payment-type.index')) side-menu__link--active  @endif">
+                    <i data-tw-merge="" data-lucide="sliders-horizontal" class="stroke-[1] w-5 h-5 side-menu__link__icon"></i>
+                    <div class="side-menu__link__title">نوع پرداخت</div>
+                </a>
+            </li>
 
             <!-- END: First Child -->
         </ul>

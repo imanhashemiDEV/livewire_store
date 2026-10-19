@@ -48,3 +48,4 @@ Route::livewire('/product_variant_edit/{product_variant}/{product}', 'admin::pro
 Route::livewire('/sliders', 'admin::sliders.list')->name('admin.sliders.list');
 
 Route::livewire('/send_type', 'admin::send-type.index')->name('admin.send-type.index');
+Route::livewire('/payment_type', 'admin::payment-type.index')->name('admin.payment-type.index');
