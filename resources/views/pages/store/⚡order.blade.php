@@ -13,7 +13,7 @@ class extends Component {
 
     public int $totalPrice = 0;
     public int $totalDiscount = 0;
-    public int $finalPrice = 0;
+    public int $total_discount_price = 0;
 
     //--- Form variables ---//
     public string $receiver_name = '';
@@ -83,6 +83,53 @@ class extends Component {
             return Cart::query()->where('user_id', $user->id)->get();
         } else {
             $this->redirectRoute('login');
+        }
+    }
+
+    public function payment()
+    {
+        $this->validate();
+
+        \Illuminate\Support\Facades\DB::beginTransaction();
+        try {
+            $order = \App\Models\Order::query()->create([
+                'user_id'=> auth()->user->id,
+                'discount_id'=>null,
+                'send_type_id'=>$this->send_type_id,
+                'payment_type_id'=>$this->payment_type_id,
+                'order_code'=> generateRandomInteger(6),
+                'receiver_name' => $this->receiver_name,
+                'receiver_family' => $this->receiver_family,
+                'province'=>$this->province,
+                'city' =>$this->city,
+                'address' => $this->address,
+                'phone' => $this->phone,
+                'postal_code' => $this->postal_code,
+                'description' => $this->description,
+                'total_price' => $this->totalPrice,
+                'total_discount' => $this->totalDiscount,
+                'total_discount_price' => $this->total_discount_price,
+            ]);
+
+              foreach ( $this->carts  as $cart ){
+                  \App\Models\OrderDetail::query()->create([
+                      'seller_id' => $cart->product_variant->seller_id,
+                      'order_id'=>$order,
+                      'price' =>$cart->product_variant->price,
+                      'discount'=>$cart->product_variant->discount,
+                      'discount_price'=>$cart->product_variant->discount_price,
+                      'count'=>$cart->count,
+                      'product_id'=>$cart->product_id,
+                      'color_id'=>$cart->product_variant->color_id,
+                      'guaranty_id'=>$cart->product_variant->guaranty_id
+                  ]);
+              }
+
+              \Illuminate\Support\Facades\DB::commit();
+
+        }catch(\Exception $exception){
+            \Illuminate\Support\Facades\Log::error($exception->getMessage());
+            \Illuminate\Support\Facades\DB::rollBack();
         }
     }
 };
@@ -186,7 +233,7 @@ class extends Component {
                     child:transition-all child:text-gray-600 child:dark:text-gray-300  child:font-DanaMedium child:text-base mt-4">
                     @foreach($this->send_types as $send_type)
                         <button
-                                class=" group ring-transparent ring-1 focus:ring-blue-500 dark:ring-white/20 dark:focus:ring-blue-400">
+                            class=" group ring-transparent ring-1 focus:ring-blue-500 dark:ring-white/20 dark:focus:ring-blue-400">
                             <span
                                 class="w-4 h-4 border border-gray-400 rounded-full group-focus:bg-blue-400 group-focus:border-blue-500 duration-300 transition-all"></span>
                             {{$send_type->title}} : {{$send_type->price}} تومان
@@ -235,8 +282,7 @@ class extends Component {
             </div>
             <div>
                 <h1 class="font-DanaDemiBold text-lg">خلاصه سفارش</h1>
-                <div class="mt-8">
-                         <span class="flex items-center gap-x-1.5">
+                <span class="flex items-center gap-x-1.5">
                         <a href="#">
                             <svg class="size-6 text-red-500 mb-1">
                                 <use href="#truck"></use>
@@ -244,19 +290,22 @@ class extends Component {
                         </a>
                         <h1 class="font-DanaMedium text-lg">جمعه ۲ خرداد-بازه ۹ - ۲۲</h1>
                         </span>
+                <div class="mt-8 flex justify-start gap-2">
+
                     @if($this->cart)
                         @foreach($this->cart as $item)
-                    <div class="flex flex-col mt-8 gap-x-4">
-                        <img src="{{$item->product->getMedia('products')->first()->getUrl()}}" class="w-36 h-20" alt="">
-                        <ul class="flex flex-col items-start gap-y-2 font-DanaMedium text-gray-600 dark:text-gray-200 mt-5  mr-3">
-                            <li class="flex items-center gap-x-1.5">
+                            <div class="flex flex-col mt-8 gap-x-4">
+                                <img src="{{$item->product->getMedia('products')->first()->getUrl()}}"
+                                     class="w-36 h-20 rounded-lg" alt="">
+                                <ul class="flex flex-col items-start gap-y-2 font-DanaMedium text-gray-600 dark:text-gray-200 mt-5  mr-3">
+                                    <li class="flex items-center gap-x-1.5">
                                             <span style="background-color: {{$item->product_variant->color->code}}"
                                                   class="size-5 rounded-full"></span>
-                                <p>{{$item->product_variant->color->title}}</p>
-                            </li>
+                                        <p>{{$item->product_variant->color->title}}</p>
+                                    </li>
 
-                            @if($item->product_variant->discount > 0)
-                                <li>
+                                    @if($item->product_variant->discount > 0)
+                                        <li>
                                     <span class="flex items-center gap-x-2">
                                         <span class="flex items-center gap-x-1 text-red-500">
                                             <p class="font-DanaMedium text-sm">{{$item->product_variant->discount}}%</p>
@@ -266,49 +315,51 @@ class extends Component {
                                             <p class="text-xs">تومان</p>
                                         </span>
                                     </span>
-                                </li>
-                            @endif
+                                        </li>
+                                    @endif
 
-                            <li>
-                                @if($item->product_variant->discount_price > 0)
-                                    <p class="font-DanaMedium text-xl">{{$item->product_variant->discount_price}}</p>
-                                @else
-                                    <p class="font-DanaMedium text-xl">{{$item->product_variant->price}}</p>
-                                @endif
-                            </li>
-                        </ul>
-                    </div>
+                                    <li>
+                                        @if($item->product_variant->discount_price > 0)
+                                            <p class="font-DanaMedium text-xl">{{$item->product_variant->discount_price}}</p>
+                                        @else
+                                            <p class="font-DanaMedium text-xl">{{$item->product_variant->price}}</p>
+                                        @endif
+                                    </li>
+                                </ul>
+                            </div>
                         @endforeach
                     @endif
                 </div>
             </div>
         </div>
         <!-- PRICE BOX -->
-        <div class="w-full lg:w-1/4 lg:sticky top-5 flex flex-col gap-y-4">
+        <div
+            class="w-full lg:w-1/4 lg:sticky top-5 flex flex-col gap-y-4 rounded-lg bg-white dark:bg-gray-800 shadow p-4">
             <!-- PRICE -->
             <ul class="child:flex child:items-center child:justify-between space-y-8">
                 <li>
                     <p>قیمت کالاها({{ $this->cart ? $this->cart->count() : 0 }})</p>
-                    <p class="flex gap-x-1 text-gray-600 dark:text-gray-300 ">{{ number_format($this->totalPrice) }} <span
+                    <p class="flex gap-x-1 text-gray-600 dark:text-gray-300 ">{{ number_format($this->totalPrice) }}
+                        <span
                             class="hidden xl:flex">تومان</span>
                     </p>
                 </li>
                 @if($this->totalDiscount > 0)
-                    <li>
+                    <li class="text-red-500 dark:text-red-400">
                         <p>تخفیف </p>
-                        <p class="font-DanaMedium text-gray-700 dark:text-gray-200">{{ number_format($this->totalDiscount) }}
+                        <p class="font-DanaMedium">{{ number_format($this->totalDiscount) }}
                             تومان </p>
                     </li>
                 @endif
                 <li class="border-t-2 border-dashed border-gray-400 pt-8">
                     <p> مبلغ نهایی :</p>
-                    <p>{{ number_format($this->finalPrice) }} تومان</p>
+                    <p>{{ number_format($this->total_discount_price) }} تومان</p>
                 </li>
             </ul>
 
-            <a href="{{route('store.order')}}"
+            <a wire:click="payment"
                class="w-full mt-4 flex items-center gap-x-1 justify-center bg-blue-500 text-white hover:bg-blue-600 transition-all rounded-lg shadow py-2">
-                تایید و تکمیل سفارش
+                پرداخت
                 <svg class="w-5 h-5">
                     <use href="#shopping-bag"></use>
                 </svg>

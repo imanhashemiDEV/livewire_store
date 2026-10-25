@@ -257,9 +257,9 @@ class extends Component {
                     </p>
                 </li>
                 @if($this->totalDiscount > 0)
-                    <li>
+                    <li class="text-red-500 dark:text-red-400">
                         <p>تخفیف </p>
-                        <p class="font-DanaMedium text-gray-700 dark:text-gray-200">{{ number_format($this->totalDiscount) }}
+                        <p class="font-DanaMedium">{{ number_format($this->totalDiscount) }}
                             تومان </p>
                     </li>
                 @endif
