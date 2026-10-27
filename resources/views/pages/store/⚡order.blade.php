@@ -29,8 +29,9 @@ class extends Component {
     public string $postal_code = '';
     public string $description = '';
     public string $discount_code = '';
-    public int $send_type_id = 0;
-    public int $payment_type_id = 0;
+
+    public int $send_type_id = 1;
+    public int $payment_type_id = 1;
 
     public $send_types;
     public $payment_types;
@@ -57,6 +58,9 @@ class extends Component {
     public function mount(): void
     {
         $this->calculateCart();
+
+        $this->send_type_id  = SendType::query()->first()?->id;
+        $this->payment_type_id = PaymentType::query()->first()?->id;
 
         $this->send_types = SendType::query()->get();
         $this->payment_types = PaymentType::query()->get();
@@ -135,6 +139,16 @@ class extends Component {
             Log::error($exception->getMessage());
             DB::rollBack();
         }
+    }
+
+    public function setSendType($id)
+    {
+        $this->send_type_id = $id;
+    }
+
+    public function setPaymentType($id)
+    {
+        $this->payment_type_id = $id;
     }
 };
 ?>
@@ -236,10 +250,17 @@ class extends Component {
                 <div class="grid grid-cols-12 child:col-span-12 gap-2 child:w-full child:flex child:items-center child:gap-x-2 child:rounded-lg  child:p-3 child:duration-300 child:border child:border-gray-300 child:dark:border-gray-300/20
                     child:transition-all child:text-gray-600 child:dark:text-gray-300  child:font-DanaMedium child:text-base mt-4">
                     @foreach($this->send_types as $send_type)
-                        <button
-                            class=" group ring-transparent ring-1 focus:ring-blue-500 dark:ring-white/20 dark:focus:ring-blue-400">
+                        <button wire:click="setSendType({{$send_type->id}})" @class([
+                                    'group ring-transparent ring-1',
+                                    ' ring-2 ring-blue-500 dark:ring-blue-400' => $this->send_type_id == $send_type->id,
+                                    'dark:ring-white/20' => $this->send_type_id != $send_type->id
+                                 ]) >
                             <span
-                                class="w-4 h-4 border border-gray-400 rounded-full group-focus:bg-blue-400 group-focus:border-blue-500 duration-300 transition-all"></span>
+                                @class([
+                                     'w-4 h-4 border  rounded-full duration-300 transition-all',
+                                     'bg-blue-400 border-blue-500' => $this->send_type_id == $send_type->id,
+                                     'border-gray-400' => $this->send_type_id != $send_type->id
+                                   ])></span>
                             {{$send_type->title}} : {{$send_type->price}} تومان
                         </button>
                     @endforeach
@@ -257,10 +278,18 @@ class extends Component {
                 <div class="grid grid-cols-12 child:col-span-12 gap-4 child:w-full child:flex child:items-center child:gap-x-3 child:rounded-lg child:px-3 child:py-3.5 child:duration-300 child:border child:border-gray-300 child:dark:border-gray-300/20
                     child:transition-all child:text-base mt-5">
                     @foreach($this->payment_types as $payment_type)
-                        <button
-                            class="group ring-transparent ring-1 focus:ring-blue-500 dark:ring-white/20 dark:focus:ring-blue-400">
+
+                        <button wire:click="setPaymentType({{$payment_type->id}})" @class([
+                                    'group ring-transparent ring-1',
+                                    'ring-blue-500 focus:ring-blue-400 ring-2 ' => $this->payment_type_id == $payment_type->id,
+                                    'dark:ring-white/20' => $this->payment_type_id != $payment_type->id
+                                 ]) >
                         <span
-                            class="size-5 border border-gray-400 rounded-full group-focus:bg-blue-400 group-focus:border-blue-500 duration-300 transition-all"></span>
+                            @class([
+                                     'w-4 h-4 border  rounded-full duration-300 transition-all',
+                                     'bg-blue-400 border-blue-500' => $this->payment_type_id == $payment_type->id,
+                                     'border-gray-400' => $this->payment_type_id != $payment_type->id
+                                   ])></span>
                             <svg class="size-6">
                                 <use href="#card"></use>
                             </svg>
