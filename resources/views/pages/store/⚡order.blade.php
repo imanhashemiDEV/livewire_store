@@ -1,12 +1,16 @@
 <?php
 
 use App\Models\Cart;
+use App\Models\Order;
+use App\Models\OrderDetail;
 use App\Models\PaymentType;
 use App\Models\SendType;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Illuminate\Support\Facades\Log;
+use \Illuminate\Support\Facades\DB;
 
 new  #[Layout('pages.layouts.master'), Title('سفارش')]
 class extends Component {
@@ -90,18 +94,18 @@ class extends Component {
     {
         $this->validate();
 
-        \Illuminate\Support\Facades\DB::beginTransaction();
+        DB::beginTransaction();
         try {
-            $order = \App\Models\Order::query()->create([
-                'user_id'=> auth()->user->id,
-                'discount_id'=>null,
-                'send_type_id'=>$this->send_type_id,
-                'payment_type_id'=>$this->payment_type_id,
-                'order_code'=> generateRandomInteger(6),
+            $order = Order::query()->create([
+                'user_id' => auth()->user->id,
+                'discount_id' => null,
+                'send_type_id' => $this->send_type_id,
+                'payment_type_id' => $this->payment_type_id,
+                'order_code' => generateRandomInteger(6),
                 'receiver_name' => $this->receiver_name,
                 'receiver_family' => $this->receiver_family,
-                'province'=>$this->province,
-                'city' =>$this->city,
+                'province' => $this->province,
+                'city' => $this->city,
                 'address' => $this->address,
                 'phone' => $this->phone,
                 'postal_code' => $this->postal_code,
@@ -111,25 +115,25 @@ class extends Component {
                 'total_discount_price' => $this->total_discount_price,
             ]);
 
-              foreach ( $this->carts  as $cart ){
-                  \App\Models\OrderDetail::query()->create([
-                      'seller_id' => $cart->product_variant->seller_id,
-                      'order_id'=>$order,
-                      'price' =>$cart->product_variant->price,
-                      'discount'=>$cart->product_variant->discount,
-                      'discount_price'=>$cart->product_variant->discount_price,
-                      'count'=>$cart->count,
-                      'product_id'=>$cart->product_id,
-                      'color_id'=>$cart->product_variant->color_id,
-                      'guaranty_id'=>$cart->product_variant->guaranty_id
-                  ]);
-              }
+            foreach ($this->carts as $cart) {
+                OrderDetail::query()->create([
+                    'seller_id' => $cart->product_variant->seller_id,
+                    'order_id' => $order,
+                    'price' => $cart->product_variant->price,
+                    'discount' => $cart->product_variant->discount,
+                    'discount_price' => $cart->product_variant->discount_price,
+                    'count' => $cart->count,
+                    'product_id' => $cart->product_id,
+                    'color_id' => $cart->product_variant->color_id,
+                    'guaranty_id' => $cart->product_variant->guaranty_id
+                ]);
+            }
 
-              \Illuminate\Support\Facades\DB::commit();
+            DB::commit();
 
-        }catch(\Exception $exception){
-            \Illuminate\Support\Facades\Log::error($exception->getMessage());
-            \Illuminate\Support\Facades\DB::rollBack();
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage());
+            DB::rollBack();
         }
     }
 };
