@@ -1,6 +1,8 @@
 <?php
 
+use App\Enums\DiscountStatus;
 use App\Models\Cart;
+use App\Models\Discount;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\PaymentType;
@@ -18,7 +20,6 @@ class extends Component {
     public int $totalPrice = 0;
     public int $totalDiscount = 0;
     public int $total_discount_price = 0;
-    public int $discountByCode = 0;
 
     //--- Form variables ---//
     public string $receiver_name = '';
@@ -29,14 +30,13 @@ class extends Component {
     public string $phone = '';
     public string $postal_code = '';
     public string $description = '';
-    public  $discount_code = null;
+    public string $discount_code = '';
 
     public int $send_type_id = 1;
     public int $payment_type_id = 1;
 
     public $send_types;
     public $payment_types;
-    public $discount;
 
     protected function rules(): array
     {
@@ -142,12 +142,12 @@ class extends Component {
         }
     }
 
-    public function setSendType($id)
+    public function setSendType($id): void
     {
         $this->send_type_id = $id;
     }
 
-    public function setPaymentType($id)
+    public function setPaymentType($id): void
     {
         $this->payment_type_id = $id;
     }
@@ -213,28 +213,28 @@ class extends Component {
                 <div class="flex flex-col lg:flex-row items-start ">
                     <form class="w-full grid grid-cols-12 gap-4">
                         <input type="text" wire:model="receiver_name" placeholder="نام*"
-                               class="block w-full py-1.5 px-3 text-base outline dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400   transition-all col-span-6
+                               class="block w-full py-1.5 px-3 text-base  dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400   transition-all col-span-6
                             text-gray-800 dark:text-gray-100 dark:bg-gray-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded-md outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-blue-400 h-11">
                         <input type="text" wire:model="receiver_family" placeholder="نام خانوادگی*"
-                               class="block w-full py-1.5 px-3 text-base outline dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400   transition-all col-span-6
+                               class="block w-full py-1.5 px-3 text-base  dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400   transition-all col-span-6
                             text-gray-800 dark:text-gray-100 dark:bg-gray-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded-md outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-blue-400 h-11">
                         <input type="text" wire:model="province" placeholder="استان*"
-                               class="block w-full py-1.5 px-3 text-base outline dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400   transition-all col-span-6
+                               class="block w-full py-1.5 px-3 text-base  dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400   transition-all col-span-6
                             text-gray-800 dark:text-gray-100 dark:bg-gray-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded-md outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-blue-400 h-11">
                         <input type="text" wire:model="city" placeholder="شهر*"
-                               class="block w-full py-1.5 px-3 text-base outline dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400   transition-all col-span-6
+                               class="block w-full py-1.5 px-3 text-base  dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400   transition-all col-span-6
                             text-gray-800 dark:text-gray-100 dark:bg-gray-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded-md outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-blue-400 h-11">
                         <input type="text" wire:model="address" placeholder="آدرس*"
-                               class="block w-full py-1.5 px-3 text-base outline dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400   transition-all col-span-12
+                               class="block w-full py-1.5 px-3 text-base  dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400   transition-all col-span-12
                             text-gray-800 dark:text-gray-100 dark:bg-gray-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded-md outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-blue-400 h-11">
                         <input type="text" wire:model="phone" placeholder="تلفن*"
-                               class="block w-full py-1.5 px-3 text-base outline dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400   transition-all col-span-6
+                               class="block w-full py-1.5 px-3 text-base  dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400   transition-all col-span-6
                             text-gray-800 dark:text-gray-100 dark:bg-gray-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded-md outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-blue-400 h-11">
                         <input type="text" wire:model="postal_code" placeholder="کد پستی*"
-                               class="block w-full py-1.5 px-3 text-base outline dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400   transition-all col-span-6
+                               class="block w-full py-1.5 px-3 text-base  dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400   transition-all col-span-6
                             text-gray-800 dark:text-gray-100 dark:bg-gray-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded-md outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-blue-400 h-11">
                         <input type="text" wire:model="description" placeholder="توضیحات"
-                               class="block w-full py-1.5 px-3 text-base outline dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400   transition-all col-span-12 h-11
+                               class="block w-full py-1.5 px-3 text-base  dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400   transition-all col-span-12 h-11
                             text-gray-800 dark:text-gray-100 dark:bg-gray-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded-md outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-blue-400">
                     </form>
                 </div>
@@ -306,10 +306,10 @@ class extends Component {
                     <label label for="email" class="block text-lg font-DanaDemiBold text-gray-800 dark:text-gray-300">کد
                         تخفیف</label>
                     <div class="mt-3 flex gap-x-2">
-                        <input wire:model="discount_code" type="text" wire:model="discount_code" placeholder="کد تخفیف خود را وارد کنید"
-                               class="block w-full p-2.5 text-base outline dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400 transition-all
+                        <input type="text" placeholder="کد تخفیف خود را وارد کنید"
+                               class="block w-full p-2.5 text-base dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400 transition-all
                             text-gray-800 dark:text-gray-100 dark:bg-gray-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded-md outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-blue-400">
-                        <button wire:click="setDiscount" class="px-5 bg-blue-500 rounded-md text-white hover:bg-blue-600 transition-all">اعمال
+                        <button  class="px-5 bg-blue-500 rounded-md text-white hover:bg-blue-600 transition-all">اعمال
                         </button>
                     </div>
                 </div>
