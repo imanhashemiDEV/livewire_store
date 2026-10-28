@@ -424,7 +424,7 @@
             <!-- MENU -->
             <ul class="flex items-center gap-x-8">
                 <li class="menu-item">
-                    <a href="index.html" class="menu-item_link">
+                    <a href="#" class="menu-item_link">
                         صفحه اصلی
                     </a>
                 </li>
@@ -432,7 +432,7 @@
                 <livewire:pages::components.categories/>
 
                 <li class="menu-item">
-                    <a href="shop.html" class="menu-item_link">
+                    <a href="#" class="menu-item_link">
                         فروشگاه
                     </a>
                 </li>
@@ -530,7 +530,7 @@
             <div class="mobile-menu z-50 flex flex-col">
                 <!--  MENU MOBILE header -->
                 <div class="flex w-full items-center justify-between border-b-normal pb-4">
-                    <a href="index.html" class="text-xl font-MorabbaMedium">
+                    <a href="#" class="text-xl font-MorabbaMedium">
                         <span class="text-blue-500">کارین</span> شاپ
                     </a>
                     <button class="close-menu-mobile">

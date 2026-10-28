@@ -18,6 +18,7 @@ class extends Component {
     public int $totalPrice = 0;
     public int $totalDiscount = 0;
     public int $total_discount_price = 0;
+    public int $discountByCode = 0;
 
     //--- Form variables ---//
     public string $receiver_name = '';
@@ -28,7 +29,7 @@ class extends Component {
     public string $phone = '';
     public string $postal_code = '';
     public string $description = '';
-    public string $discount_code = '';
+    public  $discount_code = null;
 
     public int $send_type_id = 1;
     public int $payment_type_id = 1;
@@ -251,14 +252,14 @@ class extends Component {
                     child:transition-all child:text-gray-600 child:dark:text-gray-300  child:font-DanaMedium child:text-base mt-4">
                     @foreach($this->send_types as $send_type)
                         <button wire:click="setSendType({{$send_type->id}})" @class([
-                                    'group ring-transparent ring-1',
-                                    ' ring-2 ring-blue-500 dark:ring-blue-400' => $this->send_type_id == $send_type->id,
-                                    'dark:ring-white/20' => $this->send_type_id != $send_type->id
-                                 ]) >
+                                    'group ring-1 transition-all duration-300 outline-none focus-visible:ring-2 focus-visible:ring-blue-400',
+                                    'ring-blue-500 dark:ring-blue-500' => $this->send_type_id == $send_type->id,
+                                    'ring-transparent dark:ring-white/20 hover:ring-blue-300/60' => $this->send_type_id != $send_type->id,
+                                ]) >
                             <span
                                 @class([
                                      'w-4 h-4 border  rounded-full duration-300 transition-all',
-                                     'bg-blue-400 border-blue-500' => $this->send_type_id == $send_type->id,
+                                     'bg-blue-500 border-blue-500' => $this->send_type_id == $send_type->id,
                                      'border-gray-400' => $this->send_type_id != $send_type->id
                                    ])></span>
                             {{$send_type->title}} : {{$send_type->price}} تومان
@@ -275,23 +276,23 @@ class extends Component {
                     </a>
                     <p class="font-DanaDemiBold text-lg">انتخاب روش پرداخت</p>
                 </span>
-                <div class="grid grid-cols-12 child:col-span-12 gap-4 child:w-full child:flex child:items-center child:gap-x-3 child:rounded-lg child:px-3 child:py-3.5 child:duration-300 child:border child:border-gray-300 child:dark:border-gray-300/20
+                <div class="grid grid-cols-12 child:col-span-12 gap-2 child:w-full child:flex child:items-center child:gap-x-2 child:rounded-lg child:px-3 child:py-3 child:duration-300 child:border child:border-gray-300 child:dark:border-gray-300/20
                     child:transition-all child:text-base mt-5">
                     @foreach($this->payment_types as $payment_type)
 
                         <button wire:click="setPaymentType({{$payment_type->id}})" @class([
-                                    'group ring-transparent ring-1',
-                                    'ring-blue-500 focus:ring-blue-400 ring-2 ' => $this->payment_type_id == $payment_type->id,
-                                    'dark:ring-white/20' => $this->payment_type_id != $payment_type->id
-                                 ]) >
+                                    'group ring-1 transition-all duration-300 outline-none focus-visible:ring-2 focus-visible:ring-blue-400',
+                                    'ring-blue-500 dark:ring-blue-500' => $this->payment_type_id == $payment_type->id,
+                                    'ring-transparent dark:ring-white/20 hover:ring-blue-300/60' => $this->payment_type_id != $payment_type->id,
+                                ])>
                         <span
                             @class([
-                                     'w-4 h-4 border  rounded-full duration-300 transition-all',
-                                     'bg-blue-400 border-blue-500' => $this->payment_type_id == $payment_type->id,
+                                     'w-4 h-4 border rounded-full duration-300 transition-all',
+                                     'bg-blue-500 border-blue-500' => $this->payment_type_id == $payment_type->id,
                                      'border-gray-400' => $this->payment_type_id != $payment_type->id
                                    ])></span>
                             <svg class="size-6">
-                                <use href="#card"></use>
+                                <use href="#shopping-cart"></use>
                             </svg>
                             <span class="flex flex-col items-start ">
                                 <h1 class="text-lg dark:text-gray-300 text-gray-800 font-DanaMedium">{{$payment_type->title}}</h1>
@@ -305,10 +306,10 @@ class extends Component {
                     <label label for="email" class="block text-lg font-DanaDemiBold text-gray-800 dark:text-gray-300">کد
                         تخفیف</label>
                     <div class="mt-3 flex gap-x-2">
-                        <input type="text" wire:model="discount_code" placeholder="کد تخفیف خود را وارد کنید"
+                        <input wire:model="discount_code" type="text" wire:model="discount_code" placeholder="کد تخفیف خود را وارد کنید"
                                class="block w-full p-2.5 text-base outline dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400 transition-all
                             text-gray-800 dark:text-gray-100 dark:bg-gray-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded-md outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-blue-400">
-                        <button class="px-5 bg-blue-500 rounded-md text-white hover:bg-blue-600 transition-all">اعمال
+                        <button wire:click="setDiscount" class="px-5 bg-blue-500 rounded-md text-white hover:bg-blue-600 transition-all">اعمال
                         </button>
                     </div>
                 </div>
@@ -381,6 +382,13 @@ class extends Component {
                     <li class="text-red-500 dark:text-red-400">
                         <p>تخفیف </p>
                         <p class="font-DanaMedium">{{ number_format($this->totalDiscount) }}
+                            تومان </p>
+                    </li>
+                @endif
+                @if($this->discountByCode > 0)
+                    <li class="text-red-500 dark:text-red-400">
+                        <p>تخفیف با کد</p>
+                        <p class="font-DanaMedium">{{ number_format($this->discountByCode) }}
                             تومان </p>
                     </li>
                 @endif
