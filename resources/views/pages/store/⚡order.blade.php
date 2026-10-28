@@ -75,8 +75,7 @@ class extends Component {
         $this->totalPrice = 0;
         $this->totalDiscount = 0;
         $this->product_discount_price = 0;
-        $this->total_discount_price = 0;
-        $this->discountByCode=0;
+
         if ($this->cart) {
             foreach ($this->cart as $item) {
                 $this->totalPrice += $item->product_variant->price * $item->count;
@@ -176,6 +175,7 @@ class extends Component {
             $this->discountByCode=0;
             $this->calculateCart();
             $this->addError('discount_code','کد تخفیف اشتباده است');
+            return;
         }
 
         $this->discount_id = $discount->id;
@@ -357,7 +357,7 @@ class extends Component {
                                 <use href="#truck"></use>
                             </svg>
                         </a>
-                        <h1 class="font-DanaMedium text-lg">جمعه ۲ خرداد-بازه ۹ - ۲۲</h1>
+                        <h1 class="font-DanaMedium text-lg">{{Hekmatinasser\Verta\Verta::instance(now())->addDays(7)->format('%B %d، %Y')}}-بازه ۹ - ۲۲</h1>
                         </span>
                 <div class="mt-8 flex justify-start gap-2">
 
