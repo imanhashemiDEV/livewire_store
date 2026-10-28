@@ -19,7 +19,9 @@ class extends Component {
 
     public int $totalPrice = 0;
     public int $totalDiscount = 0;
-    public int $finalPrice = 0;
+    public int $product_discount_price = 0;
+    public int $total_discount_price = 0;
+    public int $discountByCode=0;
 
     //--- Form variables ---//
     public string $receiver_name = '';
@@ -34,6 +36,7 @@ class extends Component {
 
     public int $send_type_id = 1;
     public int $payment_type_id = 1;
+    public ?int $discount_id = null;
 
     public $send_types;
     public $payment_types;
@@ -71,7 +74,9 @@ class extends Component {
     {
         $this->totalPrice = 0;
         $this->totalDiscount = 0;
-        $this->finalPrice = 0;
+        $this->product_discount_price = 0;
+        $this->total_discount_price = 0;
+        $this->discountByCode=0;
         if ($this->cart) {
             foreach ($this->cart as $item) {
                 $this->totalPrice += $item->product_variant->price * $item->count;
@@ -79,9 +84,11 @@ class extends Component {
                     $this->totalDiscount += ($item->product_variant->price - $item->product_variant->discount_price) * $item->count;
                 }
             }
-
-            $this->finalPrice = $this->totalPrice - $this->totalDiscount;
+            $this->product_discount_price = $this->totalPrice - $this->totalDiscount;
         }
+
+         $this->total_discount_price = $this->product_discount_price - $this->discountByCode;
+
     }
 
     #[Computed]
@@ -95,7 +102,7 @@ class extends Component {
         }
     }
 
-    public function payment()
+    public function payment(): void
     {
         $this->validate();
 
@@ -103,7 +110,7 @@ class extends Component {
         try {
             $order = Order::query()->create([
                 'user_id' => auth()->user->id,
-                'discount_id' => null,
+                'discount_id' => $this->discount_id,
                 'send_type_id' => $this->send_type_id,
                 'payment_type_id' => $this->payment_type_id,
                 'order_code' => generateRandomInteger(6),
@@ -123,7 +130,7 @@ class extends Component {
             foreach ($this->carts as $cart) {
                 OrderDetail::query()->create([
                     'seller_id' => $cart->product_variant->seller_id,
-                    'order_id' => $order,
+                    'order_id' => $order->id,
                     'price' => $cart->product_variant->price,
                     'discount' => $cart->product_variant->discount,
                     'discount_price' => $cart->product_variant->discount_price,
@@ -150,6 +157,31 @@ class extends Component {
     public function setPaymentType($id): void
     {
         $this->payment_type_id = $id;
+    }
+
+    public function setDiscount()
+    {
+        $this->validateOnly('discount_code');
+        $code = trim((string) $this->discount_code);
+
+        if($code ===''){
+            $this->addError('discount_code','لطفا کد تخفیف را وارد کنید');
+            return;
+        }
+
+        $discount = Discount::query()->where('code',$code)->where('status', DiscountStatus::ACTIVE->value)->first();
+
+        if(!$discount){
+            $this->discount_id =null;
+            $this->discountByCode=0;
+            $this->calculateCart();
+            $this->addError('discount_code','کد تخفیف اشتباده است');
+        }
+
+        $this->discount_id = $discount->id;
+        $this->discountByCode = ($this->product_discount_price * $discount->value)/100;
+        $this->resetErrorBag('discount_code');
+        $this->calculateCart();
     }
 };
 ?>
@@ -306,13 +338,16 @@ class extends Component {
                     <label label for="email" class="block text-lg font-DanaDemiBold text-gray-800 dark:text-gray-300">کد
                         تخفیف</label>
                     <div class="mt-3 flex gap-x-2">
-                        <input type="text" placeholder="کد تخفیف خود را وارد کنید"
+                        <input wire:model="discount_code" type="text" placeholder="کد تخفیف خود را وارد کنید"
                                class="block w-full p-2.5 text-base dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400 transition-all
                             text-gray-800 dark:text-gray-100 dark:bg-gray-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded-md outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-blue-400">
-                        <button  class="px-5 bg-blue-500 rounded-md text-white hover:bg-blue-600 transition-all">اعمال
+                        <button wire:click="setDiscount"  class="px-5 bg-blue-500 rounded-md text-white hover:bg-blue-600 transition-all">اعمال
                         </button>
                     </div>
                 </div>
+                @error('discount_code')
+                <span class="block mt-2 text-sm text-red-500">{{$message}}</span>
+                @enderror
             </div>
             <div>
                 <h1 class="font-DanaDemiBold text-lg">خلاصه سفارش</h1>
@@ -385,16 +420,18 @@ class extends Component {
                             تومان </p>
                     </li>
                 @endif
-
+                @if($this->discountByCode > 0)
                     <li class="text-red-500 dark:text-red-400">
                         <p>تخفیف با کد</p>
-                        <p class="font-DanaMedium">1000000
+                        <p class="font-DanaMedium">{{$this->discountByCode}}
                             تومان </p>
                     </li>
+                @endif
+
 
                 <li class="border-t-2 border-dashed border-gray-400 pt-8">
                     <p> مبلغ نهایی :</p>
-                    <p>{{ number_format($this->finalPrice) }} تومان</p>
+                    <p>{{ number_format($this->total_discount_price) }} تومان</p>
                 </li>
             </ul>
 
