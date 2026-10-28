@@ -19,7 +19,7 @@ class extends Component {
 
     public int $totalPrice = 0;
     public int $totalDiscount = 0;
-    public int $total_discount_price = 0;
+    public int $finalPrice = 0;
 
     //--- Form variables ---//
     public string $receiver_name = '';
@@ -385,16 +385,16 @@ class extends Component {
                             تومان </p>
                     </li>
                 @endif
-                @if($this->discountByCode > 0)
+
                     <li class="text-red-500 dark:text-red-400">
                         <p>تخفیف با کد</p>
-                        <p class="font-DanaMedium">{{ number_format($this->discountByCode) }}
+                        <p class="font-DanaMedium">1000000
                             تومان </p>
                     </li>
-                @endif
+
                 <li class="border-t-2 border-dashed border-gray-400 pt-8">
                     <p> مبلغ نهایی :</p>
-                    <p>{{ number_format($this->total_discount_price) }} تومان</p>
+                    <p>{{ number_format($this->finalPrice) }} تومان</p>
                 </li>
             </ul>
 
