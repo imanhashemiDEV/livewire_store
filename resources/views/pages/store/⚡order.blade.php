@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\DiscountStatus;
+use App\Enums\OrderStatus;
 use App\Models\Cart;
 use App\Models\Discount;
 use App\Models\Order;
@@ -21,7 +22,7 @@ class extends Component {
     public int $totalDiscount = 0;
     public int $product_discount_price = 0;
     public int $total_discount_price = 0;
-    public int $discountByCode=0;
+    public int $discountByCode = 0;
 
     //--- Form variables ---//
     public string $receiver_name = '';
@@ -63,7 +64,7 @@ class extends Component {
     {
         $this->calculateCart();
 
-        $this->send_type_id  = SendType::query()->first()?->id;
+        $this->send_type_id = SendType::query()->first()?->id;
         $this->payment_type_id = PaymentType::query()->first()?->id;
 
         $this->send_types = SendType::query()->get();
@@ -86,7 +87,7 @@ class extends Component {
             $this->product_discount_price = $this->totalPrice - $this->totalDiscount;
         }
 
-         $this->total_discount_price = $this->product_discount_price - $this->discountByCode;
+        $this->total_discount_price = $this->product_discount_price - $this->discountByCode;
 
     }
 
@@ -101,14 +102,28 @@ class extends Component {
         }
     }
 
-    public function payment(): void
+    public function payment()
     {
         $this->validate();
+
+        $cart = $this->cart;
+
+        if ($cart->isEmpty()) {
+            $this->addError('payment', 'سبد خرید شما خالی است.');
+            return;
+        }
+
+        if ($this->total_discount_price <= 0) {
+            $this->addError('payment', 'مبلغ قابل پرداخت معتبر نیست.');
+            return;
+        }
+
+        $order = null;
 
         DB::beginTransaction();
         try {
             $order = Order::query()->create([
-                'user_id' => auth()->user->id,
+                'user_id' => auth()->id(),
                 'discount_id' => $this->discount_id,
                 'send_type_id' => $this->send_type_id,
                 'payment_type_id' => $this->payment_type_id,
@@ -126,26 +141,28 @@ class extends Component {
                 'total_discount_price' => $this->total_discount_price,
             ]);
 
-            foreach ($this->carts as $cart) {
+            foreach ($cart as $item) {
                 OrderDetail::query()->create([
-                    'seller_id' => $cart->product_variant->seller_id,
+                    'seller_id' => $item->product_variant->seller_id,
                     'order_id' => $order->id,
-                    'price' => $cart->product_variant->price,
-                    'discount' => $cart->product_variant->discount,
-                    'discount_price' => $cart->product_variant->discount_price,
-                    'count' => $cart->count,
-                    'product_id' => $cart->product_id,
-                    'color_id' => $cart->product_variant->color_id,
-                    'guaranty_id' => $cart->product_variant->guaranty_id
+                    'price' => $item->product_variant->price,
+                    'discount' => $item->product_variant->discount,
+                    'discount_price' => $item->product_variant->discount_price,
+                    'count' => $item->count,
+                    'product_id' => $item->product_id,
+                    'color_id' => $item->product_variant->color_id,
+                    'guaranty_id' => $item->product_variant->guaranty_id,
                 ]);
             }
 
             DB::commit();
-
-        } catch (\Exception $exception) {
-            Log::error($exception->getMessage());
+        } catch (\Throwable $exception) {
             DB::rollBack();
+            Log::error($exception->getMessage());
+            $this->addError('payment', 'ایجاد سفارش با خطا مواجه شد.');
+            return;
         }
+
     }
 
     public function setSendType($id): void
@@ -161,25 +178,25 @@ class extends Component {
     public function setDiscount()
     {
         $this->validateOnly('discount_code');
-        $code = trim((string) $this->discount_code);
+        $code = trim((string)$this->discount_code);
 
-        if($code ===''){
-            $this->addError('discount_code','لطفا کد تخفیف را وارد کنید');
+        if ($code === '') {
+            $this->addError('discount_code', 'لطفا کد تخفیف را وارد کنید');
             return;
         }
 
-        $discount = Discount::query()->where('code',$code)->where('status', DiscountStatus::ACTIVE->value)->first();
+        $discount = Discount::query()->where('code', $code)->where('status', DiscountStatus::ACTIVE->value)->first();
 
-        if(!$discount){
-            $this->discount_id =null;
-            $this->discountByCode=0;
+        if (!$discount) {
+            $this->discount_id = null;
+            $this->discountByCode = 0;
             $this->calculateCart();
-            $this->addError('discount_code','کد تخفیف اشتباده است');
+            $this->addError('discount_code', 'کد تخفیف اشتباده است');
             return;
         }
 
         $this->discount_id = $discount->id;
-        $this->discountByCode = ($this->product_discount_price * $discount->value)/100;
+        $this->discountByCode = ($this->product_discount_price * $discount->value) / 100;
         $this->resetErrorBag('discount_code');
         $this->calculateCart();
     }
@@ -219,7 +236,7 @@ class extends Component {
                     </svg>
                     <span class="ms-1 text-sm  text-gray-500 md:ms-2 dark:text-gray-400">
                             آدرس و زمان ارسال
-                        </span>
+                    </span>
                 </div>
             </li>
         </ol>
@@ -341,7 +358,8 @@ class extends Component {
                         <input wire:model="discount_code" type="text" placeholder="کد تخفیف خود را وارد کنید"
                                class="block w-full p-2.5 text-base dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400 transition-all
                             text-gray-800 dark:text-gray-100 dark:bg-gray-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded-md outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-blue-400">
-                        <button wire:click="setDiscount"  class="px-5 bg-blue-500 rounded-md text-white hover:bg-blue-600 transition-all">اعمال
+                        <button wire:click="setDiscount"
+                                class="px-5 bg-blue-500 rounded-md text-white hover:bg-blue-600 transition-all">اعمال
                         </button>
                     </div>
                 </div>
@@ -435,8 +453,12 @@ class extends Component {
                 </li>
             </ul>
 
+            @error('payment')
+            <span class="block text-sm text-red-500">{{ $message }}</span>
+            @enderror
+
             <a wire:click="payment"
-               class="w-full mt-4 flex items-center gap-x-1 justify-center bg-blue-500 text-white hover:bg-blue-600 transition-all rounded-lg shadow py-2">
+               class="w-full mt-4 cursor-pointer flex items-center gap-x-1 justify-center bg-blue-500 text-white hover:bg-blue-600 transition-all rounded-lg shadow py-2">
                 پرداخت
                 <svg class="w-5 h-5">
                     <use href="#shopping-bag"></use>
