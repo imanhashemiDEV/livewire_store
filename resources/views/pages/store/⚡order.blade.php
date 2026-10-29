@@ -175,7 +175,7 @@ class extends Component {
         $this->payment_type_id = $id;
     }
 
-    public function setDiscount()
+    public function setDiscount(): void
     {
         $this->validateOnly('discount_code');
         $code = trim((string)$this->discount_code);
@@ -200,6 +200,7 @@ class extends Component {
         $this->resetErrorBag('discount_code');
         $this->calculateCart();
     }
+
 };
 ?>
 
@@ -261,30 +262,70 @@ class extends Component {
                 </p>
                 <div class="flex flex-col lg:flex-row items-start ">
                     <form class="w-full grid grid-cols-12 gap-4">
-                        <input type="text" wire:model="receiver_name" placeholder="نام*"
-                               class="block w-full py-1.5 px-3 text-base  dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400   transition-all col-span-6
-                            text-gray-800 dark:text-gray-100 dark:bg-gray-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded-md outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-blue-400 h-11">
-                        <input type="text" wire:model="receiver_family" placeholder="نام خانوادگی*"
-                               class="block w-full py-1.5 px-3 text-base  dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400   transition-all col-span-6
-                            text-gray-800 dark:text-gray-100 dark:bg-gray-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded-md outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-blue-400 h-11">
-                        <input type="text" wire:model="province" placeholder="استان*"
-                               class="block w-full py-1.5 px-3 text-base  dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400   transition-all col-span-6
-                            text-gray-800 dark:text-gray-100 dark:bg-gray-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded-md outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-blue-400 h-11">
-                        <input type="text" wire:model="city" placeholder="شهر*"
-                               class="block w-full py-1.5 px-3 text-base  dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400   transition-all col-span-6
-                            text-gray-800 dark:text-gray-100 dark:bg-gray-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded-md outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-blue-400 h-11">
-                        <input type="text" wire:model="address" placeholder="آدرس*"
-                               class="block w-full py-1.5 px-3 text-base  dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400   transition-all col-span-12
-                            text-gray-800 dark:text-gray-100 dark:bg-gray-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded-md outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-blue-400 h-11">
-                        <input type="text" wire:model="phone" placeholder="تلفن*"
-                               class="block w-full py-1.5 px-3 text-base  dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400   transition-all col-span-6
-                            text-gray-800 dark:text-gray-100 dark:bg-gray-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded-md outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-blue-400 h-11">
-                        <input type="text" wire:model="postal_code" placeholder="کد پستی*"
-                               class="block w-full py-1.5 px-3 text-base  dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400   transition-all col-span-6
-                            text-gray-800 dark:text-gray-100 dark:bg-gray-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded-md outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-blue-400 h-11">
-                        <input type="text" wire:model="description" placeholder="توضیحات"
-                               class="block w-full py-1.5 px-3 text-base  dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400   transition-all col-span-12 h-11
-                            text-gray-800 dark:text-gray-100 dark:bg-gray-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded-md outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-blue-400">
+                        <div class="col-span-6">
+                            <input type="text" wire:model="receiver_name" placeholder="نام*"
+                                   class="block w-full py-1.5 px-3 text-base  dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400   transition-all
+                                text-gray-800 dark:text-gray-100 dark:bg-gray-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded-md outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-blue-400 h-11">
+                            @error('receiver_name')
+                            <span class="block mt-2 text-sm text-red-500">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="col-span-6">
+                            <input type="text" wire:model="receiver_family" placeholder="نام خانوادگی*"
+                                   class="block w-full py-1.5 px-3 text-base  dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400   transition-all
+                                text-gray-800 dark:text-gray-100 dark:bg-gray-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded-md outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-blue-400 h-11">
+                            @error('receiver_family')
+                            <span class="block mt-2 text-sm text-red-500">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="col-span-6">
+                            <input type="text" wire:model="province" placeholder="استان*"
+                                   class="block w-full py-1.5 px-3 text-base  dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400   transition-all
+                                text-gray-800 dark:text-gray-100 dark:bg-gray-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded-md outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-blue-400 h-11">
+                            @error('province')
+                            <span class="block mt-2 text-sm text-red-500">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="col-span-6">
+                            <input type="text" wire:model="city" placeholder="شهر*"
+                                   class="block w-full py-1.5 px-3 text-base  dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400   transition-all
+                                text-gray-800 dark:text-gray-100 dark:bg-gray-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded-md outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-blue-400 h-11">
+                            @error('city')
+                            <span class="block mt-2 text-sm text-red-500">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="col-span-12">
+                            <input type="text" wire:model="address" placeholder="آدرس*"
+                                   class="block w-full py-1.5 px-3 text-base  dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400   transition-all
+                                text-gray-800 dark:text-gray-100 dark:bg-gray-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded-md outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-blue-400 h-11">
+                            @error('address')
+                            <span class="block mt-2 text-sm text-red-500">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="col-span-6">
+                            <input type="text" wire:model="phone" placeholder="تلفن*"
+                                   class="block w-full py-1.5 px-3 text-base  dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400   transition-all
+                                text-gray-800 dark:text-gray-100 dark:bg-gray-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded-md outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-blue-400 h-11">
+                            @error('phone')
+                            <span class="block mt-2 text-sm text-red-500">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="col-span-6">
+                            <input type="text" wire:model="postal_code" placeholder="کد پستی*"
+                                   class="block w-full py-1.5 px-3 text-base  dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400   transition-all
+                                text-gray-800 dark:text-gray-100 dark:bg-gray-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded-md outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-blue-400 h-11">
+                            @error('postal_code')
+                            <span class="block mt-2 text-sm text-red-500">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="col-span-12">
+                            <input type="text" wire:model="description" placeholder="توضیحات"
+                                   class="block w-full py-1.5 px-3 text-base  dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400   transition-all h-11
+                                text-gray-800 dark:text-gray-100 dark:bg-gray-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded-md outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-blue-400">
+                            @error('description')
+                            <span class="block mt-2 text-sm text-red-500">{{ $message }}</span>
+                            @enderror
+                        </div>
                     </form>
                 </div>
             </div>
@@ -315,6 +356,9 @@ class extends Component {
                         </button>
                     @endforeach
                 </div>
+                @error('send_type_id')
+                <span class="block mt-2 text-sm text-red-500">{{ $message }}</span>
+                @enderror
             </div>
             <div class="w-full flex flex-col">
                 <span class="flex items-center gap-x-2">
@@ -349,6 +393,9 @@ class extends Component {
                         </button>
                     @endforeach
                 </div>
+                @error('payment_type_id')
+                <span class="block mt-2 text-sm text-red-500">{{ $message }}</span>
+                @enderror
             </div>
             <div>
                 <div>
