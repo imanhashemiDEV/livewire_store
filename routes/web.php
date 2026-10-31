@@ -22,4 +22,4 @@ Route::get('/reset_password/{mobile}', [ResetPasswordByMobileController::class, 
 Route::post('/update_password', [ResetPasswordByMobileController::class, 'updatePassword'])
     ->name('auth.update_password');
 
-Route::livewire('/payment_callback', 'pages::store.index')->name('payment');
+Route::livewire('/payment_callback', 'pages::store.payment_callback')->name('payment.callback');

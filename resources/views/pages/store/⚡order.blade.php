@@ -14,6 +14,8 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 use Illuminate\Support\Facades\Log;
 use \Illuminate\Support\Facades\DB;
+use Shetabit\Multipay\Invoice;
+use Shetabit\Payment\Facade\Payment;
 
 new  #[Layout('pages.layouts.master'), Title('سفارش')]
 class extends Component {
@@ -162,6 +164,33 @@ class extends Component {
             $this->addError('payment', 'ایجاد سفارش با خطا مواجه شد.');
             return;
         }
+
+        $payment_type = PaymentType::query()->find($this->payment_type_id);
+
+        if ($payment_type->driver != 'cash') {
+
+            try {
+                $redirection = Payment::purchase(
+                    (new Invoice)->amount($this->total_discount_price),
+                    function ($driver, $transactionId) {
+                        $order->update([
+                            'transaction_id'=> $transactionId
+                        ]);
+                    }
+                )->pay();
+
+                return $this->redirect($redirection->getUrl())
+
+            } catch (\Throwable $exception) {
+                Log::error($exception->getMessage());
+                $order->update(['status' => OrderStatus::FAILED->value]);
+                $this->addError('payment', $exception->getMessage());
+            }
+
+        } else {
+            // return view successful payment
+        }
+
 
     }
 
