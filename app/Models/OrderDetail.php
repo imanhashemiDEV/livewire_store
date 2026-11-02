@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable('seller_id','order_id','price','discount','discount_price',
-    'count','product_id','color_id','guaranty_id')]
+    'count','product_id','color_id','guaranty_id','product_variant_id')]
 class OrderDetail extends Model
 {
     use SoftDeletes;
@@ -28,6 +28,11 @@ class OrderDetail extends Model
     public function product():BelongsTo
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function product_variant():BelongsTo
+    {
+        return $this->belongsTo(ProductVariant::class);
     }
 
     public function color():BelongsTo

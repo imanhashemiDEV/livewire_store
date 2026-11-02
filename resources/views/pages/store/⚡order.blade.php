@@ -154,8 +154,11 @@ class extends Component {
                     'product_id' => $item->product_id,
                     'color_id' => $item->product_variant->color_id,
                     'guaranty_id' => $item->product_variant->guaranty_id,
+                    'product_variant_id' => $item->product_variant->id,
                 ]);
             }
+
+            DB::commit();
 
             $payment_type = PaymentType::query()->find($this->payment_type_id);
 
@@ -182,7 +185,7 @@ class extends Component {
                 // return view successful payment
             }
 
-            DB::commit();
+
         } catch (\Throwable $exception) {
             DB::rollBack();
             Log::error($exception->getMessage());

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integer('discount')->default(0);
             $table->integer('discount_price')->default(0);
             $table->integer('count')->default(0);
+            $table->integer('sold')->default(0);
             $table->integer('max_sell')->nullable();
             $table->string('status')->default(\App\Enums\ProductStatus::Waiting->value);
             $table->foreignId('product_id')->constrained('products')->cascadeOnDelete()->cascadeOnUpdate();

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained('products')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('color_id')->constrained('colors')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('guaranty_id')->constrained('guaranties')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('product_variant_id')->constrained('product_variants')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('status')->default(\App\Enums\OrderDetailsStatus::PENDING->value);
             $table->softDeletes();
             $table->timestamps();

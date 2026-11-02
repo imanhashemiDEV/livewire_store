@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable('price','discount','discount_price','count','max_sell','status','product_id','color_id','guaranty_id','seller_id', 'lowest_product_id')]
+#[Fillable('price','discount','discount_price','count','sold','max_sell','status',
+    'product_id','color_id','guaranty_id','seller_id', 'lowest_product_id')]
 class ProductVariant extends Model
 {
     use SoftDeletes;
