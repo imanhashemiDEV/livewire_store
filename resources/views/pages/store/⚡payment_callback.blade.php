@@ -6,7 +6,39 @@ use Livewire\Component;
 
 new #[Layout('pages.layouts.master'), Title('نتیجه تراکنش بانکی')]
 class extends Component {
-    //
+
+    #[\Livewire\Attributes\Url]
+    public $Authority;
+    #[\Livewire\Attributes\Url]
+    public $Status;
+
+    public $order;
+    public function mount()
+    {
+      $this->order = \App\Models\Order::query()
+          ->where('transaction_id',$this->Authority)->first();
+
+      if($this->Status=='Ok'){
+          $this->order->update([
+              'status'=> \App\Enums\OrderStatus::COMPLETED->value
+          ]);
+
+          foreach ($this->order->orderDetails as $detail){
+              $product = $detail->product;
+               $product_variant = $detail->product->product_variants
+                  ->where('color_id',$detail->color_id)->where('guaranty_id',$detail->guaranty_id)->where('seller_id',$detail->seller_id)
+                  ->first();
+               $product_variant->increment('sold',$detail->count);
+               $product->increment('sold',$detail->count);
+          }
+      }else{
+          $this->order->update([
+              'status'=> \App\Enums\OrderStatus::FAILED->value
+          ]);
+      }
+
+
+    }
 };
 ?>
 

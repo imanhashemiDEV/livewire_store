@@ -157,6 +157,31 @@ class extends Component {
                 ]);
             }
 
+            $payment_type = PaymentType::query()->find($this->payment_type_id);
+
+            if ($payment_type->driver != 'cash') {
+                try {
+                    $redirection = Payment::via($payment_type->driver)->purchase(
+                        (new Invoice)->amount($this->total_discount_price),
+                        function ($driver, $transactionId) use ($order) {
+                            $order->update([
+                                'transaction_id' => $transactionId
+                            ]);
+                        }
+                    )->pay();
+
+                    return $this->redirect($redirection->getUrl());
+
+                } catch (\Throwable $exception) {
+                    Log::error($exception->getMessage());
+                    $order->update(['status' => OrderStatus::FAILED->value]);
+                    $this->addError('payment', $exception->getMessage());
+                }
+
+            } else {
+                // return view successful payment
+            }
+
             DB::commit();
         } catch (\Throwable $exception) {
             DB::rollBack();
@@ -165,31 +190,6 @@ class extends Component {
             return;
         }
 
-        $payment_type = PaymentType::query()->find($this->payment_type_id);
-
-        if ($payment_type->driver != 'cash') {
-
-            try {
-                $redirection = Payment::purchase(
-                    (new Invoice)->amount($this->total_discount_price),
-                    function ($driver, $transactionId) {
-                        $order->update([
-                            'transaction_id'=> $transactionId
-                        ]);
-                    }
-                )->pay();
-
-                return $this->redirect($redirection->getUrl())
-
-            } catch (\Throwable $exception) {
-                Log::error($exception->getMessage());
-                $order->update(['status' => OrderStatus::FAILED->value]);
-                $this->addError('payment', $exception->getMessage());
-            }
-
-        } else {
-            // return view successful payment
-        }
 
 
     }
