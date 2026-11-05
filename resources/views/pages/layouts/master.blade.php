@@ -432,7 +432,7 @@
                 <livewire:pages::components.categories/>
 
                 <li class="menu-item">
-                    <a href="#" class="menu-item_link">
+                    <a href="{{route('store.products')}}" class="menu-item_link">
                         فروشگاه
                     </a>
                 </li>

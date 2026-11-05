@@ -9,6 +9,8 @@ Route::livewire('/', 'pages::store.index')->name('store.index');
 Route::livewire('/single_product/{product}', 'pages::store.single-product')->name('store.single.product');
 Route::livewire('/cart', 'pages::store.cart')->name('store.cart');
 Route::livewire('/order', 'pages::store.order')->name('store.order');
+Route::livewire('/payment_callback', 'pages::store.payment_callback')->name('payment.callback');
+Route::livewire('/products', 'pages::store.products')->name('store.products');
 
 
 // Auth Routes
@@ -21,5 +23,3 @@ Route::get('/reset_password/{mobile}', [ResetPasswordByMobileController::class, 
     ->name('auth.reset_password');
 Route::post('/update_password', [ResetPasswordByMobileController::class, 'updatePassword'])
     ->name('auth.update_password');
-
-Route::livewire('/payment_callback', 'pages::store.payment_callback')->name('payment.callback');
