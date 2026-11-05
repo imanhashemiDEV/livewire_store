@@ -263,7 +263,7 @@ class extends Component {
                     <svg class="size-4 text-gray-400">
                         <use href="#sort-list"></use>
                     </svg>
-                    <p>{{ $this->sortTitle() }}</p>
+                    <p>جدیدترین ها</p>
                 </button>
                 <!-- SORT MODAL -->
                 <div class="sort-modal">
@@ -512,16 +512,11 @@ class extends Component {
                     </div>
                     <ul
                         class="flex items-center gap-x-1 lg:gap-x-4 child:transition-all child:cursor-pointer child:rounded-lg child:px-1 child:py-1 child:text-sm child:lg:text-base">
-                        <li wire:click="$set('sort', 'newest')"
-                            class="{{ $sort === 'newest' ? 'text-blue-500' : 'text-gray-400' }}">جدیدترین</li>
-                        <li wire:click="$set('sort', 'cheapest')"
-                            class="{{ $sort === 'cheapest' ? 'text-blue-500' : 'text-gray-400' }}">ارزان‌ترین</li>
-                        <li wire:click="$set('sort', 'expensive')"
-                            class="{{ $sort === 'expensive' ? 'text-blue-500' : 'text-gray-400' }}">گران‌ترین</li>
-                        <li wire:click="$set('sort', 'viewed')"
-                            class="{{ $sort === 'viewed' ? 'text-blue-500' : 'text-gray-400' }}">پربازدیدترین</li>
-                        <li wire:click="$set('sort', 'sold')"
-                            class="{{ $sort === 'sold' ? 'text-blue-500' : 'text-gray-400' }}">پرفروش‌ترین</li>
+                        <li>جدیدترین</li>
+                        <li>ارزان‌ترین</li>
+                        <li>گران‌ترین</li>
+                        <li>پربازدیدترین</li>
+                        <li>پرفروش‌ترین</li>
                     </ul>
                 </div>
                 <span class="text-sm text-gray-400 end">۱۳,۰۴۰ کالا </span>
@@ -529,7 +524,7 @@ class extends Component {
             <!-- PRODUCTS -->
             <div
                 class="grid grid-cols-1 xxs:grid-cols-2 xs:grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 gap-3 xs:gap-2 sm:gap-4">
-                @foreach($this->products as $product)
+                @foreach($this->mostViewed as $product)
                 <div class=" product-card group">
                     <!-- product header -->
                     <div class="product-card_header">
