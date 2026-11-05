@@ -9,31 +9,10 @@ use Livewire\Component;
 new #[Layout('pages.layouts.master'), Title('فروشگاه')]
 class extends Component {
 
-    public string $sort = 'newest';
-
     #[Computed]
-    public function products()
+    public function mostViewed()
     {
-        $query = Product::query()->activeProduct();
-
-        return match ($this->sort) {
-            'cheapest'  => $query->orderBy('discount_price')->paginate(6),
-            'expensive' => $query->orderByDesc('discount_price')->paginate(6),
-            'viewed'    => $query->orderByDesc('viewed')->paginate(6),
-            'sold'      => $query->orderByDesc('sold')->paginate(6),
-            default     => $query->orderByDesc('created_at')->paginate(6),
-        };
-    }
-
-    public function sortTitle(): string
-    {
-        return match ($this->sort) {
-            'cheapest'  => 'ارزان‌ترین',
-            'expensive' => 'گران‌ترین',
-            'viewed'    => 'پربازدیدترین',
-            'sold'      => 'پرفروش‌ترین',
-            default     => 'جدیدترین',
-        };
+        return Product::query()->activeProduct()->orderByDesc('viewed')->paginate(6);
     }
 };
 ?>
@@ -295,16 +274,11 @@ class extends Component {
                         </svg>
                     </div>
                     <ul class="flex w-full child:w-full child:text-center flex-col items-center justify-center divide-y divide-gray-300 dark:divide-gray-200/20 child:py-3">
-                        <li wire:click="$set('sort', 'newest')"
-                            class="{{ $sort === 'newest' ? 'text-blue-500' : '' }}">جدیدترین</li>
-                        <li wire:click="$set('sort', 'cheapest')"
-                            class="{{ $sort === 'cheapest' ? 'text-blue-500' : '' }}">ارزان‌ترین</li>
-                        <li wire:click="$set('sort', 'expensive')"
-                            class="{{ $sort === 'expensive' ? 'text-blue-500' : '' }}">گران‌ترین</li>
-                        <li wire:click="$set('sort', 'viewed')"
-                            class="{{ $sort === 'viewed' ? 'text-blue-500' : '' }}">پربازدیدترین</li>
-                        <li wire:click="$set('sort', 'sold')"
-                            class="{{ $sort === 'sold' ? 'text-blue-500' : '' }}">پرفروش‌ترین</li>
+                        <li>جدیدترین</li>
+                        <li>ارزان‌ترین</li>
+                        <li>گران‌ترین</li>
+                        <li>پربازدیدترین</li>
+                        <li>پرفروش‌ترین</li>
                     </ul>
                 </div>
                 <!-- FILTER BTN -->
