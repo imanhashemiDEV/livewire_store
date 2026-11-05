@@ -9,10 +9,31 @@ use Livewire\Component;
 new #[Layout('pages.layouts.master'), Title('فروشگاه')]
 class extends Component {
 
+    public string $sort = 'newest';
+
     #[Computed]
-    public function mostViewed()
+    public function products()
     {
-        return Product::query()->activeProduct()->orderByDesc('viewed')->paginate(6);
+       $query = Product::query()->activeProduct();
+
+       return match($this->sort){
+           'cheapest' => $query->orderBy('discount_price')->paginate(6),
+           'expensive' => $query->orderByDesc('discount_price')->paginate(6),
+           'viewed' => $query->orderByDesc('viewed')->paginate(6),
+           'sold' => $query->orderByDesc('sold')->paginate(6),
+           default => $query->orderByDesc('created_at')->paginate(6),
+       };
+    }
+
+    public function sortTitle():string
+    {
+        return match($this->sort){
+            'cheapest' => 'ارزان ترین',
+            'expensive' => 'گران ترین',
+            'viewed' => 'پربازدیدترین',
+            'sold' => 'پرفروش ترین',
+            default => 'جدیدترین',
+        };
     }
 };
 ?>
@@ -263,7 +284,7 @@ class extends Component {
                     <svg class="size-4 text-gray-400">
                         <use href="#sort-list"></use>
                     </svg>
-                    <p>جدیدترین ها</p>
+                    <p>{{$this->sortTitle()}}</p>
                 </button>
                 <!-- SORT MODAL -->
                 <div class="sort-modal">
@@ -274,11 +295,11 @@ class extends Component {
                         </svg>
                     </div>
                     <ul class="flex w-full child:w-full child:text-center flex-col items-center justify-center divide-y divide-gray-300 dark:divide-gray-200/20 child:py-3">
-                        <li>جدیدترین</li>
-                        <li>ارزان‌ترین</li>
-                        <li>گران‌ترین</li>
-                        <li>پربازدیدترین</li>
-                        <li>پرفروش‌ترین</li>
+                        <li wire:click="$set('sort','newest')" class="{{ $sort === 'newest' ? 'text-blue-500' : '' }}">جدیدترین</li>
+                        <li wire:click="$set('sort','cheapest')" class="{{ $sort === 'cheapest' ? 'text-blue-500' : '' }}">ارزان‌ترین</li>
+                        <li wire:click="$set('sort','expensive')" class="{{ $sort === 'expensive' ? 'text-blue-500' : '' }}">گران‌ترین</li>
+                        <li wire:click="$set('sort','viewed')" class="{{ $sort === 'viewed' ? 'text-blue-500' : '' }}">پربازدیدترین</li>
+                        <li wire:click="$set('sort','sold')" class="{{ $sort === 'sold' ? 'text-blue-500' : '' }}">پرفروش‌ترین</li>
                     </ul>
                 </div>
                 <!-- FILTER BTN -->
@@ -512,11 +533,11 @@ class extends Component {
                     </div>
                     <ul
                         class="flex items-center gap-x-1 lg:gap-x-4 child:transition-all child:cursor-pointer child:rounded-lg child:px-1 child:py-1 child:text-sm child:lg:text-base">
-                        <li>جدیدترین</li>
-                        <li>ارزان‌ترین</li>
-                        <li>گران‌ترین</li>
-                        <li>پربازدیدترین</li>
-                        <li>پرفروش‌ترین</li>
+                        <li wire:click="$set('sort','newest')" class="{{ $sort === 'newest' ? 'text-blue-500' : '' }}">جدیدترین</li>
+                        <li wire:click="$set('sort','cheapest')" class="{{ $sort === 'cheapest' ? 'text-blue-500' : '' }}">ارزان‌ترین</li>
+                        <li wire:click="$set('sort','expensive')" class="{{ $sort === 'expensive' ? 'text-blue-500' : '' }}">گران‌ترین</li>
+                        <li wire:click="$set('sort','viewed')" class="{{ $sort === 'viewed' ? 'text-blue-500' : '' }}">پربازدیدترین</li>
+                        <li wire:click="$set('sort','sold')" class="{{ $sort === 'sold' ? 'text-blue-500' : '' }}">پرفروش‌ترین</li>
                     </ul>
                 </div>
                 <span class="text-sm text-gray-400 end">۱۳,۰۴۰ کالا </span>
@@ -524,7 +545,7 @@ class extends Component {
             <!-- PRODUCTS -->
             <div
                 class="grid grid-cols-1 xxs:grid-cols-2 xs:grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 gap-3 xs:gap-2 sm:gap-4">
-                @foreach($this->mostViewed as $product)
+                @foreach($this->products as $product)
                 <div class=" product-card group">
                     <!-- product header -->
                     <div class="product-card_header">
