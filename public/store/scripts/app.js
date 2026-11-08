@@ -523,10 +523,10 @@ function toggleAccordion(index) {
 
   if (content.style.maxHeight && content.style.maxHeight !== '0px') {
     content.style.maxHeight = '0';
-    icon.classList.remove('-rotate-90');
+    icon?.classList.remove('-rotate-90');
   } else {
     content.style.maxHeight = content.scrollHeight + 'px';
-    icon.classList.add('-rotate-90'); 
+    icon?.classList.add('-rotate-90'); 
   }
 }
 

@@ -4445,6 +4445,15 @@ img {
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
 }
 
+.wrapper .range-input input::-moz-range-thumb {
+  height: 15px;
+  width: 15px;
+  background-color: oklch(62.3% 0.214 259.815);
+  border: none;
+  border-radius: 50%;
+  pointer-events: auto;
+}
+
 /* FILTER MODAL */
 
 .sort-modal {

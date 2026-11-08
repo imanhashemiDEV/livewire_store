@@ -215,11 +215,11 @@ class extends Component {
                     </label>
                 </div>
                 <!-- Accordion -->
-                <div class="">
+                <div id="price_filter">
                     <button onclick="toggleAccordion(2)"
                             class="w-full flex justify-between items-center px-2 xl:px-4 py-4 text-gray-800 dark:text-gray-100">
                         <span>محدوده قیمت</span>
-                        <span id="icon-1" class="text-gray-800 dark:text-gray-100">
+                        <span id="icon-2" class="text-gray-800 dark:text-gray-100">
                                 <svg class="size-4 transition-transform duration-300">
                                     <use href="#chevron-left"></use>
                                 </svg>
@@ -475,7 +475,7 @@ class extends Component {
                             <button onclick="toggleAccordion(4)"
                                     class="w-full flex justify-between items-center px-2 xl:px-4 py-4 text-gray-800 dark:text-gray-100">
                                 <span>محدوده قیمت</span>
-                                <span id="icon-1" class="text-gray-800 dark:text-gray-100">
+                                <span id="icon-4" class="text-gray-800 dark:text-gray-100">
                                 <svg class="size-4 transition-transform duration-300">
                                     <use href="#chevron-left"></use>
                                 </svg>

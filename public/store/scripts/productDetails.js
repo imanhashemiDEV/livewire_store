@@ -41,6 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let index = 0;
     const slider = document.getElementById("slider-text");
+    if (!slider) return;
 
     setInterval(() => {
         index = (index + 1) % texts.length;
