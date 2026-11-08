@@ -43,7 +43,7 @@ class extends Component {
     <nav class="flex mt-8" aria-label="Breadcrumb">
         <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
             <li class="inline-flex items-center">
-                <a href="index.html"
+                <a href="#"
                    class="inline-flex items-center text-sm gap-x-1  text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
                     <svg class="size-4 mb-0.5">
                         <use href="#home"/>
@@ -202,7 +202,7 @@ class extends Component {
                     </label>
                     <label for="hs-valid-toggle-switch2"
                            class="text-gray-800 dark:text-gray-100 flex items-center gap-x-2">
-                        <img class="size-5" src="./images/svg/time.png" alt="">
+                        <img class="size-5" src="{{url('store/images/svg/time.png')}}" alt="">
                         ارسال امروز
                     </label>
                 </div>
@@ -253,7 +253,7 @@ class extends Component {
                     </label>
                     <label for="hs-valid-toggle-switch3"
                            class="text-gray-800 dark:text-gray-100 flex items-center gap-x-2">
-                        <img class="size-5" src="./images/svg/Seller.svg" alt="">
+                        <img class="size-5" src="{{url('store/images/svg/Seller.svg')}}" alt="">
                         ارسال فروشنده
                     </label>
                 </div>
@@ -268,7 +268,7 @@ class extends Component {
                     </label>
                     <label for="hs-valid-toggle-switch4"
                            class="text-gray-800 dark:text-gray-100 flex items-center gap-x-1">
-                        <img class="size-5" src="./images/svg/shop.png" alt="">
+                        <img class="size-5" src="{{url('store/images/svg/shop.png')}}" alt="">
                         خرید حضوری در تهران
                     </label>
                 </div>
@@ -448,7 +448,7 @@ class extends Component {
                             </label>
                             <label for="hs-valid-toggle-switch6"
                                    class="text-gray-800 dark:text-gray-100 flex items-center gap-x-2">
-                                <img class="size-5" src="./images/svg/time.png" alt="">
+                                <img class="size-5" src="{{url('store/images/svg/time.png')}}" alt="">
                                 ارسال امروز
                             </label>
                         </div>
@@ -499,7 +499,7 @@ class extends Component {
                             </label>
                             <label for="hs-valid-toggle-switch7"
                                    class="text-gray-800 dark:text-gray-100 flex items-center gap-x-2">
-                                <img class="size-5" src="./images/svg/Seller.svg" alt="">
+                                <img class="size-5" src="{{url('store/images/svg/Seller.svg')}}" alt="">
                                 ارسال فروشنده
                             </label>
                         </div>
@@ -514,7 +514,7 @@ class extends Component {
                             </label>
                             <label for="hs-valid-toggle-switch8"
                                    class="text-gray-800 dark:text-gray-100 flex items-center gap-x-1">
-                                <img class="size-5" src="./images/svg/shop.png" alt="">
+                                <img class="size-5" src="{{url('store/images/svg/shop.png')}}" alt="">
                                 خرید حضوری در تهران
                             </label>
                         </div>
