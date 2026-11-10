@@ -22,7 +22,7 @@ class extends Component {
       $this->payment_type_title = \App\Models\PaymentType::query()->find($this->order->payment_type_id)->title;
       if($this->Status == 'OK'){
           $this->order->update([
-              'status'=> \App\Enums\OrderStatus::COMPLETED->value
+              'status'=> \App\Enums\OrderStatus::PROCESSING->value
           ]);
 
           foreach ($this->order->orderDetails as $detail){

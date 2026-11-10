@@ -50,3 +50,5 @@ Route::livewire('/sliders', 'admin::sliders.list')->name('admin.sliders.list');
 Route::livewire('/send_type', 'admin::send-type.index')->name('admin.send-type.index');
 Route::livewire('/payment_type', 'admin::payment-type.index')->name('admin.payment-type.index');
 Route::livewire('/discounts', 'admin::discounts.index')->name('admin.discounts.index');
+
+Route::livewire('/orders', 'admin::orders.index')->name('admin.orders.index');
