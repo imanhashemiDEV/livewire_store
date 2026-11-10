@@ -36,7 +36,7 @@ class extends Component {
     #[Computed]
     public function orders()
     {
-        return Order::query()->paginate(10);
+        return Order::query()->orderByDesc('created_at')->paginate(10);
     }
 
 };
@@ -143,7 +143,11 @@ class extends Component {
                                         </td>
                                         <td data-tw-merge=""
                                             class="px-5 border-b dark:border-darkmode-300 border-t border-slate-200/60 bg-slate-50 py-4 font-medium text-slate-500">
-                                            تاریخ فروش
+                                            قیمت کل
+                                        </td>
+                                        <td data-tw-merge=""
+                                            class="px-5 border-b dark:border-darkmode-300 border-t border-slate-200/60 bg-slate-50 py-4 font-medium text-slate-500">
+                                            تخفیف
                                         </td>
                                         <td data-tw-merge=""
                                             class="px-5 border-b dark:border-darkmode-300 border-t border-slate-200/60 bg-slate-50 py-4 font-medium text-slate-500">
@@ -176,7 +180,7 @@ class extends Component {
                                             <td data-tw-merge=""
                                                 class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
                                                 <a class="whitespace-nowrap font-medium">
-                                                    {{$order->total_discount_price}}
+                                                    {{$order->total_price}}
                                                 </a>
                                             </td>
                                             <td data-tw-merge=""
@@ -188,16 +192,33 @@ class extends Component {
                                             <td data-tw-merge=""
                                                 class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
                                                 <a class="whitespace-nowrap font-medium">
-                                                    {{$order->status}}
+                                                    {{$order->total_discount_price}}
                                                 </a>
+                                            </td>
+                                            <td data-tw-merge=""
+                                                class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
+                                                <div class="flex items-center justify-center">
+                                                    <i data-tw-merge="" data-lucide="database"
+                                                       class="h-3.5 w-3.5 stroke-[1.7]"></i>
+                                                    <div  class="rtl:mr-1.5 ltr:ml-1.5 whitespace-nowrap cursor-pointer">
+                                                        @if($order->status === \App\Enums\OrderStatus::FAILED->value)
+                                                            <span class=" text-danger">ناتمام</span>
+                                                        @elseif($order->status === \App\Enums\OrderStatus::PROCESSING->value)
+                                                            <span class=" text-warning">در حال پردازش</span>
+                                                        @elseif($order->status === \App\Enums\OrderStatus::COMPLETED->value)
+                                                            <span class=" text-success">تکمیل شده</span>
+                                                        @endif
+                                                    </div>
+                                                </div>
                                             </td>
                                             <td data-tw-merge=""
                                                 class="flex gap-x-2 px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
                                                 <a >
-                                                    <x-fas-edit class="text-info h-6 w-6 cursor-pointer"/>
+                                                    <x-tabler-list-details
+                                                    class="text-info h-6 w-6 cursor-pointer"/>
                                                 </a>
-                                                <x-fas-trash
-                                                    class="text-danger h-6 w-6 cursor-pointer m-4"/>
+                                                <x-entypo-address
+                                                class="text-danger h-6 w-6 cursor-pointer m-4"/>
                                             </td>
                                         </tr>
                                     @endforeach
