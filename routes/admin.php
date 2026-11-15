@@ -52,3 +52,4 @@ Route::livewire('/payment_type', 'admin::payment-type.index')->name('admin.payme
 Route::livewire('/discounts', 'admin::discounts.index')->name('admin.discounts.index');
 
 Route::livewire('/orders', 'admin::orders.index')->name('admin.orders.index');
+Route::livewire('/order_details/{order}', 'admin::orders.details')->name('admin.orders.details');
