@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Order;
+use App\Models\OrderDetail;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -9,6 +10,12 @@ new  #[Layout('admin::layouts.master', ['breadcrumb' => 'جزئیات فروش']
 class extends Component {
 
     public Order $order;
+    public $order_details;
+
+    public function mount(): void
+    {
+        $this->order_details = $this->order->orderDetails;
+    }
 
 };
 ?>
@@ -25,7 +32,7 @@ class extends Component {
                             <i data-tw-merge="" data-lucide="arrow-right"
                                class="mx-1 h-3.5 w-3.5 stroke-[1.3] sm:mx-2 sm:h-5 sm:w-5 rtl:rotate-180"></i>
                             <div class="text-sm sm:text-lg">
-                               {{$this->order->order_code}}
+                                {{$this->order->order_code}}
                             </div>
                         </div>
                         <div class="flex flex-col gap-x-3 gap-y-2 sm:flex-row rtl:lg:mr-auto ltr:lg:ml-auto">
@@ -66,7 +73,7 @@ class extends Component {
                                                 <div
                                                     class="flex w-full flex-col flex-wrap gap-y-1 sm:flex-row sm:items-center">
                                                     <div class="w-54 rtl:sm:ml-auto ltr:sm:mr-auto">شماره تلفن:</div>
-                                                   {{$this->order->phone}}
+                                                    {{$this->order->phone}}
                                                 </div>
                                             </div>
                                             <div class="flex items-center">
@@ -213,7 +220,7 @@ class extends Component {
                                                         class="dark:border-darkmode-300 border-b-0 px-0 py-0 rtl:[&_div]:first:rounded-r-md ltr:[&_div]:first:rounded-l-md rtl:[&_div]:first:border-r ltr:[&_div]:first:border-l rtl:[&_div]:last:rounded-l-md ltr:[&_div]:last:rounded-r-md rtl:[&_div]:last:border-l ltr:[&_div]:last:border-r">
                                                         <div
                                                             class="border-y border-slate-200/80 bg-slate-50 px-5 py-4 font-medium text-slate-500">
-                                                            مورد
+                                                             عکس - نام محصول
                                                         </div>
                                                     </td>
                                                     <td data-tw-merge=""
@@ -227,262 +234,105 @@ class extends Component {
                                                         class="dark:border-darkmode-300 border-b-0 px-0 py-0 rtl:[&_div]:first:rounded-r-md ltr:[&_div]:first:rounded-l-md rtl:[&_div]:first:border-r ltr:[&_div]:first:border-l rtl:[&_div]:last:rounded-l-md ltr:[&_div]:last:rounded-r-md rtl:[&_div]:last:border-l ltr:[&_div]:last:border-r">
                                                         <div
                                                             class="border-y border-slate-200/80 bg-slate-50 px-5 py-4 rtl:text-left ltr:text-right font-medium text-slate-500">
-                                                            نرخ
+                                                           اصلی قیمت
                                                         </div>
                                                     </td>
                                                     <td data-tw-merge=""
                                                         class="dark:border-darkmode-300 border-b-0 px-0 py-0 rtl:[&_div]:first:rounded-r-md ltr:[&_div]:first:rounded-l-md rtl:[&_div]:first:border-r ltr:[&_div]:first:border-l rtl:[&_div]:last:rounded-l-md ltr:[&_div]:last:rounded-r-md rtl:[&_div]:last:border-l ltr:[&_div]:last:border-r">
                                                         <div
                                                             class="border-y border-slate-200/80 bg-slate-50 px-5 py-4 rtl:text-left ltr:text-right font-medium text-slate-500">
-                                                            مقدار
+                                                            تخفیف
+                                                        </div>
+                                                    </td>
+                                                    <td data-tw-merge=""
+                                                        class="dark:border-darkmode-300 border-b-0 px-0 py-0 rtl:[&_div]:first:rounded-r-md ltr:[&_div]:first:rounded-l-md rtl:[&_div]:first:border-r ltr:[&_div]:first:border-l rtl:[&_div]:last:rounded-l-md ltr:[&_div]:last:rounded-r-md rtl:[&_div]:last:border-l ltr:[&_div]:last:border-r">
+                                                        <div
+                                                            class="border-y border-slate-200/80 bg-slate-50 px-5 py-4 rtl:text-left ltr:text-right font-medium text-slate-500">
+                                                            قیمت نهایی
                                                         </div>
                                                     </td>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-                                                <tr data-tw-merge=""
-                                                    class="[&_td]:first:pt-5 [&_td]:last:border-b-0 [&_td]:last:pb-5">
-                                                    <td data-tw-merge=""
-                                                        class="px-5 border-b dark:border-darkmode-300 border-dashed py-3.5 dark:bg-darkmode-600">
-                                                        <div class="flex items-center">
-                                                            <div class="image-fit zoom-in h-11 w-11">
-                                                                <img data-placement="top" title="شنبه فروردین ۱۴۰۲"
-                                                                     src="dist/images/products/product2-400x400.jpg"
-                                                                     alt="تیل وایز - قالب داشبورد مدیریتی"
-                                                                     class="tooltip cursor-pointer rounded-full shadow-[0px_0px_0px_2px_#fff,_1px_1px_5px_rgba(0,0,0,0.32)] dark:shadow-[0px_0px_0px_2px_#3f4865,_1px_1px_5px_rgba(0,0,0,0.32)]">
-                                                            </div>
-                                                            <div class="rtl:mr-5 ltr:ml-5">
-                                                                <a class="whitespace-nowrap font-medium" href="">
-                                                                    دوربین امنیتی خانه هوشمند
-                                                                </a>
-                                                                <div
-                                                                    class="mt-1 flex flex-col gap-0.5 whitespace-nowrap text-xs text-slate-500">
-                                                                    رنگ
-                                                                    : Men
+                                                @foreach($this->order_details as $detail)
+                                                    <tr data-tw-merge=""
+                                                        class="[&_td]:first:pt-5 [&_td]:last:border-b-0 [&_td]:last:pb-5">
+                                                        <td data-tw-merge=""
+                                                            class="px-5 border-b dark:border-darkmode-300 border-dashed py-3.5 dark:bg-darkmode-600">
+                                                            <div class="flex items-center">
+                                                                <div class="image-fit zoom-in h-11 w-11">
+                                                                    <img data-placement="top" title="{{$detail->product->title}}"
+                                                                         src="{{$detail->product->getMedia('products')->first()->getUrl()}}"
+                                                                         alt=""
+                                                                         class="tooltip cursor-pointer rounded-full shadow-[0px_0px_0px_2px_#fff,_1px_1px_5px_rgba(0,0,0,0.32)] dark:shadow-[0px_0px_0px_2px_#3f4865,_1px_1px_5px_rgba(0,0,0,0.32)]">
+                                                                </div>
+                                                                <div class="rtl:mr-5 ltr:ml-5">
+                                                                    <a class="whitespace-nowrap font-medium" href="">
+                                                                        {{$detail->product->title}}
+                                                                    </a>
+                                                                    <div
+                                                                        class="mt-1 flex flex-col gap-0.5 whitespace-nowrap text-xs text-slate-500">
+                                                                        رنگ
+                                                                        {{$detail->color->title}}
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    </td>
-                                                    <td data-tw-merge=""
-                                                        class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 rtl:text-left ltr:text-right dark:bg-darkmode-600">
-                                                        <div class="whitespace-nowrap">
-                                                            4
-                                                        </div>
-                                                    </td>
-                                                    <td data-tw-merge=""
-                                                        class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 rtl:text-left ltr:text-right dark:bg-darkmode-600">
-                                                        <div class="whitespace-nowrap">
-                                                            259 تومان
-                                                        </div>
-                                                    </td>
-                                                    <td data-tw-merge=""
-                                                        class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 rtl:text-left ltr:text-right dark:bg-darkmode-600">
-                                                        <div class="whitespace-nowrap font-medium">
-                                                            389 تومان
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr data-tw-merge=""
-                                                    class="[&_td]:first:pt-5 [&_td]:last:border-b-0 [&_td]:last:pb-5">
-                                                    <td data-tw-merge=""
-                                                        class="px-5 border-b dark:border-darkmode-300 border-dashed py-3.5 dark:bg-darkmode-600">
-                                                        <div class="flex items-center">
-                                                            <div class="image-fit zoom-in h-11 w-11">
-                                                                <img data-placement="top" title="چهارشنبه آبان ۱۴۰۰"
-                                                                     src="dist/images/products/product2-400x400.jpg"
-                                                                     alt="تیل وایز - قالب داشبورد مدیریتی"
-                                                                     class="tooltip cursor-pointer rounded-full shadow-[0px_0px_0px_2px_#fff,_1px_1px_5px_rgba(0,0,0,0.32)] dark:shadow-[0px_0px_0px_2px_#3f4865,_1px_1px_5px_rgba(0,0,0,0.32)]">
+                                                        </td>
+                                                        <td data-tw-merge=""
+                                                            class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 rtl:text-left ltr:text-right dark:bg-darkmode-600">
+                                                            <div class="whitespace-nowrap">
+                                                                {{$detail->count}}
                                                             </div>
-                                                            <div class="rtl:mr-5 ltr:ml-5">
-                                                                <a class="whitespace-nowrap font-medium" href="">
-                                                                    پایه شارژر گوشی هوشمند
-                                                                </a>
-                                                                <div
-                                                                    class="mt-1 flex flex-col gap-0.5 whitespace-nowrap text-xs text-slate-500">
-                                                                    جنسیت
-                                                                    : Men
-                                                                </div>
+                                                        </td>
+                                                        <td data-tw-merge=""
+                                                            class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 rtl:text-left ltr:text-right dark:bg-darkmode-600">
+                                                            <div class="whitespace-nowrap">
+                                                                {{$detail->price}}
                                                             </div>
-                                                        </div>
-                                                    </td>
-                                                    <td data-tw-merge=""
-                                                        class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 rtl:text-left ltr:text-right dark:bg-darkmode-600">
-                                                        <div class="whitespace-nowrap">
-                                                            3
-                                                        </div>
-                                                    </td>
-                                                    <td data-tw-merge=""
-                                                        class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 rtl:text-left ltr:text-right dark:bg-darkmode-600">
-                                                        <div class="whitespace-nowrap">
-                                                            39 تومان
-                                                        </div>
-                                                    </td>
-                                                    <td data-tw-merge=""
-                                                        class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 rtl:text-left ltr:text-right dark:bg-darkmode-600">
-                                                        <div class="whitespace-nowrap font-medium">
-                                                            59 تومان
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr data-tw-merge=""
-                                                    class="[&_td]:first:pt-5 [&_td]:last:border-b-0 [&_td]:last:pb-5">
-                                                    <td data-tw-merge=""
-                                                        class="px-5 border-b dark:border-darkmode-300 border-dashed py-3.5 dark:bg-darkmode-600">
-                                                        <div class="flex items-center">
-                                                            <div class="image-fit zoom-in h-11 w-11">
-                                                                <img data-placement="top" title="پنجشنبه مهر ۱۴۰۲"
-                                                                     src="dist/images/products/product8-400x400.jpg"
-                                                                     alt="تیل وایز - قالب داشبورد مدیریتی"
-                                                                     class="tooltip cursor-pointer rounded-full shadow-[0px_0px_0px_2px_#fff,_1px_1px_5px_rgba(0,0,0,0.32)] dark:shadow-[0px_0px_0px_2px_#3f4865,_1px_1px_5px_rgba(0,0,0,0.32)]">
+                                                        </td>
+                                                        <td data-tw-merge=""
+                                                            class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 rtl:text-left ltr:text-right dark:bg-darkmode-600">
+                                                            <div class="whitespace-nowrap font-medium">
+                                                                {{$detail->discount}}
                                                             </div>
-                                                            <div class="rtl:mr-5 ltr:ml-5">
-                                                                <a class="whitespace-nowrap font-medium" href="">
-                                                                    هدفون بی‌سیم با میکروفون
-                                                                </a>
-                                                                <div
-                                                                    class="mt-1 flex flex-col gap-0.5 whitespace-nowrap text-xs text-slate-500">
-                                                                    رنگ
-                                                                    : Men
-                                                                </div>
+                                                        </td>
+                                                        <td data-tw-merge=""
+                                                            class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 rtl:text-left ltr:text-right dark:bg-darkmode-600">
+                                                            <div class="whitespace-nowrap font-medium">
+                                                                {{$detail->discount_price}} تومان
                                                             </div>
-                                                        </div>
-                                                    </td>
-                                                    <td data-tw-merge=""
-                                                        class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 rtl:text-left ltr:text-right dark:bg-darkmode-600">
-                                                        <div class="whitespace-nowrap">
-                                                            3
-                                                        </div>
-                                                    </td>
-                                                    <td data-tw-merge=""
-                                                        class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 rtl:text-left ltr:text-right dark:bg-darkmode-600">
-                                                        <div class="whitespace-nowrap">
-                                                            159 تومان
-                                                        </div>
-                                                    </td>
-                                                    <td data-tw-merge=""
-                                                        class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 rtl:text-left ltr:text-right dark:bg-darkmode-600">
-                                                        <div class="whitespace-nowrap font-medium">
-                                                            239 تومان
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr data-tw-merge=""
-                                                    class="[&_td]:first:pt-5 [&_td]:last:border-b-0 [&_td]:last:pb-5">
-                                                    <td data-tw-merge=""
-                                                        class="px-5 border-b dark:border-darkmode-300 border-dashed py-3.5 dark:bg-darkmode-600">
-                                                        <div class="flex items-center">
-                                                            <div class="image-fit zoom-in h-11 w-11">
-                                                                <img data-placement="top" title="دوشنبه، دی ۱۳۹۹"
-                                                                     src="dist/images/products/product3-400x400.jpg"
-                                                                     alt="تیل وایز - قالب داشبورد مدیریتی"
-                                                                     class="tooltip cursor-pointer rounded-full shadow-[0px_0px_0px_2px_#fff,_1px_1px_5px_rgba(0,0,0,0.32)] dark:shadow-[0px_0px_0px_2px_#3f4865,_1px_1px_5px_rgba(0,0,0,0.32)]">
-                                                            </div>
-                                                            <div class="rtl:mr-5 ltr:ml-5">
-                                                                <a class="whitespace-nowrap font-medium" href="">
-                                                                    دوربین امنیتی خانه هوشمند
-                                                                </a>
-                                                                <div
-                                                                    class="mt-1 flex flex-col gap-0.5 whitespace-nowrap text-xs text-slate-500">
-                                                                    جنسیت
-                                                                    : Men
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td data-tw-merge=""
-                                                        class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 rtl:text-left ltr:text-right dark:bg-darkmode-600">
-                                                        <div class="whitespace-nowrap">
-                                                            5
-                                                        </div>
-                                                    </td>
-                                                    <td data-tw-merge=""
-                                                        class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 rtl:text-left ltr:text-right dark:bg-darkmode-600">
-                                                        <div class="whitespace-nowrap">
-                                                            259 تومان
-                                                        </div>
-                                                    </td>
-                                                    <td data-tw-merge=""
-                                                        class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 rtl:text-left ltr:text-right dark:bg-darkmode-600">
-                                                        <div class="whitespace-nowrap font-medium">
-                                                            389 تومان
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr data-tw-merge=""
-                                                    class="[&_td]:first:pt-5 [&_td]:last:border-b-0 [&_td]:last:pb-5">
-                                                    <td data-tw-merge=""
-                                                        class="px-5 border-b dark:border-darkmode-300 border-dashed py-3.5 dark:bg-darkmode-600">
-                                                        <div class="flex items-center">
-                                                            <div class="image-fit zoom-in h-11 w-11">
-                                                                <img data-placement="top" title="شنبه آوریل ۲۰۲۱"
-                                                                     src="dist/images/products/product1-400x400.jpg"
-                                                                     alt="تیل وایز - قالب داشبورد مدیریتی"
-                                                                     class="tooltip cursor-pointer rounded-full shadow-[0px_0px_0px_2px_#fff,_1px_1px_5px_rgba(0,0,0,0.32)] dark:shadow-[0px_0px_0px_2px_#3f4865,_1px_1px_5px_rgba(0,0,0,0.32)]">
-                                                            </div>
-                                                            <div class="rtl:mr-5 ltr:ml-5">
-                                                                <a class="whitespace-nowrap font-medium" href="">
-                                                                    هدفون بی‌سیم با میکروفون
-                                                                </a>
-                                                                <div
-                                                                    class="mt-1 flex flex-col gap-0.5 whitespace-nowrap text-xs text-slate-500">
-                                                                    اندازه
-                                                                    : قرمز
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td data-tw-merge=""
-                                                        class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 rtl:text-left ltr:text-right dark:bg-darkmode-600">
-                                                        <div class="whitespace-nowrap">
-                                                            5
-                                                        </div>
-                                                    </td>
-                                                    <td data-tw-merge=""
-                                                        class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 rtl:text-left ltr:text-right dark:bg-darkmode-600">
-                                                        <div class="whitespace-nowrap">
-                                                            159 تومان
-                                                        </div>
-                                                    </td>
-                                                    <td data-tw-merge=""
-                                                        class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 rtl:text-left ltr:text-right dark:bg-darkmode-600">
-                                                        <div class="whitespace-nowrap font-medium">
-                                                            239 تومان
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+
+
                                                 </tbody>
                                             </table>
                                         </div>
                                         <div
                                             class="mb-5 rtl:mr-auto ltr:ml-auto mt-3 flex flex-col gap-3.5 rtl:pl-5 ltr:pr-5 rtl:text-left ltr:text-right">
                                             <div class="flex items-center justify-end">
-                                                <div class="text-slate-500">جمع جزئی:</div>
+                                                <div class="text-slate-500">مبلغ کل:</div>
                                                 <div class="w-20 font-medium text-slate-600 sm:w-48">
-                                                    1.442 تومان
+                                                    {{$this->order->total_price}} تومان
                                                 </div>
                                             </div>
                                             <div class="flex items-center justify-end">
-                                                <div class="text-slate-500">جمع:</div>
+                                                <div class="text-slate-500">تخفیف کل:</div>
                                                 <div class="w-20 font-medium text-slate-600 sm:w-48">
-                                                    1.442 تومان
+                                                    {{$this->order->total_discount}} تومان
                                                 </div>
                                             </div>
                                             <div class="flex items-center justify-end">
-                                                <div class="text-slate-500">مالیات:</div>
+                                                <div class="text-slate-500">تخفیف با کد:</div>
                                                 <div class="w-20 font-medium text-slate-600 sm:w-48">
                                                     92 تومان
                                                 </div>
                                             </div>
                                             <div class="flex items-center justify-end">
-                                                <div class="text-slate-500">مقدار پرداخت شده:</div>
+                                                <div class="text-slate-500">مبلغ نهایی:</div>
                                                 <div class="w-20 font-medium text-slate-600 sm:w-48">
-                                                    1.442 تومان
-                                                </div>
-                                            </div>
-                                            <div class="flex items-center justify-end">
-                                                <div class="text-slate-500">مانده بدهی:</div>
-                                                <div class="w-20 font-medium text-slate-600 sm:w-48">
-                                                    45 تومان
+                                                    {{$this->order->total_discount_price}} تومان
                                                 </div>
                                             </div>
                                         </div>
