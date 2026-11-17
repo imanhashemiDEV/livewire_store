@@ -8,5 +8,6 @@ enum OrderStatus :string
     case PROCESSING = 'processing';
     case COMPLETED = 'completed';
     case FAILED = 'failed';
+    case REJECTED = 'rejected';
 
 }

@@ -17,6 +17,23 @@ class extends Component {
         $this->order_details = $this->order->orderDetails;
     }
 
+    public function changeStatus()
+    {
+        if($this->order->status == \App\Enums\OrderStatus::PROCESSING->value){
+            $this->order->update([
+                'status'=> \App\Enums\OrderStatus::COMPLETED->value
+            ]);
+        }elseif($this->order->status == \App\Enums\OrderStatus::COMPLETED->value){
+            $this->order->update([
+                'status'=> \App\Enums\OrderStatus::REJECTED->value
+            ]);
+        }elseif($this->order->status == \App\Enums\OrderStatus::REJECTED->value){
+            $this->order->update([
+                'status'=> \App\Enums\OrderStatus::PROCESSING->value
+            ]);
+        }
+    }
+
 };
 ?>
 
@@ -60,10 +77,22 @@ class extends Component {
                                                    class="rtl:ml-2.5 ltr:mr-2.5 h-4 w-4 stroke-[1.3] text-slate-500"></i>
                                                 <div
                                                     class="flex w-full flex-col flex-wrap gap-y-1 sm:flex-row sm:items-center">
-                                                    <div class="w-54 rtl:sm:ml-auto ltr:sm:mr-auto">نام:</div>
+                                                    <div class="w-54 rtl:sm:ml-auto ltr:sm:mr-auto">نام خریدار:</div>
                                                     <a class="underline decoration-primary/30 decoration-dotted underline-offset-[3px]"
                                                        href="">
                                                         {{$this->order->user->name}}
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <i data-tw-merge="" data-lucide="clipboard"
+                                                   class="rtl:ml-2.5 ltr:mr-2.5 h-4 w-4 stroke-[1.3] text-slate-500"></i>
+                                                <div
+                                                    class="flex w-full flex-col flex-wrap gap-y-1 sm:flex-row sm:items-center">
+                                                    <div class="w-54 rtl:sm:ml-auto ltr:sm:mr-auto">نام تحویل گیرنده:</div>
+                                                    <a class="underline decoration-primary/30 decoration-dotted underline-offset-[3px]"
+                                                       href="">
+                                                        {{$this->order->receiver_name}} {{ $this->order->receiver_family}}
                                                     </a>
                                                 </div>
                                             </div>
@@ -82,12 +111,12 @@ class extends Component {
                                                 <div
                                                     class="flex w-full flex-col flex-wrap gap-y-1 sm:flex-row sm:items-center">
                                                     <div class="w-54 rtl:sm:ml-auto ltr:sm:mr-auto">آدرس:</div>
-                                                    <a class="flex items-center underline decoration-primary/30 decoration-dotted underline-offset-[3px]"
-                                                       href="">
-                                                        <i data-tw-merge="" data-lucide="map-pin"
-                                                           class="stroke-[1] rtl:ml-1.5 ltr:mr-1.5 h-3.5 w-3.5"></i>
-                                                        مشاهده آدرس
-                                                    </a>
+                                                    <ul>
+                                                        <li>{{$this->order->province}}</li>
+                                                        <li>{{$this->order->city}}</li>
+                                                        <li>{{$this->order->postal_code}}</li>
+                                                        <li>{{$this->order->address}}</li>
+                                                    </ul>
                                                 </div>
                                             </div>
                                         </div>
@@ -118,8 +147,8 @@ class extends Component {
                                                     </div>
                                                     <div
                                                         class="rtl:ml-auto ltr:mr-auto flex items-center rounded-md border border-success/10 bg-success/10 px-1.5 py-px text-xs font-medium text-success rtl:sm:ml-0 ltr:sm:mr-0">
-                                                        @if($this->order->status === \App\Enums\OrderStatus::FAILED->value)
-                                                            <span class=" text-danger">ناتمام</span>
+                                                        @if($this->order->status === \App\Enums\OrderStatus::REJECTED->value)
+                                                            <span class=" text-danger">مرجوع شده</span>
                                                         @elseif($this->order->status === \App\Enums\OrderStatus::PROCESSING->value)
                                                             <span class=" text-warning">در حال پردازش</span>
                                                         @elseif($this->order->status === \App\Enums\OrderStatus::COMPLETED->value)
@@ -138,7 +167,7 @@ class extends Component {
                                                 </div>
                                             </div>
                                             <div class="mt-1.5">
-                                                <button data-tw-merge=""
+                                                <button data-tw-merge="" wire:click="changeStatus"
                                                         class="transition duration-200 border shadow-sm inline-flex items-center justify-center py-2 px-3 rounded-md font-medium cursor-pointer focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus-visible:outline-none dark:focus:ring-slate-700 dark:focus:ring-opacity-50 [&:hover:not(:disabled)]:bg-opacity-90 [&:hover:not(:disabled)]:border-opacity-90 [&:not(button)]:text-center disabled:opacity-70 disabled:cursor-not-allowed w-full border-primary/20 text-primary/80 hover:bg-slate-50">
                                                     <i data-tw-merge="" data-lucide="pen-square"
                                                        class="rtl:ml-2 ltr:mr-2 h-4 w-4 stroke-[1.3]"></i>
@@ -251,6 +280,13 @@ class extends Component {
                                                             قیمت نهایی
                                                         </div>
                                                     </td>
+                                                    <td data-tw-merge=""
+                                                        class="dark:border-darkmode-300 border-b-0 px-0 py-0 rtl:[&_div]:first:rounded-r-md ltr:[&_div]:first:rounded-l-md rtl:[&_div]:first:border-r ltr:[&_div]:first:border-l rtl:[&_div]:last:rounded-l-md ltr:[&_div]:last:rounded-r-md rtl:[&_div]:last:border-l ltr:[&_div]:last:border-r">
+                                                        <div
+                                                            class="border-y border-slate-200/80 bg-slate-50 px-5 py-4 rtl:text-left ltr:text-right font-medium text-slate-500">
+                                                            وضعیت
+                                                        </div>
+                                                    </td>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -302,6 +338,20 @@ class extends Component {
                                                                 {{$detail->discount_price}} تومان
                                                             </div>
                                                         </td>
+                                                        <td data-tw-merge=""
+                                                            class="px-5 border-b dark:border-darkmode-300 border-dashed py-4 rtl:text-left ltr:text-right dark:bg-darkmode-600">
+                                                            <div class="whitespace-nowrap font-medium">
+                                                                @if($detail->status == \App\Enums\OrderDetailsStatus::COMPLETED->value)
+                                                                    <p>تکمیل سفارش</p>
+                                                                @elseif($detail->status == \App\Enums\OrderDetailsStatus::PENDING->value)
+                                                                     <p>سفارش در حال پردازش</p>
+                                                                @elseif($detail->status == \App\Enums\OrderDetailsStatus::FAILED->value)
+                                                                    <p>سفارش لغو شده</p>
+                                                                @elseif($detail->status == \App\Enums\OrderDetailsStatus::SEND_BY_SELLER->value)
+                                                                    <p>سفارش ارسال شده توسط فروشنده</p>
+                                                                @endif
+                                                            </div>
+                                                        </td>
                                                     </tr>
                                                 @endforeach
 
@@ -323,12 +373,15 @@ class extends Component {
                                                     {{$this->order->total_discount}} تومان
                                                 </div>
                                             </div>
-                                            <div class="flex items-center justify-end">
-                                                <div class="text-slate-500">تخفیف با کد:</div>
-                                                <div class="w-20 font-medium text-slate-600 sm:w-48">
-                                                    92 تومان
+                                            @if($this->order->discount_id)
+                                                <div class="flex items-center justify-end">
+                                                    <div class="text-slate-500">تخفیف با کد:</div>
+                                                    <div class="w-20 font-medium text-slate-600 sm:w-48">
+                                                        {{($this->order->total_price * \App\Models\Discount::query()->find($this->order->discount_id)->value)/100}} تومان
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            @endif
+
                                             <div class="flex items-center justify-end">
                                                 <div class="text-slate-500">مبلغ نهایی:</div>
                                                 <div class="w-20 font-medium text-slate-600 sm:w-48">
