@@ -23,3 +23,6 @@ Route::get('/reset_password/{mobile}', [ResetPasswordByMobileController::class, 
     ->name('auth.reset_password');
 Route::post('/update_password', [ResetPasswordByMobileController::class, 'updatePassword'])
     ->name('auth.update_password');
+
+
+Route::livewire('/seller_panel', 'seller::panel.index')->name('seller.panel')->middleware('seller');

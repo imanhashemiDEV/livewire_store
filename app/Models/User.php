@@ -47,6 +47,13 @@ class User extends Authenticatable
         return $user->is_admin;
     }
 
+    public function isSeller()
+    {
+        $user = auth()->user();
+        return  $user->hasRole('فروشنده');
+    }
+
+
     public function isUserAdmin()
     {
         $user = auth()->user();
