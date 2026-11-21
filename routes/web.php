@@ -25,4 +25,7 @@ Route::post('/update_password', [ResetPasswordByMobileController::class, 'update
     ->name('auth.update_password');
 
 
-Route::livewire('/seller_panel', 'seller::panel.index')->name('seller.panel')->middleware('seller');
+Route::middleware('seller')->group(function (){
+    Route::livewire('/seller_panel', 'seller::panel.index')->name('seller.panel');
+    Route::livewire('/seller_product', 'seller::products.index')->name('seller.products');
+});

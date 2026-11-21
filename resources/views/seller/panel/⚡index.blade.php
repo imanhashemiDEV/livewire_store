@@ -6,7 +6,7 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-new #[Layout('admin::layouts.master', ['breadcrumb' => '']), Title('صفحه اصلی')]
+new #[Layout('seller::layouts.master', ['breadcrumb' => '']), Title('صفحه اصلی')]
 class extends Component {
 
 
