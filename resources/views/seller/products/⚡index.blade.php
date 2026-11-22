@@ -210,7 +210,7 @@ class extends Component {
                                             </td>
                                             <td data-tw-merge=""
                                                 class="flex gap-x-2 px-5 border-b dark:border-darkmode-300 border-dashed py-4 dark:bg-darkmode-600">
-                                                <a href="#">
+                                                <a href="{{route('seller.product.edit', $product_variant->id)}}">
                                                     <x-fas-edit class="text-info h-6 w-6 cursor-pointer"/>
                                                 </a>
                                                 <x-fas-trash
